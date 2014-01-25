@@ -7,7 +7,14 @@
     "authors": [
         {
             "name": "Folklore",
-            "email": "info@atelierfolklore.ca"
+            "email": "info@atelierfolklore.ca",
+            "homepage": "http://atelierfolklore.ca"
+        },
+        {
+            "name": "David Mongeau-Petitpas",
+            "email": "dmp@atelierfolklore.ca",
+            "homepage": "http://mongo.ca",
+            "role": "Developer"
         }
     ],
     "require": {
