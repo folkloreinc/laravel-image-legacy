@@ -10,7 +10,7 @@ To create a 300x300 version of this image in black and white, you use the path:
     /uploads/photo-image(300x300-crop-grayscale).jpg
 
 ## Custom filters
-You can create custom filters to group multiple manipulations in a single filter.
+You can create custom filters to group multiple manipulations in a single filter. Filters can be defined in the `app/start/global.php` file to ensure they are defined before any route is being executed.
 
 ```php
 Image::filter('thumbnail',function($image,&$options)

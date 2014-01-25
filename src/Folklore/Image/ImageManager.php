@@ -65,6 +65,7 @@ class ImageManager extends Manager {
 		if ($options && is_array($options)) {
 			foreach($options as $key => $val) {
 				if (is_numeric($key)) $params[] = $val;
+				else if ($val === true) $params[] = $key;
 				elseif (is_array($val)) $params[] = $key.'('.implode(',',$val).')';
 				else $params[] = $key.'('.$val.')';
 			}
