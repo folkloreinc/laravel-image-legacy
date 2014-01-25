@@ -1,7 +1,9 @@
 {
-    "name": "folklore/image",
+    "name": "folklore/laravel-image",
     "description": "PHP Image manipulation for Laravel 4 based on Imagine and Croppa for easy url based manipulation",
     "keywords": ["laravel","image","imagick","gd","imagine"],
+    "homepage": "http://github.com/Folklore/laravel-image",
+    "license": "MIT",
     "authors": [
         {
             "name": "Folklore",
