@@ -127,7 +127,11 @@ class ImageManager extends Manager {
 		}
 
 		//Check if filters only is enabled
-		if($this->app['config']['image::filters_only'])
+		if(!$this->app['config']['image::filters_only'])
+		{
+			$thumbnail = $image;
+		}
+		else
 		{
 			// Get current image size
 			$currentSize = $image->getSize();

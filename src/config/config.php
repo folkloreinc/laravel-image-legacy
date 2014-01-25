@@ -27,14 +27,15 @@ return array(
 	| image manipulation
 	|
 	*/
-	'pattern' => '^(.*)-image\(([0-9a-zA-Z(),\-._]+?)\)\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$'
+	'pattern' => '^(.*)-image\(([0-9a-zA-Z(),\-._]+?)\)\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$',
 
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Filters only
 	|--------------------------------------------------------------------------
 	|
-	| Restrict options in URL to custom filters only. This prevent 
+	| Restrict options in URL to custom filters only. This prevent direct
+	| manipulation of the image.
 	|
 	*/
 	'filters_only' => false
