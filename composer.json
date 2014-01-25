@@ -1,6 +1,7 @@
 {
     "name": "folklore/image",
     "description": "PHP Image manipulation for Laravel 4 based on Imagine and Croppa for easy url based manipulation",
+    "keywords": ["laravel","image","imagick","gd","imagine"],
     "authors": [
         {
             "name": "Folklore",
