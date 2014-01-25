@@ -19,8 +19,9 @@ To create a 300x300 version of this image in black and white, you use the path:
 #### Installation:
 
 Require the package via Composer in your `composer.json`.
-
+```json
     "folklore/laravel-image": "dev-master"
+```
 
 Run Composer to install or update the new requirement.
 
@@ -31,16 +32,18 @@ or
     $ composer update
 
 Add the service provider to your `app/config/app.php` file
-
-    'Folklore\Image\ImageServiceProvider',
+```php
+'Folklore\Image\ImageServiceProvider',
+```
 
 Add the facade to your `app/config/app.php` file
-
-    'Image' => 'Folklore\Image\ImageFacade',
+```php
+'Image' => 'Folklore\Image\ImageFacade',
+```
 
 Publish the configuration file
 
-    php artisan config:publish folklore/laravel-image
+    $ php artisan config:publish folklore/laravel-image
 
 ## Configuration
 
