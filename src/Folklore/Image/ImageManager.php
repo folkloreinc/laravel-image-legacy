@@ -42,8 +42,18 @@ class ImageManager extends Manager {
 	public function url($src, $width = null, $height = null, $options = array())
 	{
 
-		// Defaults
-		if (empty($src)) return; // Don't allow empty strings
+		// Don't allow empty strings
+		if (empty($src)) return;
+
+		//If width parameter is an array, use it as options
+		if(is_array($width))
+		{
+			$options = $width;
+			$width = null;
+			$height = null;
+		}
+
+		//Get size
 		if (empty($width)) $width = '_';
 		if (empty($height)) $height = '_';
 		
@@ -60,7 +70,7 @@ class ImageManager extends Manager {
 			}
 		}
 		
-		//Compile the url parameter
+		//Create the url parameter
 		$params = implode('-',$params);
 		$parameter = str_replace('{options}',$params,$this->app['config']['image::url_parameter']);
 

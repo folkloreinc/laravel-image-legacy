@@ -16,6 +16,18 @@ You can create custom filters to group multiple manipulations in a single filter
 ```php
 Image::filter('thumbnail',function($image,&$options)
 {
-	return $image->thumbnail(new Box(100,100))->effects()->grayscale();
+	return $image->thumbnail(new Box(100,100))
+					->effects()
+					->grayscale();
 });
+```
+
+This filter can be used by passing is name in the URL
+
+    /uploads/photo-image(thumbnail).jpg
+
+Or by using the method to generate an URL
+
+```php
+Image::url('/uploads/photo.jpg',array('thumbnail'));
 ```
