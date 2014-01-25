@@ -8,3 +8,14 @@ To create a 300x300 version of this image in black and white, you use the path:
     /uploads/photo-image(300x300-crop-grayscale).jpg
 
 It supports basic image manipulations such as resize, crop, rotation and flip. It also supports effects such as negative, grayscale, gamma, colorize and blur. You can also define custom filters for greater flexibility.
+
+
+## Custom filters
+You can create custom filters to group multiple manipulations in a single filter.
+
+```php
+Image::filter('thumbnail',function($image,&$options)
+{
+	return $image->thumbnail(new Box(100,100))->effects()->grayscale();
+});
+```

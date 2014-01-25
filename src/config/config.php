@@ -20,14 +20,20 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
-	| URL pattern
+	| URL parameter
 	|--------------------------------------------------------------------------
 	|
-	| Pattern used in the route to identify path that belongs to
-	| image manipulation
+	| The URL parameter that will be appended to your image filename containing
+	| all the options for image manipulation. You have to put {options} where
+	| you want options to be placed. Keep in mind that this parameter is used
+	| in an url so all characters should be URL safe.
+	|
+	| Default: -image({options})
+	|
+	| Example: /uploads/photo-image(300x300-grayscale).jpg
 	|
 	*/
-	'pattern' => '^(.*)-image\(([0-9a-zA-Z(),\-._]+?)\)\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$',
+	'url_parameter' => '-image({options})',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -38,5 +44,17 @@ return array(
 	| manipulation of the image.
 	|
 	*/
-	'filters_only' => false
+	'filters_only' => false,
+
+	/*
+	|--------------------------------------------------------------------------
+	| Write image
+	|--------------------------------------------------------------------------
+	|
+	| Write the manipulated image in the same directory as the original image
+	| so the next request will serve this static file
+	|
+	*/
+	'write_image' => false
+	
 );

@@ -27,7 +27,7 @@ class ImageServiceProvider extends ServiceProvider {
 			
 			return $image->generate($path);
 
-		})->where('path', $image->pattern());	
+		})->where('path', $image->pattern());
 	}
 
 	/**

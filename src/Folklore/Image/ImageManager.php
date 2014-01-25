@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Manager;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Blade;
 
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
@@ -59,11 +60,14 @@ class ImageManager extends Manager {
 			}
 		}
 		
+		//Compile the url parameter
+		$params = implode('-',$params);
+		$parameter = str_replace('{options}',$params,$this->app['config']['image::url_parameter']);
+
 		// Break the path apart and put back together again
-		$params = '-image('.implode('-',$params).')';
 		$parts = pathinfo($src);
 		$host = '//'.$this->app->make('request')->getHttpHost();
-		$url = $host .$parts['dirname'].'/'.$parts['filename'].$params;
+		$url = $host .$parts['dirname'].'/'.$parts['filename'].$parameter;
 		if (!empty($parts['extension'])) $url .= '.'.$parts['extension'];
 
 		return $url;
@@ -99,13 +103,17 @@ class ImageManager extends Manager {
 			throw new Exception('Referenced file missing');
 		}
 		
-		// Make the destination the same path
-		$dst = dirname($fullPath).'/'.basename($url);
-		
 		// Make sure destination is writeable
-		if (!is_writable(dirname($dst)))
+		if ($this->app['config']['image::write_image'] && !is_writable(dirname($fullPath)))
 		{
 			throw new Exception('Destination is not writeable');
+		}
+
+		// Get image format
+		$format = $this->getFormat($fullPath);
+		if (!$format)
+		{
+			throw new Exception('Image format is not supported');
 		}
 
 		//Open the image
@@ -127,14 +135,14 @@ class ImageManager extends Manager {
 		}
 
 		//Check if filters only is enabled
-		if(!$this->app['config']['image::filters_only'])
+		if($this->app['config']['image::filters_only'])
 		{
 			$thumbnail = $image;
 		}
 		else
 		{
 			// Get current image size
-			$currentSize = $image->getSize();
+			$size = $image->getSize();
 			$width = $options['width'];
 			$height = $options['height'];
 
@@ -147,8 +155,8 @@ class ImageManager extends Manager {
 			else
 			{
 				//Set the new size
-				$newWidth = $width === '_' ? $currentSize->getWidth():$width;
-				$newHeight = $height === '_' ? $currentSize->getHeight():$height;
+				$newWidth = $width === '_' ? $size->getWidth():$width;
+				$newHeight = $height === '_' ? $size->getHeight():$height;
 				$newSize = new Box($newWidth, $newHeight);
 
 				//Get resize mode
@@ -188,14 +196,22 @@ class ImageManager extends Manager {
 			}
 		}
 
+		//Write the image
+		if ($this->app['config']['image::write_image'])
+		{
+			$destinationPath = dirname($fullPath).'/'.basename($url);
+			$thumbnail->save($destinationPath);
+		}
+
 		//Get the image content
-		$contents = $thumbnail->get('png',array(
-			'quality' => isset($options['quality']) ? (int)$options['quality']:80
+		$contents = $thumbnail->get($format,array(
+			'quality' => $options['quality']
 		));
 
 		//Create the response
+		$mime = $this->getMimeFromFormat($format);
 		$response = Response::make($contents, 200);
-		$response->header('Content-Type', 'image/png');
+		$response->header('Content-Type', $mime);
 
 		//Return the response
 		return $response;
@@ -206,8 +222,61 @@ class ImageManager extends Manager {
 	 * 
 	 * @return string
 	 */
-	public function pattern() {
-		return $this->app['config']['image::pattern'];
+	public function pattern()
+	{
+
+		//Replace the {options} with the options regular expression
+		$parameter = preg_quote($this->app['config']['image::url_parameter']);
+		$parameter = str_replace('\{options\}','([0-9a-zA-Z\(\),\-._]+?)',$parameter);
+
+		return '^(.*)'.$parameter.'\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
+	}
+
+	/**
+	 * Get image format
+	 * 
+	 * @return string
+	 */
+	protected function getFormat($path)
+	{
+
+		$format = exif_imagetype($path);
+		switch($format) {
+			case IMAGETYPE_GIF:
+				return 'gif';
+			break;
+			case IMAGETYPE_JPEG:
+				return 'jpeg';
+			break;
+			case IMAGETYPE_PNG:
+				return 'png';
+			break;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get mime type from image format
+	 * 
+	 * @return string
+	 */
+	protected function getMimeFromFormat($format)
+	{
+
+		switch($format) {
+			case 'gif':
+				return 'image/gif';
+			break;
+			case 'jpeg':
+				return 'image/jpeg';
+			break;
+			case 'png':
+				return 'image/png';
+			break;
+		}
+
+		return null;
 	}
 	
 	/**
