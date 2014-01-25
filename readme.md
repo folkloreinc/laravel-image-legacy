@@ -24,11 +24,11 @@ Require the package via Composer in your `composer.json`.
 
 Run Composer to install or update the new requirement.
 
-    $ php composer.phar install
+    $ composer install
 
 or
 
-    $ php composer.phar update
+    $ composer update
 
 Add the service provider to your `app/config/app.php` file
 
