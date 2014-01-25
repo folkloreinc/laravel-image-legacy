@@ -9,6 +9,43 @@ To create a 300x300 version of this image in black and white, you use the path:
 
     /uploads/photo-image(300x300-crop-grayscale).jpg
 
+## Installation
+
+#### Server Requirements:
+
+* [gd](http://php.net/manual/en/book.image.php) or [Imagick](http://php.net/manual/fr/book.imagick.php) or [Gmagick](http://www.php.net/manual/fr/book.gmagick.php)
+* [exif](http://php.net/manual/en/book.exif.php) - Required to get image format.
+
+#### Installation:
+
+1. Require the package via Composer in your `composer.json`.
+
+    "folklore/laravel-image": "dev-master"
+
+2. Run Composer to install or update the new requirement.
+
+    $ php composer.phar install
+
+or
+
+    $ php composer.phar update
+
+3. Add the service provider to your `app/config/app.php` file
+
+    'Folklore\Image\ImageServiceProvider',
+
+4. Add the facade to your `app/config/app.php` file
+
+    'Image' => 'Folklore\Image\ImageFacade',
+
+5. Publish the configuration file
+
+    php artisan config:publish folklore/laravel-image
+
+## Configuration
+
+
+
 ## Custom filters
 You can create custom filters to group multiple manipulations in a single filter. Filters can be defined in the `app/start/global.php` file to ensure they are defined before any route is being executed.
 
