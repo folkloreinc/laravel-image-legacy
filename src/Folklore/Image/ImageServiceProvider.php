@@ -20,7 +20,7 @@ class ImageServiceProvider extends ServiceProvider {
 	{
 		$this->package('folklore/image');
 
-		// Listen for Cropa style URLs, these are how Croppa gets triggered
+		// Listen for Image style URLs, this is how Image gets triggered
 		$image = $this->app['image'];
 		$this->app->make('router')->get('{path}', function($path) use ($image)
 		{
@@ -39,7 +39,7 @@ class ImageServiceProvider extends ServiceProvider {
 	{
 		$this->app->singleton('image', function($app)
 		{
-			return new Image($app);
+			return new ImageManager($app);
 		});
 	}
 

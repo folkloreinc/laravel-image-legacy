@@ -8,7 +8,19 @@ use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\Color;
 
-class Image extends Manager {
+class ImageManager extends Manager {
+
+	/**
+	 * Default options
+	 *
+	 * @var array
+	 */
+	protected $defaultOptions = array(
+		'width' => '_',
+		'height' => '_',
+		'quality' => 80,
+		'filters' => array()
+	);
 
 	/**
 	 * All of the custom filters.
@@ -53,6 +65,7 @@ class Image extends Manager {
 		$host = '//'.$this->app->make('request')->getHttpHost();
 		$url = $host .$parts['dirname'].'/'.$parts['filename'].$params;
 		if (!empty($parts['extension'])) $url .= '.'.$parts['extension'];
+
 		return $url;
 
 	}
@@ -113,58 +126,62 @@ class Image extends Manager {
 			}
 		}
 
-		// Get current image size
-		$currentSize = $image->getSize();
-		$width = $options['width'];
-		$height = $options['height'];
-
-		//If width and height are not set, skip resize
-		if($width === '_' && $height === '_')
+		//Check if filters only is enabled
+		if($this->app['config']['image::filters_only'])
 		{
-			$thumbnail = $image;
-		}
-		//Resize the image
-		else
-		{
-			//Set the new size
-			$newWidth = $width === '_' ? $currentSize->getWidth():$width;
-			$newHeight = $height === '_' ? $currentSize->getHeight():$height;
-			$newSize = new Box($newWidth, $newHeight);
+			// Get current image size
+			$currentSize = $image->getSize();
+			$width = $options['width'];
+			$height = $options['height'];
 
-			//Get resize mode
-			$mode = isset($options['crop']) ? ImageInterface::THUMBNAIL_OUTBOUND:ImageInterface::THUMBNAIL_INSET;
+			//If width and height are not set, skip resize
+			if($width === '_' && $height === '_')
+			{
+				$thumbnail = $image;
+			}
+			//Resize the image
+			else
+			{
+				//Set the new size
+				$newWidth = $width === '_' ? $currentSize->getWidth():$width;
+				$newHeight = $height === '_' ? $currentSize->getHeight():$height;
+				$newSize = new Box($newWidth, $newHeight);
 
-			//Create the thumbnail
-			$thumbnail = $image->thumbnail($newSize,$mode);
-		}
+				//Get resize mode
+				$mode = isset($options['crop']) ? ImageInterface::THUMBNAIL_OUTBOUND:ImageInterface::THUMBNAIL_INSET;
 
-		//Rotate
-		if(isset($options['rotate'])) {
-			$thumbnail->rotate($options['rotate']);
-		}
+				//Create the thumbnail
+				$thumbnail = $image->thumbnail($newSize,$mode);
+			}
 
-		//Apply built-in effects
-		$effects = $thumbnail->effects();
-		//Grayscale
-		if(isset($options['grayscale'])) {
-			$effects->grayscale();
-		}
-		//Negative
-		if(isset($options['negative'])) {
-			$effects->negative();
-		}
-		//Gamma
-		if(isset($options['gamma'])) {
-			$effects->gamma((float)$options['gamma']);
-		}
-		//Blur
-		if(isset($options['blur'])) {
-			$effects->blur((float)$options['blur']);
-		}
-		//Colorize
-		if(isset($options['colorize'])) {
-			$color = new Color('#'.$options['colorize']);
-			$effects->colorize($color);
+			//Rotate
+			if(isset($options['rotate'])) {
+				$thumbnail->rotate($options['rotate']);
+			}
+
+			//Apply built-in effects
+			$effects = $thumbnail->effects();
+			//Grayscale
+			if(isset($options['grayscale'])) {
+				$effects->grayscale();
+			}
+			//Negative
+			if(isset($options['negative'])) {
+				$effects->negative();
+			}
+			//Gamma
+			if(isset($options['gamma'])) {
+				$effects->gamma((float)$options['gamma']);
+			}
+			//Blur
+			if(isset($options['blur'])) {
+				$effects->blur((float)$options['blur']);
+			}
+			//Colorize
+			if(isset($options['colorize'])) {
+				$color = new Color('#'.$options['colorize']);
+				$effects->colorize($color);
+			}
 		}
 
 		//Get the image content
@@ -186,7 +203,7 @@ class Image extends Manager {
 	 * @return string
 	 */
 	public function pattern() {
-		return '^(.*)-image\(([0-9a-zA-Z(),\-._]+?)\)\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
+		return $this->app['config']['image::pattern'];
 	}
 	
 	/**
@@ -197,13 +214,9 @@ class Image extends Manager {
 	 */
 	private function makeOptions($option_params) {
 
-		$options = array(
-			'width' => '_',
-			'height' => '_',
-			'filters' => array()
-		);
+		$options = array();
 		
-		// These will look like: "-quadrant(T)-resize"
+		// These will look like: "-colorize(CC0000)-greyscale"
 		$option_params = explode('-', $option_params);
 		
 		// Loop through the params and make the options key value pairs
@@ -240,8 +253,8 @@ class Image extends Manager {
 			}
 		}
 
-		// Return new options array
-		return $options;
+		// Merge the options with defaults
+		return array_merge($this->defaultOptions, $options);
 	}
 
 	/**
