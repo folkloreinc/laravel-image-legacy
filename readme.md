@@ -26,11 +26,15 @@ Laravel Image is an image manipulation package for Laravel 4 based on the [PHP I
 
 **2-** Run Composer to install or update the new requirement.
 
-    $ composer install
+```bash
+$ composer install
+```
 
 or
 
-    $ composer update
+```bash
+$ composer update
+```
 
 **3-** Add the service provider to your `app/config/app.php` file
 ```php
@@ -44,7 +48,9 @@ or
 
 **5-** Publish the configuration file
 
-    $ php artisan config:publish folklore/laravel-image
+```bash
+$ php artisan config:publish folklore/laravel-image
+```
 
 ## Configuration
 
