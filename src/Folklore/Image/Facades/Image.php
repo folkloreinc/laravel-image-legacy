@@ -1,8 +1,8 @@
-<?php namespace Folklore\Image;
+<?php namespace Folklore\Image\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class ImageFacade extends Facade
+class Image extends Facade
 {
 
 	protected static function getFacadeAccessor()

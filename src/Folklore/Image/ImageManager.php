@@ -1,8 +1,9 @@
 <?php namespace Folklore\Image;
 
+use Folklore\LaravelImage\Exception\Exception;
+
 use Illuminate\Support\Manager;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Blade;
 
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
@@ -135,7 +136,7 @@ class ImageManager extends Manager {
 		//Apply built-in filters
 		foreach($options as $key => $arguments) {
 			$method = 'filter'.ucfirst($key);
-			if(method_exists($this,$method)) {
+			if($arguments !== false && method_exists($this,$method)) {
 				$arguments = (array)$arguments;
 				array_unshift($arguments,$image);
 				$image = call_user_func_array(array($this,$method),$arguments);
@@ -171,7 +172,7 @@ class ImageManager extends Manager {
 
 		// Parse the current path
 		$parsedPath = $this->parsePath($path);
-		$path = $parsedPath['path'];
+		$imagePath = $parsedPath['path'];
 
 		//If custom filters only, remove all other options
 		if($config['laravel-image::serve_custom_filters_only']) {
@@ -184,17 +185,17 @@ class ImageManager extends Manager {
 		$options = array_merge($this->defaultOptions,$parsedOptions,$options);
 
 		//Make the image
-		$image = $this->make($path,$options);
+		$image = $this->make($imagePath,$options);
 
 		//Write the image
 		if ($config['laravel-image::write_image'])
 		{
-			$destinationPath = dirname($path).'/'.basename($url);
+			$destinationPath = dirname($path).'/'.basename($path);
 			$image->save($destinationPath);
 		}
 
 		//Get the image format
-		$format = $this->getFormat($path);
+		$format = $this->getFormat($imagePath);
 
 		//Get the image content
 		$contents = $image->get($format,array(
@@ -232,7 +233,7 @@ class ImageManager extends Manager {
 	public function thumbnail($image, $width = null, $height = null, $crop = true)
 	{
 		//If $image is a path, open it
-		if(is_string($image))
+		if (is_string($image))
 		{
 			$image = $this->open($image);
 		}
@@ -272,7 +273,7 @@ class ImageManager extends Manager {
 	 * @param  string			$name The filter name
 	 * @return void
 	 */
-	protected function applyCustomFilter($image,$name)
+	protected function applyCustomFilter(ImageInterface $image, $name)
 	{
 
 		//Get arguments
@@ -295,7 +296,7 @@ class ImageManager extends Manager {
 	 * @param  float			$degree The rotation degree
 	 * @return void
 	 */
-	protected function filterRotate($image,$degree)
+	protected function filterRotate(ImageInterface $image, $degree)
 	{
 		return $image->rotate($degree);
 	}
@@ -306,7 +307,7 @@ class ImageManager extends Manager {
 	 * @param  ImageInterface	$image An image instance
 	 * @return void
 	 */
-	protected function filterGrayscale($image)
+	protected function filterGrayscale(ImageInterface $image)
 	{
 		$image->effects()->grayscale();
 		return $image;
@@ -318,7 +319,7 @@ class ImageManager extends Manager {
 	 * @param  ImageInterface	$image An image instance
 	 * @return void
 	 */
-	protected function filterNegative($image)
+	protected function filterNegative(ImageInterface $image)
 	{
 		$image->effects()->negative();
 		return $image;
@@ -331,7 +332,7 @@ class ImageManager extends Manager {
 	 * @param  float			$gamma The gamma value
 	 * @return void
 	 */
-	protected function filterGamma($image,$gamma)
+	protected function filterGamma(ImageInterface $image, $gamma)
 	{
 		$image->effects()->gamma($gamma);
 		return $image;
@@ -344,7 +345,7 @@ class ImageManager extends Manager {
 	 * @param  int			$blur The amount of blur
 	 * @return void
 	 */
-	protected function filterBlur($image,$blur)
+	protected function filterBlur(ImageInterface $image, $blur)
 	{
 		$image->effects()->blur($blur);
 		return $image;
@@ -357,7 +358,7 @@ class ImageManager extends Manager {
 	 * @param  string			$color The hex value of the color
 	 * @return void
 	 */
-	protected function filterColorize($image,$color)
+	protected function filterColorize(ImageInterface $image, $color)
 	{
 		$image->effects()->colorize($color);
 		return $image;

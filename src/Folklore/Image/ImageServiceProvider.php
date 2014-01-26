@@ -23,7 +23,8 @@ class ImageServiceProvider extends ServiceProvider {
 		$app = $this->app;
 
 		//Serve image
-		if($this->app['config']['laravel-image::serve_image']) {
+		if($this->app['config']['laravel-image::serve_image'])
+		{
 			// Create a route that match pattern
 			$app->make('router')->get('{path}', function($path) use ($app)
 			{

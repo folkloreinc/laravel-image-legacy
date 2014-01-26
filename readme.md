@@ -30,12 +30,12 @@ or
 
 Add the service provider to your `app/config/app.php` file
 ```php
-'Folklore\LaravelImage\LaravelImageServiceProvider',
+'Folklore\Image\ImageServiceProvider',
 ```
 
 Add the facade to your `app/config/app.php` file
 ```php
-'Image' => 'Folklore\LaravelImage\Facades\Image',
+'Image' => 'Folklore\Image\Facades\Image',
 ```
 
 Publish the configuration file
