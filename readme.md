@@ -15,12 +15,16 @@ Laravel Image is an image manipulation package for Laravel 4 based on the [PHP I
 
 #### Installation:
 
-Require the package via Composer in your `composer.json`.
+**1-** Require the package via Composer in your `composer.json`.
 ```json
-    "folklore/image": "dev-master"
+{
+	"require": {
+		"folklore/image": "dev-master"
+	}
+}
 ```
 
-Run Composer to install or update the new requirement.
+**2-** Run Composer to install or update the new requirement.
 
     $ composer install
 
@@ -28,17 +32,17 @@ or
 
     $ composer update
 
-Add the service provider to your `app/config/app.php` file
+**3-** Add the service provider to your `app/config/app.php` file
 ```php
 'Folklore\Image\ImageServiceProvider',
 ```
 
-Add the facade to your `app/config/app.php` file
+**4-** Add the facade to your `app/config/app.php` file
 ```php
 'Image' => 'Folklore\Image\Facades\Image',
 ```
 
-Publish the configuration file
+**5-** Publish the configuration file
 
     $ php artisan config:publish folklore/laravel-image
 
