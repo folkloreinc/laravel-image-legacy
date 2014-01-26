@@ -17,8 +17,8 @@ class ImageManager extends Manager {
 	 * @var array
 	 */
 	protected $defaultOptions = array(
-		'width' => '_',
-		'height' => '_',
+		'width' => null,
+		'height' => null,
 		'quality' => 80,
 		'filters' => array()
 	);
@@ -73,7 +73,7 @@ class ImageManager extends Manager {
 		
 		//Create the url parameter
 		$params = implode('-',$params);
-		$parameter = str_replace('{options}',$params,$this->app['config']['image::url_parameter']);
+		$parameter = str_replace('{options}',$params,$this->app['config']['laravel-image::url_parameter']);
 
 		// Break the path apart and put back together again
 		$parts = pathinfo($src);
@@ -86,136 +86,118 @@ class ImageManager extends Manager {
 	}
 
 	/**
-	 * Generate the image
+	 * Make an image and apply options
 	 *
-	 * @param  string  $url
-	 * @return string
+	 * @param  string	$path The path of the image
+	 * @param  array	$options The manipulations to apply on the image
+	 * @return ImageInterface
 	 */
-	public function generate($url)
-	{
+	public function make($path, $options = array()) {
 
-		// Check if the current url looks like an image URL.
-		if (!preg_match('#'.$this->pattern().'#i', $url, $matches)) return false;
-
-		//Get path and options
-		$path = $matches[1].'.'.$matches[3];
-		$options = $matches[2];
-		$fullPath = $this->app->make('path.public').'/'.$path;
-
-		// Increase memory limit, cause some images require a lot to resize
-		ini_set('memory_limit', '128M');
-		
-		// Parse options
-		$options = $this->makeOptions($options);
+		//Get app config
+		$config = $this->app['config'];
 
 		// See if the referenced file exists and is an image
-		if(!file_exists($fullPath))
+		if(!file_exists($path))
 		{
-			throw new Exception('Referenced file missing');
-		}
-		
-		// Make sure destination is writeable
-		if ($this->app['config']['image::write_image'] && !is_writable(dirname($fullPath)))
-		{
-			throw new Exception('Destination is not writeable');
+			throw new Exception('Image file missing');
 		}
 
 		// Get image format
-		$format = $this->getFormat($fullPath);
+		$format = $this->getFormat($path);
 		if (!$format)
 		{
 			throw new Exception('Image format is not supported');
 		}
 
 		//Open the image
-		$image = $this->open($fullPath);
+		$image = $this->open($path);
 
-		// Execute all filters
+		//Get options
+		$options = array_merge($this->defaultOptions, $options);
+
+		// Apply all custom filters
 		if(isset($options['filters']) && sizeof($options['filters'])) {
 			foreach($options['filters'] as $filter) {
-				// Put the image and a reference to $options as the first two arguments
-				$arguments = array_merge(array($image,&$options),$filter['arguments']);
-				// Call the filter and get the return value
-				$return = call_user_func_array($filter['closure'],$arguments);
-				// If the return value is an instance of ImageInterface,
-				// replace the current image with it.
-				if($return instanceof ImageInterface) {
-					$image = $return;
-				}
+				$arguments = (array)$filter;
+				array_unshift($arguments,$image);
+				$image = call_user_func_array(array($this,'applyCustomFilter'), $arguments);
 			}
 		}
-
-		//Check if filters only is enabled
-		if($this->app['config']['image::filters_only'])
+		
+		//If width and height are not set, skip resize
+		if($options['width'] !== null || $options['height'] !== null)
 		{
-			$thumbnail = $image;
+			$crop = isset($options['crop']) ? $options['crop']:false;
+			$image = $this->thumbnail($image,$options['width'],$options['height'],$crop);
 		}
-		else
+
+		//Apply built-in filters
+		foreach($options as $key => $arguments) {
+			$method = 'filter'.ucfirst($key);
+			if(method_exists($this,$method)) {
+				$arguments = (array)$arguments;
+				array_unshift($arguments,$image);
+				$image = call_user_func_array(array($this,$method),$arguments);
+			}
+		}
+
+
+		
+		return $image;
+	}
+
+	/**
+	 * Serve the image
+	 *
+	 * @param  string	$path
+	 * @param  array	$options
+	 * @return string
+	 */
+	public function serve($path,$options = array())
+	{
+
+		//Get app config
+		$config = $this->app['config'];
+
+		// Make sure destination is writeable
+		if ($config['laravel-image::write_image'] && !is_writable(dirname($path)))
 		{
-			// Get current image size
-			$size = $image->getSize();
-			$width = $options['width'];
-			$height = $options['height'];
-
-			//If width and height are not set, skip resize
-			if($width === '_' && $height === '_')
-			{
-				$thumbnail = $image;
-			}
-			//Resize the image
-			else
-			{
-				//Set the new size
-				$newWidth = $width === '_' ? $size->getWidth():$width;
-				$newHeight = $height === '_' ? $size->getHeight():$height;
-				$newSize = new Box($newWidth, $newHeight);
-
-				//Get resize mode
-				$mode = isset($options['crop']) ? ImageInterface::THUMBNAIL_OUTBOUND:ImageInterface::THUMBNAIL_INSET;
-
-				//Create the thumbnail
-				$thumbnail = $image->thumbnail($newSize,$mode);
-			}
-
-			//Rotate
-			if(isset($options['rotate'])) {
-				$thumbnail->rotate($options['rotate']);
-			}
-
-			//Apply built-in effects
-			$effects = $thumbnail->effects();
-			//Grayscale
-			if(isset($options['grayscale'])) {
-				$effects->grayscale();
-			}
-			//Negative
-			if(isset($options['negative'])) {
-				$effects->negative();
-			}
-			//Gamma
-			if(isset($options['gamma'])) {
-				$effects->gamma((float)$options['gamma']);
-			}
-			//Blur
-			if(isset($options['blur'])) {
-				$effects->blur((float)$options['blur']);
-			}
-			//Colorize
-			if(isset($options['colorize'])) {
-				$color = new Color('#'.$options['colorize']);
-				$effects->colorize($color);
-			}
+			throw new Exception('Destination is not writeable');
 		}
+
+		// Increase memory limit, cause some images require a lot to resize
+		ini_set('memory_limit', '128M');
+
+		// Parse the current path
+		$parsedPath = $this->parsePath($path);
+		$path = $parsedPath['path'];
+
+		//If custom filters only, remove all other options
+		if($config['laravel-image::serve_custom_filters_only']) {
+			$parsedOptions = array_intersect_key($parsedPath['options'],array('filters'=>null));
+		} else {
+			$parsedOptions = $parsedPath['options'];
+		}
+
+		//Merge with defaults and options argument
+		$options = array_merge($this->defaultOptions,$parsedOptions,$options);
+
+		//Make the image
+		$image = $this->make($path,$options);
 
 		//Write the image
-		if ($this->app['config']['image::write_image'])
+		if ($config['laravel-image::write_image'])
 		{
-			$destinationPath = dirname($fullPath).'/'.basename($url);
-			$thumbnail->save($destinationPath);
+			$destinationPath = dirname($path).'/'.basename($url);
+			$image->save($destinationPath);
 		}
 
+		//Get the image format
+		$format = $this->getFormat($path);
+
 		//Get the image content
-		$contents = $thumbnail->get($format,array(
+		$contents = $image->get($format,array(
 			'quality' => $options['quality']
 		));
 
@@ -229,18 +211,156 @@ class ImageManager extends Manager {
 	}
 
 	/**
-	 * Return the Image URL regex
+	 * Register a custom filter.
+	 *
+	 * @param  string			$name The name of the filter
+	 * @param  Closure|string	$filter 
+	 * @return void
+	 */
+	public function filter($name, $filter)
+	{
+		$this->filters[$name] = $filter;
+	}
+
+	/**
+	 * Create a thumbnail from an image
+	 *
+	 * @param  ImageInterface|string	$image An image instance or the path to an image
+	 * @param  int						$width
+	 * @return ImageInterface
+	 */
+	public function thumbnail($image, $width = null, $height = null, $crop = true)
+	{
+		//If $image is a path, open it
+		if(is_string($image))
+		{
+			$image = $this->open($image);
+		}
+
+		//Get new size
+		$size = $image->getSize();
+		$newWidth = $width === null ? $size->getWidth():$width;
+		$newHeight = $height === null ? $size->getHeight():$height;
+		$newSize = new Box($newWidth, $newHeight);
+
+		//Get resize mode
+		$mode = $crop ? ImageInterface::THUMBNAIL_OUTBOUND:ImageInterface::THUMBNAIL_INSET;
+
+		//Create the thumbnail
+		return $image->thumbnail($newSize,$mode);
+	}
+
+	/**
+	 * Get the URL pattern
 	 * 
 	 * @return string
 	 */
-	public function pattern()
+	public function getPattern()
 	{
 
 		//Replace the {options} with the options regular expression
-		$parameter = preg_quote($this->app['config']['image::url_parameter']);
-		$parameter = str_replace('\{options\}','([0-9a-zA-Z\(\),\-._]+?)',$parameter);
+		$parameter = preg_quote($this->app['config']['laravel-image::url_parameter']);
+		$parameter = str_replace('\{options\}','([0-9a-zA-Z\(\),\-._]+?)?',$parameter);
 
 		return '^(.*)'.$parameter.'\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
+	}
+
+	/**
+	 * Apply a custom filter or an image
+	 *
+	 * @param  ImageInterface	$image An image instance
+	 * @param  string			$name The filter name
+	 * @return void
+	 */
+	protected function applyCustomFilter($image,$name)
+	{
+
+		//Get arguments
+		$arguments = array_slice(func_get_args(),2);
+		array_unshift($arguments,$image);
+		// Call the filter and get the return value
+		$return = call_user_func_array($this->filters[$name],$arguments);
+		// If the return value is an instance of ImageInterface,
+		// replace the current image with it.
+		if($return instanceof ImageInterface) {
+			$image = $return;
+		}
+		return $image;
+	}
+
+	/**
+	 * Apply rotate filter
+	 *
+	 * @param  ImageInterface	$image An image instance
+	 * @param  float			$degree The rotation degree
+	 * @return void
+	 */
+	protected function filterRotate($image,$degree)
+	{
+		return $image->rotate($degree);
+	}
+
+	/**
+	 * Apply grayscale filter
+	 *
+	 * @param  ImageInterface	$image An image instance
+	 * @return void
+	 */
+	protected function filterGrayscale($image)
+	{
+		$image->effects()->grayscale();
+		return $image;
+	}
+
+	/**
+	 * Apply negative filter
+	 *
+	 * @param  ImageInterface	$image An image instance
+	 * @return void
+	 */
+	protected function filterNegative($image)
+	{
+		$image->effects()->negative();
+		return $image;
+	}
+
+	/**
+	 * Apply gamma filter
+	 *
+	 * @param  ImageInterface	$image An image instance
+	 * @param  float			$gamma The gamma value
+	 * @return void
+	 */
+	protected function filterGamma($image,$gamma)
+	{
+		$image->effects()->gamma($gamma);
+		return $image;
+	}
+
+	/**
+	 * Apply blur filter
+	 *
+	 * @param  ImageInterface	$image An image instance
+	 * @param  int			$blur The amount of blur
+	 * @return void
+	 */
+	protected function filterBlur($image,$blur)
+	{
+		$image->effects()->blur($blur);
+		return $image;
+	}
+
+	/**
+	 * Apply colorize filter
+	 *
+	 * @param  ImageInterface	$image An image instance
+	 * @param  string			$color The hex value of the color
+	 * @return void
+	 */
+	protected function filterColorize($image,$color)
+	{
+		$image->effects()->colorize($color);
+		return $image;
 	}
 
 	/**
@@ -289,6 +409,32 @@ class ImageManager extends Manager {
 
 		return null;
 	}
+
+	/**
+	 * Parse the path for options
+	 *
+	 * @param  string  $path
+	 * @return array
+	 */
+	protected function parsePath($path) {
+
+		$parsedOptions = array();
+
+		if (preg_match('#'.$this->getPattern().'#i', $path, $matches))
+		{
+			//Get path and options
+			$path = $matches[1].'.'.$matches[3];
+			$pathOptions = $matches[2];
+
+			// Parse options from path
+			$parsedOptions = $this->parseOptions($pathOptions);
+		}
+
+		return array(
+			'path' => $path,
+			'options' => $parsedOptions
+		);
+	}
 	
 	/**
 	 * Parse options from url string
@@ -296,7 +442,7 @@ class ImageManager extends Manager {
 	 * @param  string  $option_params
 	 * @return array
 	 */
-	private function makeOptions($option_params) {
+	protected function parseOptions($option_params) {
 
 		$options = array();
 		
@@ -308,8 +454,8 @@ class ImageManager extends Manager {
 		{
 			if (preg_match('#([0-9]+|_)x([0-9]+|_)#i', $option, $matches))
 			{
-				$options['width'] = is_numeric($matches[1]) ? (int)$matches[1]:$matches[1];
-				$options['height'] = is_numeric($matches[2]) ? (int)$matches[2]:$matches[2];
+				$options['width'] = $matches[1] === '_' ? null:(int)$matches[1];
+				$options['height'] = $matches[2] === '_' ? null:(int)$matches[2];
 				continue;
 			}
 			else if (!preg_match('#(\w+)(?:\(([\w,.]+)\))?#i', $option, $matches))
@@ -321,10 +467,9 @@ class ImageManager extends Manager {
 
 			if(isset($this->filters[$key])) {
 				if(is_object($this->filters[$key]) && is_callable($this->filters[$key])) {
-					$options['filters'][] = array(
-						'closure' => $this->filters[$key],
-						'arguments' => isset($matches[2]) ? explode(',', $matches[2]):array()
-					);
+					$arguments = isset($matches[2]) ? explode(',', $matches[2]):array();
+					array_unshift($arguments,$key);
+					$options['filters'][] = $arguments;
 				} else if(is_array($this->filters[$key])) {
 					$options = array_merge($options,$this->filters[$key]);
 				}
@@ -338,19 +483,7 @@ class ImageManager extends Manager {
 		}
 
 		// Merge the options with defaults
-		return array_merge($this->defaultOptions, $options);
-	}
-
-	/**
-	 * Register a custom filter.
-	 *
-	 * @param  string  $name
-	 * @param  Closure|string  $filter
-	 * @return void
-	 */
-	public function filter($name, $filter)
-	{
-		$this->filters[$name] = $filter;
+		return $options;
 	}
 
 	/**
@@ -390,7 +523,7 @@ class ImageManager extends Manager {
 	 */
 	public function getDefaultDriver()
 	{
-		return $this->app['config']['image::driver'];
+		return $this->app['config']['laravel-image::driver'];
 	}
 
 	/**
@@ -401,7 +534,7 @@ class ImageManager extends Manager {
 	 */
 	public function setDefaultDriver($name)
 	{
-		$this->app['config']['image::driver'] = $name;
+		$this->app['config']['laravel-image::driver'] = $name;
 	}
 
 }

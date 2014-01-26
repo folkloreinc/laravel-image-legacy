@@ -18,16 +18,23 @@ class ImageServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('folklore/image');
+		$this->package('folklore/laravel-image');
 
-		// Listen for Image style URLs, this is how Image gets triggered
-		$image = $this->app['image'];
-		$this->app->make('router')->get('{path}', function($path) use ($image)
-		{
-			
-			return $image->generate($path);
+		$app = $this->app;
 
-		})->where('path', $image->pattern());
+		//Serve image
+		if($this->app['config']['laravel-image::serve_image']) {
+			// Create a route that match pattern
+			$app->make('router')->get('{path}', function($path) use ($app)
+			{
+				//Get the full path of an image
+				$fullPath = $app->make('path.public').'/'.$path;
+
+				//Serve the image response
+				return $app['image']->serve($fullPath);
+
+			})->where('path', $app['image']->getPattern());
+		}
 	}
 
 	/**

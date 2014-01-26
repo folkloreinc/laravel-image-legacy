@@ -37,24 +37,35 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
-	| Custom Filters only
+	| Serve image
 	|--------------------------------------------------------------------------
 	|
-	| Restrict options in URL to custom filters only. This prevent direct
+	| If true, a route will be added to catch image containing the
+	| URL parameter above.
+	|
+	*/
+	'serve_image' => true,
+
+	/*
+	|--------------------------------------------------------------------------
+	| Serve custom Filters only
+	|--------------------------------------------------------------------------
+	|
+	| Restrict options in url to custom filters only. This prevent direct
 	| manipulation of the image.
 	|
 	*/
-	'filters_only' => false,
+	'serve_custom_filters_only' => false,
 
 	/*
 	|--------------------------------------------------------------------------
 	| Write image
 	|--------------------------------------------------------------------------
 	|
-	| Write the manipulated image in the same directory as the original image
-	| so the next request will serve this static file
+	| When serving an image, write the manipulated image in the same directory
+	| as the original image so the next request will serve this static file
 	|
 	*/
 	'write_image' => false
-	
+
 );
