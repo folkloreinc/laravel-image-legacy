@@ -17,7 +17,7 @@ Laravel Image is an image manipulation package for Laravel 4 based on the [PHP I
 
 Require the package via Composer in your `composer.json`.
 ```json
-    "folklore/laravel-image": "dev-master"
+    "folklore/image": "dev-master"
 ```
 
 Run Composer to install or update the new requirement.
