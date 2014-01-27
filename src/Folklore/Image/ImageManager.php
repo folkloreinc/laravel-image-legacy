@@ -54,6 +54,9 @@ class ImageManager extends Manager {
 			$height = null;
 		}
 
+		if(isset($options['width'])) $width = $options['width'];
+		if(isset($options['height'])) $height = $options['height'];
+
 		//Get size
 		if (empty($width)) $width = '_';
 		if (empty($height)) $height = '_';
@@ -99,7 +102,7 @@ class ImageManager extends Manager {
 		$config = $this->app['config'];
 
 		// See if the referenced file exists and is an image
-		if(!file_exists($path))
+		if(!($path = $this->checkForFile($path)))
 		{
 			throw new Exception('Image file missing');
 		}
@@ -277,6 +280,21 @@ class ImageManager extends Manager {
 	}
 
 	/**
+	 * Delete a file and all manipulated files
+	 *
+	 * @param  string	$path The path to an image
+	 * @return void
+	 */
+	public function delete($path)
+	{
+		$files = $this->getAllFiles($path);
+
+		foreach($files as $file) {
+			if (!unlink($file)) throw new Exception('Unlink failed: '.$file);
+		}
+	}
+
+	/**
 	 * Get the URL pattern
 	 * 
 	 * @return string
@@ -289,6 +307,72 @@ class ImageManager extends Manager {
 		$parameter = str_replace('\{options\}','([0-9a-zA-Z\(\),\-._]+?)?',$parameter);
 
 		return '^(.*)'.$parameter.'\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
+	}
+	
+	/**
+	 * Check for file in src_dirs
+	 *
+	 * @param  string	$path Path to an original image
+	 * @return string
+	 */
+	protected function checkForFile($path) {
+
+		if (is_file($path)) {
+			return $path;
+		}
+
+		// Loop through all the directories files may be uploaded to
+		$dirs = $this->app['config']['image::src_dirs'];
+		foreach($dirs as $dir) {
+			
+			// Check that directory exists
+			if (!is_dir($dir)) continue;
+			if (substr($dir, -1, 1) != '/') $dir .= '/';
+			
+			// Look for the image in the directory
+			$src = realpath($dir.$path);
+			if (is_file($src)) {
+				return $src;
+			}
+		}
+		
+		// None found
+		return false;
+	}
+
+	/**
+	 * Get all files (including manipulated images)
+	 *
+	 * @param  string	$path Path to an original image
+	 * @return array
+	 */
+	protected function getAllFiles($path)
+	{
+
+		$images = array();
+
+		// Need to decode the url so that we can handle things like space characters
+		$path = urldecode($path);
+	
+		// Add the source image to the list
+		if(!($path = $this->checkForFile($path)))
+		{
+			return $images;
+		}
+		$images[] = $path;
+		
+		// Loop through the contents of the source directory and delete
+		// any images that contain the source directories filename and also match
+		// the Image URL pattern
+		$parts = pathinfo($path);
+		$files = scandir($parts['dirname']);
+		foreach($files as $file) {
+			if (strpos($file, $parts['filename']) === false || !preg_match('#'.$this->getPattern().'#', $file)) continue;
+			$images[] = $parts['dirname'].'/'.$file;
+		}
+
+		// Return the list
+		return $images;
 	}
 
 	/**
