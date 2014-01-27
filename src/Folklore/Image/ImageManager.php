@@ -105,7 +105,7 @@ class ImageManager extends Manager {
 		}
 
 		// Get image format
-		$format = $this->getFormat($path);
+		$format = $this->format($path);
 		if (!$format)
 		{
 			throw new Exception('Image format is not supported');
@@ -195,7 +195,7 @@ class ImageManager extends Manager {
 		}
 
 		//Get the image format
-		$format = $this->getFormat($imagePath);
+		$format = $this->format($imagePath);
 
 		//Get the image content
 		$contents = $image->get($format,array(
@@ -249,6 +249,31 @@ class ImageManager extends Manager {
 
 		//Create the thumbnail
 		return $image->thumbnail($newSize,$mode);
+	}
+
+	/**
+	 * Get the format of an image
+	 *
+	 * @param  string	$path The path to an image
+	 * @return ImageInterface
+	 */
+	public function format($path)
+	{
+
+		$format = exif_imagetype($path);
+		switch($format) {
+			case IMAGETYPE_GIF:
+				return 'gif';
+			break;
+			case IMAGETYPE_JPEG:
+				return 'jpeg';
+			break;
+			case IMAGETYPE_PNG:
+				return 'png';
+			break;
+		}
+
+		return null;
 	}
 
 	/**
@@ -362,30 +387,6 @@ class ImageManager extends Manager {
 	{
 		$image->effects()->colorize($color);
 		return $image;
-	}
-
-	/**
-	 * Get image format
-	 * 
-	 * @return string
-	 */
-	protected function getFormat($path)
-	{
-
-		$format = exif_imagetype($path);
-		switch($format) {
-			case IMAGETYPE_GIF:
-				return 'gif';
-			break;
-			case IMAGETYPE_JPEG:
-				return 'jpeg';
-			break;
-			case IMAGETYPE_PNG:
-				return 'png';
-			break;
-		}
-
-		return null;
 	}
 
 	/**
