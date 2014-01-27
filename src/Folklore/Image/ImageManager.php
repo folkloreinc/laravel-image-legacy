@@ -1,6 +1,6 @@
 <?php namespace Folklore\Image;
 
-use Folklore\LaravelImage\Exception\Exception;
+use Folklore\Image\Exception\Exception;
 
 use Illuminate\Support\Manager;
 use Illuminate\Support\Facades\Response;
@@ -74,7 +74,7 @@ class ImageManager extends Manager {
 		
 		//Create the url parameter
 		$params = implode('-',$params);
-		$parameter = str_replace('{options}',$params,$this->app['config']['laravel-image::url_parameter']);
+		$parameter = str_replace('{options}',$params,$this->app['config']['image::url_parameter']);
 
 		// Break the path apart and put back together again
 		$parts = pathinfo($src);
@@ -162,7 +162,7 @@ class ImageManager extends Manager {
 		$config = $this->app['config'];
 
 		// Make sure destination is writeable
-		if ($config['laravel-image::write_image'] && !is_writable(dirname($path)))
+		if ($config['image::write_image'] && !is_writable(dirname($path)))
 		{
 			throw new Exception('Destination is not writeable');
 		}
@@ -175,7 +175,7 @@ class ImageManager extends Manager {
 		$imagePath = $parsedPath['path'];
 
 		//If custom filters only, remove all other options
-		if($config['laravel-image::serve_custom_filters_only']) {
+		if($config['image::serve_custom_filters_only']) {
 			$parsedOptions = array_intersect_key($parsedPath['options'],array('filters'=>null));
 		} else {
 			$parsedOptions = $parsedPath['options'];
@@ -188,7 +188,7 @@ class ImageManager extends Manager {
 		$image = $this->make($imagePath,$options);
 
 		//Write the image
-		if ($config['laravel-image::write_image'])
+		if ($config['image::write_image'])
 		{
 			$destinationPath = dirname($path).'/'.basename($path);
 			$image->save($destinationPath);
@@ -285,7 +285,7 @@ class ImageManager extends Manager {
 	{
 
 		//Replace the {options} with the options regular expression
-		$parameter = preg_quote($this->app['config']['laravel-image::url_parameter']);
+		$parameter = preg_quote($this->app['config']['image::url_parameter']);
 		$parameter = str_replace('\{options\}','([0-9a-zA-Z\(\),\-._]+?)?',$parameter);
 
 		return '^(.*)'.$parameter.'\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
@@ -525,7 +525,7 @@ class ImageManager extends Manager {
 	 */
 	public function getDefaultDriver()
 	{
-		return $this->app['config']['laravel-image::driver'];
+		return $this->app['config']['image::driver'];
 	}
 
 	/**
@@ -536,7 +536,7 @@ class ImageManager extends Manager {
 	 */
 	public function setDefaultDriver($name)
 	{
-		$this->app['config']['laravel-image::driver'] = $name;
+		$this->app['config']['image::driver'] = $name;
 	}
 
 }
