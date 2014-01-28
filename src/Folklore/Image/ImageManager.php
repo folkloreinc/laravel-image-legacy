@@ -215,18 +215,23 @@ class ImageManager extends Manager {
 		//If custom filters only, remove all other options
 		if ($config['image::serve_custom_filters_only'])
 		{
-			$parsedOptions = array_intersect_key($parsedPath['options'],array('filters'=>null));
+			$parsedOptions = array_intersect_key($parsedPath['options'],array('filters'=>null,'filtersOptions'=>array()));
 		}
 		else
 		{
 			$parsedOptions = $parsedPath['options'];
 		}
 
+		//Get the filters options
+		$filtersOptions = $parsedOptions['filtersOptions'];
+		unset($parsedOptions['filtersOptions']);
+
 		// Merge all options with the following priority:
 		// Options passed as an argument to the serve method
+		// Options from the custom filters
 		// Options parsed from the URL
 		// Default options
-		$options = array_merge($this->defaultOptions,$parsedOptions,$options);
+		$options = array_merge($this->defaultOptions,$parsedOptions,$filtersOptions,$options);
 
 		//Make the image
 		$image = $this->make($imagePath,$options);
@@ -573,6 +578,7 @@ class ImageManager extends Manager {
 	protected function parseOptions($option_params) {
 
 		$options = array();
+		$filtersOptions = array();
 		
 		// These will look like: "-colorize(CC0000)-greyscale"
 		$option_params = explode('-', $option_params);
@@ -580,6 +586,7 @@ class ImageManager extends Manager {
 		// Loop through the params and make the options key value pairs
 		foreach($option_params as $option)
 		{
+			//Check if the option is a size or is properly formatted
 			if (preg_match('#([0-9]+|_)x([0-9]+|_)#i', $option, $matches))
 			{
 				$options['width'] = $matches[1] === '_' ? null:(int)$matches[1];
@@ -591,13 +598,15 @@ class ImageManager extends Manager {
 				continue;
 			}
 
+			//Check if the key is valid
 			$key = $matches[1];
-
 			if(!$this->isValidOption($key))
 			{
 				throw new ParseException('The option key "'.$key.'" does not exists.');
 			}
 
+			// If the option is a custom filter, check if it's a closure or an array.
+			// If it's an array, keep it for a future merge with options.
 			if(isset($this->filters[$key]))
 			{
 				if(is_object($this->filters[$key]) && is_callable($this->filters[$key]))
@@ -608,7 +617,7 @@ class ImageManager extends Manager {
 				}
 				else if(is_array($this->filters[$key]))
 				{
-					$options = array_merge($options,$this->filters[$key]);
+					$filtersOptions = array_merge($filtersOptions,$this->filters[$key]);
 				}
 			}
 			else
@@ -620,6 +629,8 @@ class ImageManager extends Manager {
 				}
 			}
 		}
+
+		$options['filtersOptions'] = $filtersOptions;
 
 		// Merge the options with defaults
 		return $options;
