@@ -25,7 +25,11 @@ define(function (require) {
 		
 		// Produce the image option
 		var params = [];
-		params.push(width+'x'+height);
+
+		//Add size if presents
+		if(width != '_' || height != '_') {
+			params.push(width+'x'+height);
+		}
 		
 		// Add options.
 		if (options && options instanceof Object) {
