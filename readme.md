@@ -101,3 +101,10 @@ $ php artisan config:publish folklore/laravel-image
 * [Complete documentation](https://github.com/Folkloreatelier/image/wiki)
 * [Configuration options](https://github.com/Folkloreatelier/image/wiki/Configuration-options)
 * [API reference](https://github.com/Folkloreatelier/image/wiki/Image-reference)
+
+## Roadmap
+Here are some features we would like to add in the future. Feel free to collaborate and improve this library.
+
+* Unit testing
+* More built-in filters such as Brightness and Contrast
+* Support for batch operations on multiple files
