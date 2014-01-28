@@ -65,7 +65,12 @@ class ImageManager extends Manager {
 		
 		// Produce the parameter parts
 		$params = array();
-		$params[] = $width.'x'.$height;
+
+		//Add size only if present
+		if($width != '_' || $height != '_')
+		{
+			$params[] = $width.'x'.$height;
+		}
 		
 		// Build options. If the key as no value or is equal to
 		// true, only the key is added.
