@@ -209,29 +209,17 @@ class ImageManager extends Manager {
 		}
 
 		// Parse the current path
-		$parsedPath = $this->parse($path);
+		$parsedPath = $this->parse($path, array(
+			'custom_filters_only' => $config['image::serve_custom_filters_only']
+		));
 		$imagePath = $parsedPath['path'];
-
-		//If custom filters only, remove all other options
-		if ($config['image::serve_custom_filters_only'])
-		{
-			$parsedOptions = array_intersect_key($parsedPath['options'],array('filters'=>null,'filtersOptions'=>array()));
-		}
-		else
-		{
-			$parsedOptions = $parsedPath['options'];
-		}
-
-		//Get the filters options
-		$filtersOptions = $parsedOptions['filtersOptions'];
-		unset($parsedOptions['filtersOptions']);
+		$parsedOptions = $parsedPath['options'];
 
 		// Merge all options with the following priority:
 		// Options passed as an argument to the serve method
-		// Options from the custom filters
 		// Options parsed from the URL
 		// Default options
-		$options = array_merge($this->defaultOptions,$parsedOptions,$filtersOptions,$options);
+		$options = array_merge($this->defaultOptions,$parsedOptions,$options);
 
 		//Make the image
 		$image = $this->make($imagePath,$options);
@@ -355,15 +343,19 @@ class ImageManager extends Manager {
 		return '^(.*)'.$parameter.'\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
 	}
 
-
-
 	/**
-	 * Parse the path for options
+	 * Parse the path for the original path of the image and options
 	 *
-	 * @param  string  $path
+	 * @param  string	$path A path to parse
+	 * @param  array	$config Configuration options for the parsing
 	 * @return array
 	 */
-	public function parse($path) {
+	public function parse($path, $config = array()) {
+
+		//Default config
+		$config = array_merge(array(
+			'custom_filters_only' => false
+		),$config);
 
 		$parsedOptions = array();
 
@@ -374,13 +366,103 @@ class ImageManager extends Manager {
 			$pathOptions = $matches[2];
 
 			// Parse options from path
-			$parsedOptions = $this->parseOptions($pathOptions);
+			$parsedOptions = $this->parseOptions($pathOptions, $config);
 		}
 
 		return array(
 			'path' => $path,
 			'options' => $parsedOptions
 		);
+	}
+	
+	/**
+	 * Parse options from url string
+	 *
+	 * @param  string	$option_path The path contaning all the options
+	 * @param  array	$config Configuration options for the parsing
+	 * @return array
+	 */
+	protected function parseOptions($option_path, $config = array()) {
+
+		//Default config
+		$config = array_merge(array(
+			'custom_filters_only' => false
+		),$config);
+
+		$options = array();
+		
+		// These will look like: "-colorize(CC0000)-greyscale"
+		$option_path_parts = explode('-', $option_path);
+		
+		// Loop through the params and make the options key value pairs
+		foreach($option_path_parts as $option)
+		{
+			//Check if the option is a size or is properly formatted
+			if (!$config['custom_filters_only'] && preg_match('#([0-9]+|_)x([0-9]+|_)#i', $option, $matches))
+			{
+				$options['width'] = $matches[1] === '_' ? null:(int)$matches[1];
+				$options['height'] = $matches[2] === '_' ? null:(int)$matches[2];
+				continue;
+			}
+			else if (!preg_match('#(\w+)(?:\(([\w,.]+)\))?#i', $option, $matches))
+			{
+				continue;
+			}
+
+			//Check if the key is valid
+			$key = $matches[1];
+			if(!$this->isValidOption($key))
+			{
+				throw new ParseException('The option key "'.$key.'" does not exists.');
+			}
+
+			// If the option is a custom filter, check if it's a closure or an array.
+			// If it's an array, merge it with options
+			if(isset($this->filters[$key]))
+			{
+				if(is_object($this->filters[$key]) && is_callable($this->filters[$key]))
+				{
+					$arguments = isset($matches[2]) ? explode(',', $matches[2]):array();
+					array_unshift($arguments,$key);
+					$options['filters'][] = $arguments;
+				}
+				else if(is_array($this->filters[$key]))
+				{
+					$options = array_merge($options,$this->filters[$key]);
+				}
+			}
+			else if(!$config['custom_filters_only'])
+			{
+				if(isset($matches[2])) {
+					$options[$key] = strpos($matches[2],',') === true ? explode(',', $matches[2]):$matches[2];
+				} else {
+					$options[$key] = true;
+				}
+			} else {
+				throw new ParseException('The option key "'.$key.'" does not exists.');
+			}
+		}
+
+		// Merge the options with defaults
+		return $options;
+	}
+
+	/**
+	 * Check if an option key is valid by checking if a
+	 * $this->filterName() method is present or if a custom filter
+	 * is registered.
+	 *
+	 * @param  string  $key Option key to check
+	 * @return boolean
+	 */
+	protected function isValidOption($key)
+	{
+		$method = 'filter'.ucfirst($key);
+		if(method_exists($this,$method) || isset($this->filters[$key]))
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -569,91 +651,6 @@ class ImageManager extends Manager {
 		}
 
 		return null;
-	}
-	
-	/**
-	 * Parse options from url string
-	 *
-	 * @param  string  $option_params
-	 * @return array
-	 */
-	protected function parseOptions($option_params) {
-
-		$options = array();
-		$filtersOptions = array();
-		
-		// These will look like: "-colorize(CC0000)-greyscale"
-		$option_params = explode('-', $option_params);
-		
-		// Loop through the params and make the options key value pairs
-		foreach($option_params as $option)
-		{
-			//Check if the option is a size or is properly formatted
-			if (preg_match('#([0-9]+|_)x([0-9]+|_)#i', $option, $matches))
-			{
-				$options['width'] = $matches[1] === '_' ? null:(int)$matches[1];
-				$options['height'] = $matches[2] === '_' ? null:(int)$matches[2];
-				continue;
-			}
-			else if (!preg_match('#(\w+)(?:\(([\w,.]+)\))?#i', $option, $matches))
-			{
-				continue;
-			}
-
-			//Check if the key is valid
-			$key = $matches[1];
-			if(!$this->isValidOption($key))
-			{
-				throw new ParseException('The option key "'.$key.'" does not exists.');
-			}
-
-			// If the option is a custom filter, check if it's a closure or an array.
-			// If it's an array, keep it for a future merge with options.
-			if(isset($this->filters[$key]))
-			{
-				if(is_object($this->filters[$key]) && is_callable($this->filters[$key]))
-				{
-					$arguments = isset($matches[2]) ? explode(',', $matches[2]):array();
-					array_unshift($arguments,$key);
-					$options['filters'][] = $arguments;
-				}
-				else if(is_array($this->filters[$key]))
-				{
-					$filtersOptions = array_merge($filtersOptions,$this->filters[$key]);
-				}
-			}
-			else
-			{
-				if(isset($matches[2])) {
-					$options[$key] = strpos($matches[2],',') === true ? explode(',', $matches[2]):$matches[2];
-				} else {
-					$options[$key] = true;
-				}
-			}
-		}
-
-		$options['filtersOptions'] = $filtersOptions;
-
-		// Merge the options with defaults
-		return $options;
-	}
-
-	/**
-	 * Check if an option key is valid by checking if a
-	 * $this->filterName() method is present or if a custom filter
-	 * is registered.
-	 *
-	 * @param  string  $key Option key to check
-	 * @return boolean
-	 */
-	protected function isValidOption($key)
-	{
-		$method = 'filter'.ucfirst($key);
-		if(method_exists($this,$method) || isset($this->filters[$key]))
-		{
-			return true;
-		}
-		return false;
 	}
 
 	/**
