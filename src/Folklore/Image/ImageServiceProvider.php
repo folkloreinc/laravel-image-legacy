@@ -2,6 +2,10 @@
 
 use Illuminate\Support\ServiceProvider;
 
+use Folklore\Image\Exception\Exception;
+use Folklore\Image\Exception\FileMissingException;
+use Folklore\Image\Exception\ParseException;
+
 class ImageServiceProvider extends ServiceProvider {
 
 	/**
@@ -31,8 +35,20 @@ class ImageServiceProvider extends ServiceProvider {
 				//Get the full path of an image
 				$fullPath = $app->make('path.public').'/'.$path;
 
-				//Serve the image response
-				return $app['image']->serve($fullPath);
+				// Serve the image response. If there is an file missing
+				// exception, throw a 404.
+				try
+				{
+					return $app['image']->serve($fullPath);
+				}
+				catch(ParseException $e)
+				{
+					return $app->abort(404);
+				}
+				catch(FileMissingException $e)
+				{
+					return $app->abort(404);
+				}
 
 			})->where('path', $app['image']->getPattern());
 		}

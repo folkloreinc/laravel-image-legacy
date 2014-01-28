@@ -1,6 +1,9 @@
 <?php namespace Folklore\Image;
 
 use Folklore\Image\Exception\Exception;
+use Folklore\Image\Exception\FileMissingException;
+use Folklore\Image\Exception\ParseException;
+use Folklore\Image\Exception\FormatException;
 
 use Illuminate\Support\Manager;
 use Illuminate\Support\Facades\Response;
@@ -47,29 +50,31 @@ class ImageManager extends Manager {
 		if (empty($src)) return;
 
 		//If width parameter is an array, use it as options
-		if(is_array($width))
+		if (is_array($width))
 		{
 			$options = $width;
 			$width = null;
 			$height = null;
 		}
 
-		if(isset($options['width'])) $width = $options['width'];
-		if(isset($options['height'])) $height = $options['height'];
-
 		//Get size
+		if (isset($options['width'])) $width = $options['width'];
+		if (isset($options['height'])) $height = $options['height'];
 		if (empty($width)) $width = '_';
 		if (empty($height)) $height = '_';
 		
-		// Produce the croppa syntax
+		// Produce the parameter parts
 		$params = array();
 		$params[] = $width.'x'.$height;
 		
-		// Add options.  If the key has no arguments (like resize), the key will be like [1]
-		if ($options && is_array($options)) {
-			foreach($options as $key => $val) {
+		// Build options. If the key as no value or is equal to
+		// true, only the key is added.
+		if ($options && is_array($options))
+		{
+			foreach($options as $key => $val)
+			{
 				if (is_numeric($key)) $params[] = $val;
-				else if ($val === true) $params[] = $key;
+				else if ($val === true || $val === null) $params[] = $key;
 				elseif (is_array($val)) $params[] = $key.'('.implode(',',$val).')';
 				else $params[] = $key.'('.$val.')';
 			}
@@ -104,44 +109,72 @@ class ImageManager extends Manager {
 		// See if the referenced file exists and is an image
 		if(!($path = $this->checkForFile($path)))
 		{
-			throw new Exception('Image file missing');
+			throw new FileMissingException('Image file missing');
 		}
 
 		// Get image format
 		$format = $this->format($path);
 		if (!$format)
 		{
-			throw new Exception('Image format is not supported');
+			throw new FormatException('Image format is not supported');
 		}
+
+		// Check if all filters exists
+		if(isset($options['filters']) && sizeof($options['filters']))
+		{
+			foreach($options['filters'] as $filter)
+			{
+				$filter = (array)$filter;
+				$key = $filter[0];
+				if(!$this->filters[$key])
+				{
+					throw new Exception('Custom filter "'.$key.'" doesn\'t exists.');
+				}
+			}
+		}
+
+		// Increase memory limit, cause some images require a lot to resize
+		ini_set('memory_limit', '128M');
 
 		//Open the image
 		$image = $this->open($path);
 
-		//Get options
+		//Merge options with the default
 		$options = array_merge($this->defaultOptions, $options);
 
-		// Apply all custom filters
-		if(isset($options['filters']) && sizeof($options['filters'])) {
-			foreach($options['filters'] as $filter) {
+		// Apply the custom filter on the image. Replace the
+		// current image with the return value.
+		if(isset($options['filters']) && sizeof($options['filters']))
+		{
+			foreach($options['filters'] as $filter)
+			{
 				$arguments = (array)$filter;
 				array_unshift($arguments,$image);
+
 				$image = call_user_func_array(array($this,'applyCustomFilter'), $arguments);
 			}
 		}
 		
-		//If width and height are not set, skip resize
+		// Resize only if one or both width and height values are set.
 		if($options['width'] !== null || $options['height'] !== null)
 		{
 			$crop = isset($options['crop']) ? $options['crop']:false;
+
 			$image = $this->thumbnail($image,$options['width'],$options['height'],$crop);
 		}
 
-		//Apply built-in filters
-		foreach($options as $key => $arguments) {
+		// Apply built-in filters by checking fi a method $this->filterName
+		// exists. Also if the value of the option is false, the filter
+		// is ignored.
+		foreach($options as $key => $arguments)
+		{
 			$method = 'filter'.ucfirst($key);
-			if($arguments !== false && method_exists($this,$method)) {
+
+			if($arguments !== false && method_exists($this,$method))
+			{
 				$arguments = (array)$arguments;
 				array_unshift($arguments,$image);
+
 				$image = call_user_func_array(array($this,$method),$arguments);
 			}
 		}
@@ -158,7 +191,7 @@ class ImageManager extends Manager {
 	 * @param  array	$options
 	 * @return string
 	 */
-	public function serve($path,$options = array())
+	public function serve($path, $options = array())
 	{
 
 		//Get app config
@@ -170,21 +203,24 @@ class ImageManager extends Manager {
 			throw new Exception('Destination is not writeable');
 		}
 
-		// Increase memory limit, cause some images require a lot to resize
-		ini_set('memory_limit', '128M');
-
 		// Parse the current path
 		$parsedPath = $this->parsePath($path);
 		$imagePath = $parsedPath['path'];
 
 		//If custom filters only, remove all other options
-		if($config['image::serve_custom_filters_only']) {
+		if ($config['image::serve_custom_filters_only'])
+		{
 			$parsedOptions = array_intersect_key($parsedPath['options'],array('filters'=>null));
-		} else {
+		}
+		else
+		{
 			$parsedOptions = $parsedPath['options'];
 		}
 
-		//Merge with defaults and options argument
+		// Merge all options with the following priority:
+		// Options passed as an argument to the serve method
+		// Options parsed from the URL
+		// Default options
 		$options = array_merge($this->defaultOptions,$parsedOptions,$options);
 
 		//Make the image
@@ -361,9 +397,8 @@ class ImageManager extends Manager {
 		}
 		$images[] = $path;
 		
-		// Loop through the contents of the source directory and delete
-		// any images that contain the source directories filename and also match
-		// the Image URL pattern
+		// Loop through the contents of the source directory and get
+		// all files that match the pattern
 		$parts = pathinfo($path);
 		$files = scandir($parts['dirname']);
 		foreach($files as $file) {
@@ -380,21 +415,22 @@ class ImageManager extends Manager {
 	 *
 	 * @param  ImageInterface	$image An image instance
 	 * @param  string			$name The filter name
-	 * @return void
+	 * @return ImageInterface|array
 	 */
 	protected function applyCustomFilter(ImageInterface $image, $name)
 	{
-
-		//Get arguments
+		//Get all arguments following $name and add $image as the first
+		//arguments then call the filter closure
 		$arguments = array_slice(func_get_args(),2);
 		array_unshift($arguments,$image);
-		// Call the filter and get the return value
 		$return = call_user_func_array($this->filters[$name],$arguments);
+
 		// If the return value is an instance of ImageInterface,
 		// replace the current image with it.
 		if($return instanceof ImageInterface) {
 			$image = $return;
 		}
+
 		return $image;
 	}
 
@@ -485,6 +521,7 @@ class ImageManager extends Manager {
 			case 'gif':
 				return 'image/gif';
 			break;
+			case 'jpg':
 			case 'jpeg':
 				return 'image/jpeg';
 			break;
@@ -551,15 +588,26 @@ class ImageManager extends Manager {
 
 			$key = $matches[1];
 
-			if(isset($this->filters[$key])) {
-				if(is_object($this->filters[$key]) && is_callable($this->filters[$key])) {
+			if(!$this->isValidOption($key))
+			{
+				throw new ParseException('The option key "'.$key.'" does not exists.');
+			}
+
+			if(isset($this->filters[$key]))
+			{
+				if(is_object($this->filters[$key]) && is_callable($this->filters[$key]))
+				{
 					$arguments = isset($matches[2]) ? explode(',', $matches[2]):array();
 					array_unshift($arguments,$key);
 					$options['filters'][] = $arguments;
-				} else if(is_array($this->filters[$key])) {
+				}
+				else if(is_array($this->filters[$key]))
+				{
 					$options = array_merge($options,$this->filters[$key]);
 				}
-			} else {
+			}
+			else
+			{
 				if(isset($matches[2])) {
 					$options[$key] = strpos($matches[2],',') === true ? explode(',', $matches[2]):$matches[2];
 				} else {
@@ -570,6 +618,24 @@ class ImageManager extends Manager {
 
 		// Merge the options with defaults
 		return $options;
+	}
+
+	/**
+	 * Check if an option key is valid by checking if a
+	 * $this->filterName() method is present or if a custom filter
+	 * is registered.
+	 *
+	 * @param  string  $key Option key to check
+	 * @return boolean
+	 */
+	protected function isValidOption($key)
+	{
+		$method = 'filter'.ucfirst($key);
+		if(method_exists($this,$method) || isset($this->filters[$key]))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	/**
