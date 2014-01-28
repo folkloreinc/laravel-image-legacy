@@ -209,7 +209,7 @@ class ImageManager extends Manager {
 		}
 
 		// Parse the current path
-		$parsedPath = $this->parsePath($path);
+		$parsedPath = $this->parse($path);
 		$imagePath = $parsedPath['path'];
 
 		//If custom filters only, remove all other options
@@ -353,6 +353,34 @@ class ImageManager extends Manager {
 		$parameter = str_replace('\{options\}','([0-9a-zA-Z\(\),\-._]+?)?',$parameter);
 
 		return '^(.*)'.$parameter.'\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
+	}
+
+
+
+	/**
+	 * Parse the path for options
+	 *
+	 * @param  string  $path
+	 * @return array
+	 */
+	public function parse($path) {
+
+		$parsedOptions = array();
+
+		if (preg_match('#'.$this->getPattern().'#i', $path, $matches))
+		{
+			//Get path and options
+			$path = $matches[1].'.'.$matches[3];
+			$pathOptions = $matches[2];
+
+			// Parse options from path
+			$parsedOptions = $this->parseOptions($pathOptions);
+		}
+
+		return array(
+			'path' => $path,
+			'options' => $parsedOptions
+		);
 	}
 	
 	/**
@@ -541,32 +569,6 @@ class ImageManager extends Manager {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Parse the path for options
-	 *
-	 * @param  string  $path
-	 * @return array
-	 */
-	protected function parsePath($path) {
-
-		$parsedOptions = array();
-
-		if (preg_match('#'.$this->getPattern().'#i', $path, $matches))
-		{
-			//Get path and options
-			$path = $matches[1].'.'.$matches[3];
-			$pathOptions = $matches[2];
-
-			// Parse options from path
-			$parsedOptions = $this->parseOptions($pathOptions);
-		}
-
-		return array(
-			'path' => $path,
-			'options' => $parsedOptions
-		);
 	}
 	
 	/**
