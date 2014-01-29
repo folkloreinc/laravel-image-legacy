@@ -107,4 +107,5 @@ Here are some features we would like to add in the future. Feel free to collabor
 
 * Unit testing
 * More built-in filters such as Brightness and Contrast
+* Better image serving with more options and configuration
 * Support for batch operations on multiple files
