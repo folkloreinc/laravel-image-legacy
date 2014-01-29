@@ -25,6 +25,12 @@
     "require-dev": {
         "orchestra/testbench": "2.1.*"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git://github.com/orchestral/phpseclib.git"
+        }
+    ],
     "autoload": {
         "classmap": [
             
