@@ -91,11 +91,19 @@ class ImageManager extends Manager {
 
 		// Break the path apart and put back together again
 		$parts = pathinfo($src);
-		$host = '//'.$this->app->make('request')->getHttpHost();
-		$url = $host .$parts['dirname'].'/'.$parts['filename'].$parameter;
-		if (!empty($parts['extension'])) $url .= '.'.$parts['extension'];
+		$host = isset($options['host']) ? $options['host']:$this->app['config']['image::host'];
+		$dir = trim($parts['dirname'], '/');
 
-		return $url;
+		$path = array();
+		$path[] = rtrim($host, '/');
+		if (!empty($dir)) $path[] = $dir;
+
+		$filename = array();
+		$filename[] = $parts['filename'].$parameter;
+		if (!empty($parts['extension'])) $filename[] = $parts['extension'];
+		$path[] = implode('.',$filename);
+
+		return implode('/',$path);
 
 	}
 
@@ -190,42 +198,51 @@ class ImageManager extends Manager {
 	}
 
 	/**
-	 * Serve the image
+	 * Serve an image from an url
 	 *
 	 * @param  string	$path
-	 * @param  array	$options
-	 * @return string
+	 * @param  array	$config
+	 * @return Illuminate\Support\Facades\Response
 	 */
-	public function serve($path, $options = array())
+	public function serve($path, $config = array())
 	{
 
-		//Get app config
-		$config = $this->app['config'];
-
-		// Make sure destination is writeable
-		if ($config['image::write_image'] && !is_writable(dirname($path)))
-		{
-			throw new Exception('Destination is not writeable');
-		}
+		$config = array_merge(array(
+			'custom_filters_only' => false,
+			'write_image' => false,
+			'options' => array()
+		),$config);
 
 		// Parse the current path
 		$parsedPath = $this->parse($path, array(
-			'custom_filters_only' => $config['image::serve_custom_filters_only']
+			'custom_filters_only' => $config['custom_filters_only']
 		));
 		$imagePath = $parsedPath['path'];
 		$parsedOptions = $parsedPath['options'];
+
+		// See if the referenced file exists and is an image
+		if(!($imagePath = $this->checkForFile($imagePath)))
+		{
+			throw new FileMissingException('Image file missing');
+		}
+
+		// Make sure destination is writeable
+		if ($config['write_image'] && !is_writable(dirname($path)))
+		{
+			throw new Exception('Destination is not writeable');
+		}
 
 		// Merge all options with the following priority:
 		// Options passed as an argument to the serve method
 		// Options parsed from the URL
 		// Default options
-		$options = array_merge($this->defaultOptions,$parsedOptions,$options);
+		$options = array_merge($this->defaultOptions,$parsedOptions,$config['options']);
 
 		//Make the image
 		$image = $this->make($imagePath,$options);
 
 		//Write the image
-		if ($config['image::write_image'])
+		if ($config['write_image'])
 		{
 			$destinationPath = dirname($path).'/'.basename($path);
 			$image->save($destinationPath);
@@ -297,7 +314,7 @@ class ImageManager extends Manager {
 	public function format($path)
 	{
 
-		$format = exif_imagetype($path);
+		$format = @exif_imagetype($path);
 		switch($format) {
 			case IMAGETYPE_GIF:
 				return 'gif';
@@ -321,7 +338,22 @@ class ImageManager extends Manager {
 	 */
 	public function delete($path)
 	{
-		$files = $this->getAllFiles($path);
+		$files = $this->getFiles($path);
+
+		foreach($files as $file) {
+			if (!unlink($file)) throw new Exception('Unlink failed: '.$file);
+		}
+	}
+
+	/**
+	 * Delete all manipulated files
+	 *
+	 * @param  string	$path The path to an image
+	 * @return void
+	 */
+	public function deleteManipulated($path)
+	{
+		$files = $this->getFiles($path, false);
 
 		foreach($files as $file) {
 			if (!unlink($file)) throw new Exception('Unlink failed: '.$file);
@@ -457,6 +489,8 @@ class ImageManager extends Manager {
 	 */
 	protected function isValidOption($key)
 	{
+		if(in_array($key,array('crop','width','height'))) return true;
+
 		$method = 'filter'.ucfirst($key);
 		if(method_exists($this,$method) || isset($this->filters[$key]))
 		{
@@ -502,20 +536,23 @@ class ImageManager extends Manager {
 	 * @param  string	$path Path to an original image
 	 * @return array
 	 */
-	protected function getAllFiles($path)
+	protected function getFiles($path, $withOriginal = true)
 	{
 
 		$images = array();
-
-		// Need to decode the url so that we can handle things like space characters
-		$path = urldecode($path);
 	
-		// Add the source image to the list
+		//Check path
+		$path = urldecode($path);
 		if(!($path = $this->checkForFile($path)))
 		{
 			return $images;
 		}
-		$images[] = $path;
+
+		// Add the source image to the list
+		if($withOriginal)
+		{
+			$images[] = $path;
+		}
 		
 		// Loop through the contents of the source directory and get
 		// all files that match the pattern
