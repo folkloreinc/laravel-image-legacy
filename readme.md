@@ -13,7 +13,7 @@ To create a 300x300 version of this image in black and white, you use the URL:
 
     /uploads/photo-image(300x300-crop-grayscale).jpg
     
-To help you generate the URL to an image, you can use the `Image::url()` function
+To help you generate the URL to an image, you can use the `Image::url()` method
 
 ```php
 Image::url('/uploads/photo.jpg',300,300,array('crop','grayscale'));
@@ -107,5 +107,6 @@ Here are some features we would like to add in the future. Feel free to collabor
 
 * Crop position
 * More built-in filters such as Brightness and Contrast
-* Better image serving with more options and configuration
+* More configuration when serving images
+* Artisan command to manipulate images
 * Support for batch operations on multiple files
