@@ -105,7 +105,7 @@ $ php artisan config:publish folklore/laravel-image
 ## Roadmap
 Here are some features we would like to add in the future. Feel free to collaborate and improve this library.
 
-* Unit testing
+* Crop position
 * More built-in filters such as Brightness and Contrast
 * Better image serving with more options and configuration
 * Support for batch operations on multiple files
