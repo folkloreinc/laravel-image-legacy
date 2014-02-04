@@ -35,11 +35,11 @@ class ImageServiceProvider extends ServiceProvider {
 				//Get the full path of an image
 				$fullPath = $app->make('path.public').'/'.$path;
 
-				// Serve the image response. If there is an file missing
-				// exception, throw a 404.
+				// Serve the image response. If there is a file missing
+				// exception or parse exception, throw a 404.
 				try
 				{
-					$response = $app['image']->serve($fullPath,array(
+					$response = $app['image']->serve($fullPath, array(
 						'write_image' => $app['config']['image::write_image'],
 						'custom_filters_only' => $app['config']['image::serve_custom_filters_only']
 					));
