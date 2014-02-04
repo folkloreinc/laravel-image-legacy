@@ -3,6 +3,15 @@
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Folklore\Image\Exception\FormatException;
 
+//Add getimagesizefromstring for PHP 5.3
+if (!function_exists('getimagesizefromstring')) {
+    function getimagesizefromstring($data)
+    {
+        $uri = 'data://application/octet-stream;base64,' . base64_encode($data);
+        return getimagesize($uri);
+    }
+}
+
 class ImageTest extends Orchestra\Testbench\TestCase {
 
     protected $imagePath = '/image.jpg';
