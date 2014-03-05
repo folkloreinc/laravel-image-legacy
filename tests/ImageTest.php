@@ -31,33 +31,56 @@ class ImageTest extends Orchestra\Testbench\TestCase {
     public function testURLisValid()
     {
 
-        $options = array(
-            'grayscale',
-            'crop' => true,
-            'colorize' => 'FFCC00'
+        $patterns = array(
+            array(
+                'url_parameter' => null
+            ),
+            array(
+                'url_parameter' => '-image({options})',
+                'url_parameter_separator' => '-'
+            ),
+            array(
+                'url_parameter' => '-i-{options}',
+                'url_parameter_separator' => '-'
+            ),
+            array(
+                'url_parameter' => '/i/{options}',
+                'url_parameter_separator' => '/'
+            )
         );
-        $url = Image::url($this->imagePath, 300, 300, $options);
 
-        //Check against pattern
-        $urlMatch = preg_match('#'.Image::getPattern().'#',$url,$matches);
-        $this->assertEquals($urlMatch,1);
+        foreach($patterns as $pattern) {
 
-        //Check path
-        $parsedPath = Image::parse($url);
-        $this->assertEquals($parsedPath['path'],$this->imagePath);
+            $options = array(
+                'grayscale',
+                'crop' => true,
+                'colorize' => 'FFCC00'
+            );
+            $url = Image::url($this->imagePath, 300, 300, array_merge($pattern,$options));
 
-        //Check options
-        foreach($options as $key => $value) {
-            if(is_numeric($key)) {
-                $this->assertTrue($parsedPath['options'][$value]);
-            } else {
-                $this->assertEquals($parsedPath['options'][$key], $value);
+            //Check against pattern
+            $urlMatch = preg_match('#'.Image::pattern($pattern['url_parameter']).'#',$url,$matches);
+            $this->assertEquals($urlMatch,1);
+
+            //Check path
+            $parsedPath = Image::parse($url,$pattern);
+            $this->assertEquals($parsedPath['path'],$this->imagePath);
+
+            //Check options
+            foreach($options as $key => $value) {
+                if(is_numeric($key)) {
+                    $this->assertTrue($parsedPath['options'][$value]);
+                } else {
+                    $this->assertEquals($parsedPath['options'][$key], $value);
+                }
             }
+
         }
     }
 
     public function testServeNoResize()
     {
+
         $url = Image::url($this->imagePath,null,null,array(
             'grayscale'
         ));
