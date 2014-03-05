@@ -662,6 +662,7 @@ class ImageManager extends Manager {
 	 */
 	protected function filterColorize(ImageInterface $image, $color)
 	{
+		$color = new Color($color);
 		$image->effects()->colorize($color);
 		return $image;
 	}
