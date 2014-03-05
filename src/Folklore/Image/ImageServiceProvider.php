@@ -39,10 +39,7 @@ class ImageServiceProvider extends ServiceProvider {
 				// exception or parse exception, throw a 404.
 				try
 				{
-					$response = $app['image']->serve($fullPath, array(
-						'write_image' => $app['config']['image::write_image'],
-						'custom_filters_only' => $app['config']['image::serve_custom_filters_only']
-					));
+					$response = $app['image']->serve($fullPath);
 
 					return $response;
 				}
@@ -55,7 +52,7 @@ class ImageServiceProvider extends ServiceProvider {
 					return $app->abort(404);
 				}
 
-			})->where('path', $app['image']->getPattern());
+			})->where('path', $app['image']->pattern());
 		}
 	}
 

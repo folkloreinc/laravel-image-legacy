@@ -57,6 +57,10 @@ class ImageManager extends Manager {
 			$height = null;
 		}
 
+		$url_parameter = isset($options['url_parameter']) ? $options['url_parameter']:$this->app['config']['image::url_parameter'];
+		$url_parameter_separator = isset($options['url_parameter_separator']) ? $options['url_parameter_separator']:$this->app['config']['image::url_parameter_separator'];
+		unset($options['url_parameter'],$options['url_parameter_separator']);
+
 		//Get size
 		if (isset($options['width'])) $width = $options['width'];
 		if (isset($options['height'])) $height = $options['height'];
@@ -86,8 +90,8 @@ class ImageManager extends Manager {
 		}
 		
 		//Create the url parameter
-		$params = implode('-',$params);
-		$parameter = str_replace('{options}',$params,$this->app['config']['image::url_parameter']);
+		$params = implode($url_parameter_separator, $params);
+		$parameter = str_replace('{options}', $params, $url_parameter);
 
 		// Break the path apart and put back together again
 		$parts = pathinfo($src);
@@ -206,10 +210,10 @@ class ImageManager extends Manager {
 	 */
 	public function serve($path, $config = array())
 	{
-
+		//Merge config with defaults
 		$config = array_merge(array(
-			'custom_filters_only' => false,
-			'write_image' => false,
+			'custom_filters_only' => $this->app['config']['image::serve_custom_filters_only'],
+			'write_image' => $this->app['config']['image::write_image'],
 			'options' => array()
 		),$config);
 
@@ -365,12 +369,12 @@ class ImageManager extends Manager {
 	 * 
 	 * @return string
 	 */
-	public function getPattern()
+	public function pattern($parameter = null)
 	{
 
 		//Replace the {options} with the options regular expression
-		$parameter = preg_quote($this->app['config']['image::url_parameter']);
-		$parameter = str_replace('\{options\}','([0-9a-zA-Z\(\),\-._]+?)?',$parameter);
+		$parameter = !isset($parameter) ? preg_quote($this->app['config']['image::url_parameter']):preg_quote($parameter);
+		$parameter = str_replace('\{options\}','([0-9a-zA-Z\(\),\-/._]+?)?',$parameter);
 
 		return '^(.*)'.$parameter.'\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
 	}
@@ -386,12 +390,14 @@ class ImageManager extends Manager {
 
 		//Default config
 		$config = array_merge(array(
-			'custom_filters_only' => false
+			'custom_filters_only' => false,
+			'url_parameter' => null,
+			'url_parameter_separator' => $this->app['config']['image::url_parameter_separator']
 		),$config);
 
 		$parsedOptions = array();
 
-		if (preg_match('#'.$this->getPattern().'#i', $path, $matches))
+		if (preg_match('#'.$this->pattern($config['url_parameter']).'#i', $path, $matches))
 		{
 			//Get path and options
 			$path = $matches[1].'.'.$matches[3];
@@ -418,13 +424,14 @@ class ImageManager extends Manager {
 
 		//Default config
 		$config = array_merge(array(
-			'custom_filters_only' => false
+			'custom_filters_only' => false,
+			'url_parameter_separator' => $this->app['config']['image::url_parameter_separator']
 		),$config);
 
 		$options = array();
 		
-		// These will look like: "-colorize(CC0000)-greyscale"
-		$option_path_parts = explode('-', $option_path);
+		// These will look like (depends on the url_parameter_separator): "-colorize(CC0000)-greyscale"
+		$option_path_parts = explode($config['url_parameter_separator'], $option_path);
 		
 		// Loop through the params and make the options key value pairs
 		foreach($option_path_parts as $option)
@@ -559,7 +566,7 @@ class ImageManager extends Manager {
 		$parts = pathinfo($path);
 		$files = scandir($parts['dirname']);
 		foreach($files as $file) {
-			if (strpos($file, $parts['filename']) === false || !preg_match('#'.$this->getPattern().'#', $file)) continue;
+			if (strpos($file, $parts['filename']) === false || !preg_match('#'.$this->pattern().'#', $file)) continue;
 			$images[] = $parts['dirname'].'/'.$file;
 		}
 

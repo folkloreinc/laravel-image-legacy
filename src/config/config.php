@@ -59,6 +59,21 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
+	| URL parameter separator
+	|--------------------------------------------------------------------------
+	|
+	| The URL parameter separator is used to build the parameters string
+	| that will replace {options} in url_parameter
+	|
+	| Default: -
+	|
+	| Example: /uploads/photo-image(300x300-grayscale).jpg
+	|
+	*/
+	'url_parameter_separator' => '-',
+
+	/*
+	|--------------------------------------------------------------------------
 	| Serve image
 	|--------------------------------------------------------------------------
 	|
@@ -88,6 +103,6 @@ return array(
 	| as the original image so the next request will serve this static file
 	|
 	*/
-	'write_image' => true
+	'write_image' => false
 
 );
