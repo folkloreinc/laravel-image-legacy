@@ -94,7 +94,7 @@ $ composer update
 **5-** Publish the configuration file
 
 ```bash
-$ php artisan config:publish folklore/laravel-image
+$ php artisan config:publish folklore/image
 ```
 
 ## Documentation
