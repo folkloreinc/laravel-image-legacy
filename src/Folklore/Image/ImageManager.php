@@ -256,9 +256,13 @@ class ImageManager extends Manager {
 		$format = $this->format($imagePath);
 
 		//Get the image content
-		$contents = $image->get($format,array(
-			'quality' => $options['quality']
-		));
+		$saveOptions = array();
+		if($format === 'jpeg') {
+			$saveOptions['jpeg_quality'] = $options['quality'];
+		} else if($format === 'png') {
+			$saveOptions['png_compression_level'] = round($options['quality']/100 * 9);
+		}
+		$contents = $image->get($format,$saveOptions);
 
 		//Create the response
 		$mime = $this->getMimeFromFormat($format);
