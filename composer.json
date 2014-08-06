@@ -20,10 +20,10 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.2.*",
-        "imagine/imagine": "~0.6.0"
+        "imagine/imagine": "0.6.*"
     },
     "require-dev": {
-        "orchestra/testbench": "2.1.*"
+        "orchestra/testbench": "2.2.*"
     },
     "repositories": [
         {
