@@ -54,7 +54,7 @@ $thumbnail->save('/path/to/the/thumbnail.jpg');
 #### Dependencies:
 
 * [Laravel 4.x](https://github.com/laravel/laravel)
-* [Imagine 0.5.x](https://github.com/avalanche123/Imagine)
+* [Imagine 0.6.x](https://github.com/avalanche123/Imagine)
 
 #### Server Requirements:
 
@@ -67,7 +67,7 @@ $thumbnail->save('/path/to/the/thumbnail.jpg');
 ```json
 {
 	"require": {
-		"folklore/image": "dev-master"
+		"folklore/image": "0.1.*"
 	}
 }
 ```
@@ -98,6 +98,12 @@ $ composer update
 
 ```bash
 $ php artisan config:publish folklore/image
+```
+
+**6-** Review the configuration file
+
+```
+app/config/packages/folklore/image/config.php
 ```
 
 ## Documentation
