@@ -57,8 +57,8 @@ class ImageManager extends Manager {
 			$height = null;
 		}
 
-		$url_parameter = isset($options['url_parameter']) ? $options['url_parameter']:$this->app['config']['image::url_parameter'];
-		$url_parameter_separator = isset($options['url_parameter_separator']) ? $options['url_parameter_separator']:$this->app['config']['image::url_parameter_separator'];
+		$url_parameter = isset($options['url_parameter']) ? $options['url_parameter']:$this->app['config']['image.url_parameter'];
+		$url_parameter_separator = isset($options['url_parameter_separator']) ? $options['url_parameter_separator']:$this->app['config']['image.url_parameter_separator'];
 		unset($options['url_parameter'],$options['url_parameter_separator']);
 
 		//Get size
@@ -66,7 +66,7 @@ class ImageManager extends Manager {
 		if (isset($options['height'])) $height = $options['height'];
 		if (empty($width)) $width = '_';
 		if (empty($height)) $height = '_';
-		
+
 		// Produce the parameter parts
 		$params = array();
 
@@ -75,7 +75,7 @@ class ImageManager extends Manager {
 		{
 			$params[] = $width.'x'.$height;
 		}
-		
+
 		// Build options. If the key as no value or is equal to
 		// true, only the key is added.
 		if ($options && is_array($options))
@@ -88,14 +88,14 @@ class ImageManager extends Manager {
 				else $params[] = $key.'('.$val.')';
 			}
 		}
-		
+
 		//Create the url parameter
 		$params = implode($url_parameter_separator, $params);
 		$parameter = str_replace('{options}', $params, $url_parameter);
 
 		// Break the path apart and put back together again
 		$parts = pathinfo($src);
-		$host = isset($options['host']) ? $options['host']:$this->app['config']['image::host'];
+		$host = isset($options['host']) ? $options['host']:$this->app['config']['image.host'];
 		$dir = trim($parts['dirname'], '/');
 
 		$path = array();
@@ -171,7 +171,7 @@ class ImageManager extends Manager {
 				$image = call_user_func_array(array($this,'applyCustomFilter'), $arguments);
 			}
 		}
-		
+
 		// Resize only if one or both width and height values are set.
 		if($options['width'] !== null || $options['height'] !== null)
 		{
@@ -197,7 +197,7 @@ class ImageManager extends Manager {
 		}
 
 
-		
+
 		return $image;
 	}
 
@@ -212,8 +212,8 @@ class ImageManager extends Manager {
 	{
 		//Merge config with defaults
 		$config = array_merge(array(
-			'custom_filters_only' => $this->app['config']['image::serve_custom_filters_only'],
-			'write_image' => $this->app['config']['image::write_image'],
+			'custom_filters_only' => $this->app['config']['image.serve_custom_filters_only'],
+			'write_image' => $this->app['config']['image.write_image'],
 			'options' => array()
 		),$config);
 
@@ -277,7 +277,7 @@ class ImageManager extends Manager {
 	 * Register a custom filter.
 	 *
 	 * @param  string			$name The name of the filter
-	 * @param  Closure|string	$filter 
+	 * @param  Closure|string	$filter
 	 * @return void
 	 */
 	public function filter($name, $filter)
@@ -370,14 +370,14 @@ class ImageManager extends Manager {
 
 	/**
 	 * Get the URL pattern
-	 * 
+	 *
 	 * @return string
 	 */
 	public function pattern($parameter = null)
 	{
 
 		//Replace the {options} with the options regular expression
-		$parameter = !isset($parameter) ? preg_quote($this->app['config']['image::url_parameter']):preg_quote($parameter);
+		$parameter = !isset($parameter) ? preg_quote($this->app['config']['image.url_parameter']):preg_quote($parameter);
 		$parameter = str_replace('\{options\}','([0-9a-zA-Z\(\),\-/._]+?)?',$parameter);
 
 		return '^(.*)'.$parameter.'\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
@@ -396,7 +396,7 @@ class ImageManager extends Manager {
 		$config = array_merge(array(
 			'custom_filters_only' => false,
 			'url_parameter' => null,
-			'url_parameter_separator' => $this->app['config']['image::url_parameter_separator']
+			'url_parameter_separator' => $this->app['config']['image.url_parameter_separator']
 		),$config);
 
 		$parsedOptions = array();
@@ -416,7 +416,7 @@ class ImageManager extends Manager {
 			'options' => $parsedOptions
 		);
 	}
-	
+
 	/**
 	 * Parse options from url string
 	 *
@@ -429,14 +429,14 @@ class ImageManager extends Manager {
 		//Default config
 		$config = array_merge(array(
 			'custom_filters_only' => false,
-			'url_parameter_separator' => $this->app['config']['image::url_parameter_separator']
+			'url_parameter_separator' => $this->app['config']['image.url_parameter_separator']
 		),$config);
 
 		$options = array();
-		
+
 		// These will look like (depends on the url_parameter_separator): "-colorize(CC0000)-greyscale"
 		$option_path_parts = explode($config['url_parameter_separator'], $option_path);
-		
+
 		// Loop through the params and make the options key value pairs
 		foreach($option_path_parts as $option)
 		{
@@ -509,7 +509,7 @@ class ImageManager extends Manager {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check for file in src_dirs
 	 *
@@ -523,20 +523,20 @@ class ImageManager extends Manager {
 		}
 
 		// Loop through all the directories files may be uploaded to
-		$dirs = $this->app['config']['image::src_dirs'];
+		$dirs = $this->app['config']['image.src_dirs'];
 		foreach($dirs as $dir) {
-			
+
 			// Check that directory exists
 			if (!is_dir($dir)) continue;
 			if (substr($dir, -1, 1) != '/') $dir .= '/';
-			
+
 			// Look for the image in the directory
 			$src = realpath($dir.$path);
 			if (is_file($src)) {
 				return $src;
 			}
 		}
-		
+
 		// None found
 		return false;
 	}
@@ -551,7 +551,7 @@ class ImageManager extends Manager {
 	{
 
 		$images = array();
-	
+
 		//Check path
 		$path = urldecode($path);
 		if(!($path = $this->checkForFile($path)))
@@ -564,7 +564,7 @@ class ImageManager extends Manager {
 		{
 			$images[] = $path;
 		}
-		
+
 		// Loop through the contents of the source directory and get
 		// all files that match the pattern
 		$parts = pathinfo($path);
@@ -680,7 +680,7 @@ class ImageManager extends Manager {
 
 	/**
 	 * Get mime type from image format
-	 * 
+	 *
 	 * @return string
 	 */
 	protected function getMimeFromFormat($format)
@@ -739,7 +739,7 @@ class ImageManager extends Manager {
 	 */
 	public function getDefaultDriver()
 	{
-		return $this->app['config']['image::driver'];
+		return $this->app['config']['image.driver'];
 	}
 
 	/**
@@ -750,7 +750,7 @@ class ImageManager extends Manager {
 	 */
 	public function setDefaultDriver($name)
 	{
-		$this->app['config']['image::driver'] = $name;
+		$this->app['config']['image.driver'] = $name;
 	}
 
 }
