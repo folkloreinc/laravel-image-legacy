@@ -151,9 +151,9 @@ class ImageManager extends Manager {
 		}
 
 		// Increase memory limit, cause some images require a lot to resize
-		if($config['memory_limit'])
+		if($config->get('image::memory_limit'))
 		{
-			ini_set('memory_limit', $config['memory_limit']);
+			ini_set('memory_limit', $config->get('image::memory_limit'));
 		}
 
 		//Open the image
