@@ -103,6 +103,16 @@ return array(
 	| as the original image so the next request will serve this static file
 	|
 	*/
-	'write_image' => false
+	'write_image' => false,
+
+	/*
+	|--------------------------------------------------------------------------
+	| Memory limit
+	|--------------------------------------------------------------------------
+	|
+	| When manipulating an image, the memory limit is increased to this value
+	|
+	*/
+	'memory_limit' => '128M'
 
 );
