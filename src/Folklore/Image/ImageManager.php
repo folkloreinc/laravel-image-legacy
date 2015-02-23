@@ -49,6 +49,9 @@ class ImageManager extends Manager {
 		// Don't allow empty strings
 		if (empty($src)) return;
 
+		// Extract the path from a URL if a URL was provided instead of a path
+		$src = parse_url($src, PHP_URL_PATH);
+
 		//If width parameter is an array, use it as options
 		if (is_array($width))
 		{
