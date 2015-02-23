@@ -22,15 +22,16 @@ class ImageServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		// Publish
-		$this->publishes([
-		    __DIR__.'/../../config/image.php' => config_path('image.php'),
-		]);
+		// Config file path
+		$configFile = __DIR__ . '/../../config/image.php';
 
 		// Merge files
-		$this->mergeConfigFrom(
-		    'image', __DIR__.'/../../config/image.php'
-		);
+		$this->mergeConfigFrom($configFile, 'image');
+
+		// Publish
+		$this->publishes([
+			$configFile => config_path('image.php')
+		]);
 
 		$app = $this->app;
 
