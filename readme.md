@@ -67,7 +67,7 @@ $thumbnail->save('/path/to/the/thumbnail.jpg');
 ```json
 {
 	"require": {
-		"folklore/image": "0.1.*"
+		"folklore/image": "0.2.*"
 	}
 }
 ```
