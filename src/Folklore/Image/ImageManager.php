@@ -6,7 +6,8 @@ use Folklore\Image\Exception\ParseException;
 use Folklore\Image\Exception\FormatException;
 
 use Illuminate\Support\Manager;
-use Illuminate\Support\Facades\Response;
+
+use Response;
 
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
