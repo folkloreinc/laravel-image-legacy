@@ -22,12 +22,23 @@ class ImageServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('folklore/image');
+		// Config file path
+		$configFile = __DIR__ . '/../../resources/config/image.php';
+		$assetsFile = __DIR__ . '/../../resources/assets/';
+
+		// Merge files
+		$this->mergeConfigFrom($configFile, 'image');
+
+		// Publish
+		$this->publishes([
+			$configFile => config_path('image.php'),
+			$assetsFile => public_path('vendor/folklore/image')
+		]);
 
 		$app = $this->app;
 
 		//Serve image
-		if($this->app['config']['image::serve_image'])
+		if($this->app['config']['image.serve_image'])
 		{
 			// Create a route that match pattern
 			$app->make('router')->get('{path}', function($path) use ($app)
@@ -45,11 +56,11 @@ class ImageServiceProvider extends ServiceProvider {
 				}
 				catch(ParseException $e)
 				{
-					return $app->abort(404);
+					return abort(404);
 				}
 				catch(FileMissingException $e)
 				{
-					return $app->abort(404);
+					return abort(404);
 				}
 
 			})->where('path', $app['image']->pattern());
