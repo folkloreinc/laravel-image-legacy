@@ -24,16 +24,19 @@ class ImageServiceProvider extends ServiceProvider {
 	{
 		// Config file path
 		$configFile = __DIR__ . '/../../resources/config/image.php';
-		$assetsFile = __DIR__ . '/../../resources/assets/';
+		$publicFile = __DIR__ . '/../../resources/assets/';
 
 		// Merge files
 		$this->mergeConfigFrom($configFile, 'image');
 
 		// Publish
 		$this->publishes([
-			$configFile => config_path('image.php'),
-			$assetsFile => public_path('vendor/folklore/image')
-		]);
+			$configFile => config_path('image.php')
+		], 'config');
+		
+		$this->publishes([
+			$publicFile => public_path('vendor/folklore/image')
+		], 'public');
 
 		$app = $this->app;
 

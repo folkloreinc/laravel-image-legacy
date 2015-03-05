@@ -94,7 +94,7 @@ $ composer update
 'Image' => 'Folklore\Image\Facades\Image',
 ```
 
-**5-** Publish the configuration file
+**5-** Publish the configuration file and public files
 
 ```bash
 $ php artisan vendor:publish --provider="Folklore\Image\ImageServiceProvider"
