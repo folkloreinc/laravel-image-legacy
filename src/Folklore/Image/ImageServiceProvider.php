@@ -22,12 +22,21 @@ class ImageServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('folklore/image');
+		// Config file path
+		$configFile = __DIR__ . '/../../config/image.php';
+
+		// Merge files
+		$this->mergeConfigFrom($configFile, 'image');
+
+		// Publish
+		$this->publishes([
+			$configFile => config_path('image.php')
+		]);
 
 		$app = $this->app;
 
 		//Serve image
-		if($this->app['config']['image::serve_image'])
+		if($this->app['config']['image.serve_image'])
 		{
 			// Create a route that match pattern
 			$app->make('router')->get('{path}', function($path) use ($app)
