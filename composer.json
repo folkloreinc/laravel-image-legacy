@@ -23,7 +23,7 @@
         "imagine/imagine": "0.6.*"
     },
     "require-dev": {
-        "orchestra/testbench": "2.2.*"
+        "orchestra/testbench": "3.0.*"
     },
     "repositories": [
         {
@@ -33,7 +33,7 @@
     ],
     "autoload": {
         "classmap": [
-
+            "tests/ImageTestCase.php"
         ],
         "psr-0": {
             "Folklore\\Image\\": "src/"
