@@ -97,7 +97,7 @@ $ composer update
 **5-** Publish the configuration file
 
 ```bash
-$ php artisan vendor:publish --provider=Folklore\Image\ImageServiceProvider"
+$ php artisan vendor:publish --provider="Folklore\Image\ImageServiceProvider"
 ```
 
 **6-** Review the configuration file
