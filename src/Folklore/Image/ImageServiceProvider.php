@@ -2,10 +2,6 @@
 
 use Illuminate\Support\ServiceProvider;
 
-use Folklore\Image\Exception\Exception;
-use Folklore\Image\Exception\FileMissingException;
-use Folklore\Image\Exception\ParseException;
-
 class ImageServiceProvider extends ServiceProvider {
 
 	/**
@@ -44,29 +40,12 @@ class ImageServiceProvider extends ServiceProvider {
 		if($this->app['config']['image.serve_image'])
 		{
 			// Create a route that match pattern
-			$app->make('router')->get('{path}', function($path) use ($app)
-			{
-				//Get the full path of an image
-				$fullPath = $app->make('path.public').'/'.$path;
-
-				// Serve the image response. If there is a file missing
-				// exception or parse exception, throw a 404.
-				try
-				{
-					$response = $app['image']->serve($fullPath);
-
-					return $response;
-				}
-				catch(ParseException $e)
-				{
-					return abort(404);
-				}
-				catch(FileMissingException $e)
-				{
-					return abort(404);
-				}
-
-			})->where('path', $app['image']->pattern());
+			$pathPattern = $app['image']->pattern();
+			$app->make('router')
+				->get('{path}', array(
+					'uses' => 'Folklore\Image\ImageController@serve'
+				))
+				->where('path', $pathPattern);
 		}
 	}
 
