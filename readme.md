@@ -1,5 +1,5 @@
 # Laravel Image
-Laravel Image is an image manipulation package for Laravel 4 based on the [PHP Imagine library](https://github.com/avalanche123/Imagine). It is inspired by [Croppa](https://github.com/BKWLD/croppa) as it can use specially formatted urls to do the manipulations. It supports basic image manipulations such as resize, crop, rotation and flip. It also supports effects such as negative, grayscale, gamma, colorize and blur. You can also define custom filters for greater flexibility.
+Laravel Image is an image manipulation package for Laravel 4 and 5 based on the [PHP Imagine library](https://github.com/avalanche123/Imagine). It is inspired by [Croppa](https://github.com/BKWLD/croppa) as it can use specially formatted urls to do the manipulations. It supports basic image manipulations such as resize, crop, rotation and flip. It also supports effects such as negative, grayscale, gamma, colorize and blur. You can also define custom filters for greater flexibility.
 
 [![Latest Stable Version](https://poser.pugx.org/folklore/image/v/stable.svg)](https://packagist.org/packages/folklore/image)
 [![Build Status](https://travis-ci.org/Folkloreatelier/laravel-image.png?branch=master)](https://travis-ci.org/Folkloreatelier/laravel-image)
@@ -34,7 +34,7 @@ Alternatively, you can programmatically manipulate images using the `Image::make
 Image::make('/uploads/photo.jpg',array(
 	'width' => 300,
 	'height' => 300,
-	'greyscale' => true
+	'grayscale' => true
 ))->save('/path/to/the/thumbnail.jpg');
 ```
 
