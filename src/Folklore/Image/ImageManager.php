@@ -12,7 +12,6 @@ use Response;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
-use Imagine\Image\Color;
 
 class ImageManager extends Manager {
 
@@ -680,7 +679,7 @@ class ImageManager extends Manager {
 	 */
 	protected function filterColorize(ImageInterface $image, $color)
 	{
-		$color = new Color($color);
+		$color = $image->palette()->color($color);
 		$image->effects()->colorize($color);
 		return $image;
 	}
