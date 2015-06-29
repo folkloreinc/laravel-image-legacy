@@ -304,16 +304,75 @@ class ImageManager extends Manager {
 		}
 
 		//Get new size
-		$size = $image->getSize();
-		$newWidth = $width === null ? $size->getWidth():$width;
-		$newHeight = $height === null ? $size->getHeight():$height;
-		$newSize = new Box($newWidth, $newHeight);
+		$imageSize = $image->getSize();
+		$newWidth = $width === null ? $imageSize->getWidth():$width;
+		$newHeight = $height === null ? $imageSize->getHeight():$height;
+		$size = new Box($newWidth, $newHeight);
+		
+        $ratios = array(
+            $size->getWidth() / $imageSize->getWidth(),
+            $size->getHeight() / $imageSize->getHeight()
+        );
 
-		//Get resize mode
-		$mode = $crop ? ImageInterface::THUMBNAIL_OUTBOUND:ImageInterface::THUMBNAIL_INSET;
+        $thumbnail = $image->copy();
+
+        $thumbnail->usePalette($image->palette());
+        $thumbnail->strip();
+
+        if (!$crop) {
+            $ratio = min($ratios);
+        } else {
+            $ratio = max($ratios);
+        }
+
+        if ($crop) {
+			
+            $imageSize = $thumbnail->getSize()->scale($ratio);
+			$thumbnail->resize($imageSize);
+			
+			$x = max(0, round(($imageSize->getWidth() - $size->getWidth()) / 2));
+			$y = max(0, round(($imageSize->getHeight() - $size->getHeight()) / 2));
+			
+			$cropPositions = $this->getCropPositions($crop);
+			
+			if($cropPositions[0] === 'top')
+			{
+				$y = 0;
+			}
+			else if($cropPositions[0] === 'bottom')
+			{
+				$y = $imageSize->getHeight() - $size->getHeight();
+			}
+			
+			if($cropPositions[1] === 'left')
+			{
+				$x = 0;
+			}
+			else if($cropPositions[1] === 'right')
+			{
+				$x = $imageSize->getWidth() - $size->getWidth();
+			}
+			
+			$point = new Point($x, $y);
+			
+            $thumbnail->crop($point, $size);
+        }
+		else
+		{
+            if (!$imageSize->contains($size))
+			{
+                $imageSize = $imageSize->scale($ratio);
+                $thumbnail->resize($imageSize);
+            }
+			else
+			{
+                $imageSize = $thumbnail->getSize()->scale($ratio);
+                $thumbnail->resize($imageSize);
+            }
+        }
 
 		//Create the thumbnail
-		return $image->thumbnail($newSize,$mode);
+		return $thumbnail;
 	}
 
 	/**
@@ -703,6 +762,31 @@ class ImageManager extends Manager {
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Return crop positions from the crop parameter
+	 * 
+	 * @return array
+	 */
+	protected function getCropPositions($crop)
+	{
+		$crop = $crop === true ? 'center':$crop;
+		
+		$cropPositions = explode('_',$crop);
+		if(sizeof($cropPositions) === 1)
+		{
+			if($cropPositions[0] === 'top' || $cropPositions[0] === 'bottom' || $cropPositions[0] === 'center')
+			{
+				$cropPositions[] = 'center';
+			}
+			else if($cropPositions[0] === 'left' || $cropPositions[0] === 'right')
+			{
+				array_unshift($cropPositions, 'center');
+			}
+		}
+		
+		return $cropPositions;
 	}
 
 	/**

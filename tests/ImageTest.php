@@ -15,7 +15,9 @@ if (!function_exists('getimagesizefromstring')) {
 class ImageTest extends Orchestra\Testbench\TestCase {
 
     protected $imagePath = '/image.jpg';
+    protected $imageSmallPath = '/image_small.jpg';
     protected $imageSize;
+    protected $imageSmallSize;
 
     public function setUp()
     {
@@ -24,6 +26,7 @@ class ImageTest extends Orchestra\Testbench\TestCase {
         Image::deleteManipulated($this->imagePath);
 
         $this->imageSize = getimagesize(public_path().$this->imagePath);
+        $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
     }
 
 
@@ -119,6 +122,21 @@ class ImageTest extends Orchestra\Testbench\TestCase {
     {
         //Both height and width with crop
         $url = Image::url($this->imagePath,300,300,array(
+            'crop' => true
+        ));
+        $response = $this->call('GET', $url);
+
+        $this->assertTrue($response->isOk());
+
+        $sizeManipulated = getimagesizefromstring($response->getContent());
+        $this->assertEquals($sizeManipulated[0],300);
+        $this->assertEquals($sizeManipulated[1],300);
+    }
+    
+    public function testServeResizeCropSmall()
+    {
+        //Both height and width with crop
+        $url = Image::url($this->imageSmallPath,300,300,array(
             'crop' => true
         ));
         $response = $this->call('GET', $url);
