@@ -1,5 +1,5 @@
 # Laravel Image
-Laravel Image is an image manipulation package for Laravel 4 based on the [PHP Imagine library](https://github.com/avalanche123/Imagine). It is inspired by [Croppa](https://github.com/BKWLD/croppa) as it can use specially formatted urls to do the manipulations. It supports basic image manipulations such as resize, crop, rotation and flip. It also supports effects such as negative, grayscale, gamma, colorize and blur. You can also define custom filters for greater flexibility.
+Laravel Image is an image manipulation package for Laravel 4 and 5 based on the [PHP Imagine library](https://github.com/avalanche123/Imagine). It is inspired by [Croppa](https://github.com/BKWLD/croppa) as it can use specially formatted urls to do the manipulations. It supports basic image manipulations such as resize, crop, rotation and flip. It also supports effects such as negative, grayscale, gamma, colorize and blur. You can also define custom filters for greater flexibility.
 
 [![Latest Stable Version](https://poser.pugx.org/folklore/image/v/stable.svg)](https://packagist.org/packages/folklore/image)
 [![Build Status](https://travis-ci.org/Folkloreatelier/laravel-image.png?branch=master)](https://travis-ci.org/Folkloreatelier/laravel-image)
@@ -34,7 +34,7 @@ Alternatively, you can programmatically manipulate images using the `Image::make
 Image::make('/uploads/photo.jpg',array(
 	'width' => 300,
 	'height' => 300,
-	'greyscale' => true
+	'grayscale' => true
 ))->save('/path/to/the/thumbnail.jpg');
 ```
 
@@ -53,7 +53,7 @@ $thumbnail->save('/path/to/the/thumbnail.jpg');
 
 #### Dependencies:
 
-* [Laravel 4.x](https://github.com/laravel/laravel)
+* [Laravel 5.x](https://github.com/laravel/laravel)
 * [Imagine 0.6.x](https://github.com/avalanche123/Imagine)
 
 #### Server Requirements:
@@ -67,7 +67,7 @@ $thumbnail->save('/path/to/the/thumbnail.jpg');
 ```json
 {
 	"require": {
-		"folklore/image": "0.1.*"
+		"folklore/image": "0.2.*"
 	}
 }
 ```
@@ -94,22 +94,21 @@ $ composer update
 'Image' => 'Folklore\Image\Facades\Image',
 ```
 
-**5-** Publish the configuration file
+**5-** Publish the configuration file and public files
 
 ```bash
-$ php artisan config:publish folklore/image
+$ php artisan vendor:publish --provider="Folklore\Image\ImageServiceProvider"
 ```
 
 **6-** Review the configuration file
 
 ```
-app/config/packages/folklore/image/config.php
+app/config/image.php
 ```
 
 ## Documentation
 * [Complete documentation](https://github.com/Folkloreatelier/image/wiki)
 * [Configuration options](https://github.com/Folkloreatelier/image/wiki/Configuration-options)
-* [API reference](https://github.com/Folkloreatelier/image/wiki/Image-reference)
 
 ## Roadmap
 Here are some features we would like to add in the future. Feel free to collaborate and improve this library.

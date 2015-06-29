@@ -2,17 +2,9 @@
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Folklore\Image\Exception\FormatException;
+use Orchestra\Testbench\TestCase;
 
-//Add getimagesizefromstring for PHP 5.3
-if (!function_exists('getimagesizefromstring')) {
-    function getimagesizefromstring($data)
-    {
-        $uri = 'data://application/octet-stream;base64,' . base64_encode($data);
-        return getimagesize($uri);
-    }
-}
-
-class ImageTest extends Orchestra\Testbench\TestCase {
+class ImageTestCase extends TestCase {
 
     protected $imagePath = '/image.jpg';
     protected $imageSmallPath = '/image_small.jpg';
@@ -22,6 +14,8 @@ class ImageTest extends Orchestra\Testbench\TestCase {
     public function setUp()
     {
         parent::setUp();
+        
+        $this->app->instance('path.public', __DIR__.'/fixture');
 
         Image::deleteManipulated($this->imagePath);
 
@@ -179,28 +173,15 @@ class ImageTest extends Orchestra\Testbench\TestCase {
 
 
 
-    protected function getPackageProviders()
+    protected function getPackageProviders($app)
     {
         return array('Folklore\Image\ImageServiceProvider');
     }
 
-    protected function getPackageAliases()
+    protected function getPackageAliases($app)
     {
         return array(
             'Image' => 'Folklore\Image\Facades\Image'
         );
     }
-
-    protected function getApplicationPaths()
-    {
-        $basePath = realpath(__DIR__.'/../vendor/orchestra/testbench/src/fixture');
-
-        return array(
-            'app'     => "{$basePath}/app",
-            'public'  => realpath(__DIR__.'/fixture'),
-            'base'    => $basePath,
-            'storage' => "{$basePath}/app/storage",
-        );
-    }
-
 }
