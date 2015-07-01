@@ -5,7 +5,6 @@ Laravel Image is an image manipulation package for Laravel 4 and 5 based on the 
 [![Build Status](https://travis-ci.org/Folkloreatelier/laravel-image.png?branch=master)](https://travis-ci.org/Folkloreatelier/laravel-image)
 [![Total Downloads](https://poser.pugx.org/folklore/image/downloads.svg)](https://packagist.org/packages/folklore/image)
 
-
 The main difference between this package and other image manipulation libraries is that you can use parameters directly in the url to manipulate the image. A manipulated version of the image is then saved in the same path as the original image, **creating a static version of the file and bypassing PHP for all future requests**.
 
 For example, if you have an image at this URL:
@@ -48,6 +47,20 @@ $thumbnail->effects()->grayscale();
 	
 $thumbnail->save('/path/to/the/thumbnail.jpg');
 ```
+
+## Features
+
+This package use [Imagine](https://github.com/avalanche123/Imagine) for image manipulation. Imagine is compatible with GD2, Imagick, Gmagick and supports a lot of [features](http://imagine.readthedocs.org/en/latest/).
+
+This package also provides some common filters ready to use ([more on this](https://github.com/Folkloreatelier/laravel-image/wiki/Image-filters)):
+- Resize
+- Crop (with position)
+- Rotation
+- Black and white
+- Invert
+- Gamma
+- Blur
+- Colorization
 
 ## Installation
 
@@ -113,7 +126,6 @@ app/config/image.php
 ## Roadmap
 Here are some features we would like to add in the future. Feel free to collaborate and improve this library.
 
-* Crop position
 * More built-in filters such as Brightness and Contrast
 * More configuration when serving images
 * Artisan command to manipulate images
