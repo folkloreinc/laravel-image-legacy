@@ -61,6 +61,7 @@ This package also provides some common filters ready to use ([more on this](http
 - Gamma
 - Blur
 - Colorization
+- Interlace
 
 ## Installation
 

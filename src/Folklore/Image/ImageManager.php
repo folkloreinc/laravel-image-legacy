@@ -744,6 +744,18 @@ class ImageManager extends Manager {
 	}
 
 	/**
+	 * Apply  interlace filter
+	 *
+	 * @param  ImageInterface	$image An image instance
+	 * @return void
+	 */
+	protected function filterInterlace(ImageInterface $image)
+	{
+		$image->interlace(ImageInterface::INTERLACE_LINE);
+		return $image;
+	}	
+
+	/**
 	 * Get mime type from image format
 	 *
 	 * @return string
