@@ -13,6 +13,10 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
+use Imagine\Filter\Basic\Autorotate;
+use Imagine\Image\Metadata\ExifMetadataReader;
+use Imagine\Image\Metadata\DefaultMetadataReader;
+
 class ImageManager extends Manager {
 
 	/**
@@ -158,9 +162,21 @@ class ImageManager extends Manager {
 		{
 			ini_set('memory_limit', $config->get('image::memory_limit'));
 		}
-
+		
+		//Only use ExifMetadataReader if rotation is auto.
+		if(isset($options['rotate']) && $options['rotate'] === 'auto')
+		{
+			$this->setMetadataReader(new ExifMetadataReader());
+		}
+		
 		//Open the image
 		$image = $this->open($path);
+		
+		//For better performance, set DefaultMetadataReader back after opening the image 
+		if(isset($options['rotate']) && $options['rotate'] === 'auto')
+		{
+			$this->setMetadataReader(new DefaultMetadataReader());
+		}
 
 		//Merge options with the default
 		$options = array_merge($this->defaultOptions, $options);
@@ -671,11 +687,17 @@ class ImageManager extends Manager {
 	 * Apply rotate filter
 	 *
 	 * @param  ImageInterface	$image An image instance
-	 * @param  float			$degree The rotation degree
+	 * @param  float|string			$degree The rotation degree
 	 * @return void
 	 */
 	protected function filterRotate(ImageInterface $image, $degree)
 	{
+		if($degree === 'auto')
+		{
+			$autorotate = new Autorotate();
+			return $autorotate->apply($image);
+		}
+		
 		return $image->rotate($degree);
 	}
 

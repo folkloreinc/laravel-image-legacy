@@ -3,13 +3,16 @@
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Folklore\Image\Exception\FormatException;
 use Orchestra\Testbench\TestCase;
+use Imagine\Image\Metadata\ExifMetadataReader;
 
 class ImageTestCase extends TestCase {
 
     protected $imagePath = '/image.jpg';
     protected $imageSmallPath = '/image_small.jpg';
+    protected $imageMobilePath = '/image_mobile3.jpg';
     protected $imageSize;
     protected $imageSmallSize;
+    protected $imageMobileSize;
 
     public function setUp()
     {
@@ -21,9 +24,8 @@ class ImageTestCase extends TestCase {
 
         $this->imageSize = getimagesize(public_path().$this->imagePath);
         $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
+        $this->imageMobileSize = getimagesize(public_path().$this->imageMobilePath);
     }
-
-
 
     public function testURLisValid()
     {
@@ -140,6 +142,27 @@ class ImageTestCase extends TestCase {
         $sizeManipulated = getimagesizefromstring($response->getContent());
         $this->assertEquals($sizeManipulated[0],300);
         $this->assertEquals($sizeManipulated[1],300);
+    }
+    
+    public function testRotateAuto()
+    {
+        //Both height and width with crop
+        $image = Image::make(public_path().$this->imageMobilePath, array(
+            'rotate' => 'auto'
+        ));
+        
+        $tmpFile = tempnam(sys_get_temp_dir(), 'php_laravel_image_imagine');
+        
+        $image->save($tmpFile);
+        
+        $reader = new ExifMetadataReader();
+        $metadata = $reader->readFile($tmpFile);
+        
+        unlink($tmpFile);
+        
+        var_dump($metadata);
+
+        $this->assertEquals($metadata['ifd0.Orientation'], 1);
     }
 
     public function testServeWrongParameter()
