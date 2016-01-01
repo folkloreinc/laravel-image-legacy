@@ -19,11 +19,11 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "~5.0",
+        "illuminate/support": ">=5.0 <5.2",
         "imagine/imagine": "0.6.*"
     },
     "require-dev": {
-        "orchestra/testbench": "3.0.*"
+        "orchestra/testbench": ">=3.0 <3.2"
     },
     "repositories": [
         {
