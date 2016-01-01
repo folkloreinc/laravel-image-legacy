@@ -218,6 +218,7 @@ class ImageManager extends Manager {
 		$config = array_merge(array(
 			'custom_filters_only' => $this->app['config']['image.serve_custom_filters_only'],
 			'write_image' => $this->app['config']['image.write_image'],
+			'write_path' => $this->app['config']['image.write_path'],
 			'options' => array()
 		),$config);
 
@@ -252,7 +253,8 @@ class ImageManager extends Manager {
 		//Write the image
 		if ($config['write_image'])
 		{
-			$destinationPath = dirname($path).'/'.basename($path);
+			$destinationFolder = isset($config['write_path']) ? $config['write_path']:dirname($path);
+			$destinationPath = rtrim($destinationFolder, '/').'/'.basename($path);
 			$image->save($destinationPath);
 		}
 
@@ -584,18 +586,26 @@ class ImageManager extends Manager {
 		if (is_file($path)) {
 			return $path;
 		}
+		
+		//Get directories
+		$dirs = $this->app['config']['image.src_dirs'];
+		if($this->app['config']['image.write_path'])
+		{
+			$dirs[] = $this->app['config']['image.write_path'];
+		}
 
 		// Loop through all the directories files may be uploaded to
-		$dirs = $this->app['config']['image.src_dirs'];
-		foreach($dirs as $dir) {
-
+		foreach($dirs as $dir)
+		{
+			$dir = rtrim($dir, '/');
+			
 			// Check that directory exists
 			if (!is_dir($dir)) continue;
-			if (substr($dir, -1, 1) != '/') $dir .= '/';
 
 			// Look for the image in the directory
-			$src = realpath($dir.$path);
-			if (is_file($src)) {
+			$src = realpath($dir.'/'.ltrim($path, '/'));
+			if (is_file($src))
+			{
 				return $src;
 			}
 		}
@@ -628,15 +638,24 @@ class ImageManager extends Manager {
 			$images[] = $path;
 		}
 
-		// Loop through the contents of the source directory and get
+		// Loop through the contents of the source and write directory and get
 		// all files that match the pattern
 		$parts = pathinfo($path);
-		$files = scandir($parts['dirname']);
-		foreach($files as $file) {
-			if (strpos($file, $parts['filename']) === false || !preg_match('#'.$this->pattern().'#', $file)) continue;
-			$images[] = $parts['dirname'].'/'.$file;
+		$dirs = [$parts['dirname']];
+		$dirs = [$parts['dirname']];
+		if($this->app['config']['image.write_path'])
+		{
+			$dirs[] = $this->app['config']['image.write_path'];
 		}
-
+		foreach($dirs as $directory)
+		{
+			$files = scandir($directory);
+			foreach($files as $file) {
+				if (strpos($file, $parts['filename']) === false || !preg_match('#'.$this->pattern().'#', $file)) continue;
+				$images[] = $directory.'/'.$file;
+			}
+		}
+		
 		// Return the list
 		return $images;
 	}
