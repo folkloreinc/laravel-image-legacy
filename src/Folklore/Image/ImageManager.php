@@ -7,8 +7,6 @@ use Folklore\Image\Exception\FormatException;
 
 use Illuminate\Support\Manager;
 
-use Response;
-
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
@@ -272,7 +270,7 @@ class ImageManager extends Manager {
 
 		//Create the response
 		$mime = $this->getMimeFromFormat($format);
-		$response = Response::make($contents, 200);
+		$response = response()->make($contents, 200);
 		$response->header('Content-Type', $mime);
 
 		//Return the response
