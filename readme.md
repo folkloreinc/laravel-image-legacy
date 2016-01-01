@@ -63,6 +63,15 @@ This package also provides some common filters ready to use ([more on this](http
 - Colorization
 - Interlace
 
+## Version Compatibility
+
+ Laravel  | Image
+:---------|:----------
+ 4.2.x    | 0.1.x
+ 5.0.x    | 0.2.x
+ 5.1.x    | 0.2.x
+ 5.2.x    | 0.3.x
+
 ## Installation
 
 #### Dependencies:
@@ -81,7 +90,7 @@ This package also provides some common filters ready to use ([more on this](http
 ```json
 {
 	"require": {
-		"folklore/image": "0.2.*"
+		"folklore/image": "0.3.*"
 	}
 }
 ```
