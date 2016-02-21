@@ -11,34 +11,38 @@ use Folklore\Image\Exception\ParseException;
 use App;
 use Image;
 
-class ImageController extends BaseController {
+class ImageController extends BaseController
+{
 
-	use DispatchesJobs, ValidatesRequests;
-	
-	public function serve($path)
-	{
-		$app = app();
-		
-		//Get the full path of an image
-		$fullPath = $app->make('path.public').'/'.$path;
-
-		// Serve the image response. If there is a file missing
-		// exception or parse exception, throw a 404.
-		try
-		{
-			$response = $app['image']->serve($fullPath);
-
-			return $response;
-		}
-		catch(ParseException $e)
-		{
-			return abort(404);
-		}
-		catch(FileMissingException $e)
-		{
-			return abort(404);
-		}
-
-	}
-
+    use DispatchesJobs, ValidatesRequests;
+    
+    public function serve($path)
+    {
+        // Serve the image response. If there is a file missing
+        // exception or parse exception, throw a 404.
+        try {
+            return app('image')->serve($path);
+        } catch (ParseException $e) {
+            return abort(404);
+        } catch (FileMissingException $e) {
+            return abort(404);
+        } catch (Exception $e) {
+            return abort(500);
+        }
+    }
+    
+    public function proxy($path)
+    {
+        // Serve the image response from proxy. If there is a file missing
+        // exception or parse exception, throw a 404.
+        try {
+            return app('image')->proxy($path);
+        } catch (ParseException $e) {
+            return abort(404);
+        } catch (FileMissingException $e) {
+            return abort(404);
+        } catch (Exception $e) {
+            return abort(500);
+        }
+    }
 }

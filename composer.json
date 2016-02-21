@@ -36,7 +36,8 @@
             "tests/ImageTestCase.php"
         ],
         "psr-0": {
-            "Folklore\\Image\\": "src/"
+            "Folklore\\Image\\": "src/",
+            "Folklore\\Image\\Tests": "tests/"
         }
     },
     "minimum-stability": "stable"

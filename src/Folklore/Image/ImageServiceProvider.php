@@ -2,74 +2,85 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class ImageServiceProvider extends ServiceProvider {
+class ImageServiceProvider extends ServiceProvider
+{
 
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
 
-	/**
-	 * Bootstrap the application events.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
-		// Config file path
-		$configFile = __DIR__ . '/../../resources/config/image.php';
-		$publicFile = __DIR__ . '/../../resources/assets/';
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        // Config file path
+        $configFile = __DIR__ . '/../../resources/config/image.php';
+        $publicFile = __DIR__ . '/../../resources/assets/';
 
-		// Merge files
-		$this->mergeConfigFrom($configFile, 'image');
+        // Merge files
+        $this->mergeConfigFrom($configFile, 'image');
 
-		// Publish
-		$this->publishes([
-			$configFile => config_path('image.php')
-		], 'config');
-		
-		$this->publishes([
-			$publicFile => public_path('vendor/folklore/image')
-		], 'public');
+        // Publish
+        $this->publishes([
+            $configFile => config_path('image.php')
+        ], 'config');
+        
+        $this->publishes([
+            $publicFile => public_path('vendor/folklore/image')
+        ], 'public');
 
-		$app = $this->app;
+        $app = $this->app;
+        $router = $app['router'];
+        $router->pattern('image_pattern', $app['image']->pattern());
 
-		//Serve image
-		if($this->app['config']['image.serve_image'])
-		{
-			// Create a route that match pattern
-			$pathPattern = $app['image']->pattern();
-			$app->make('router')
-				->get('{path}', array(
-					'uses' => 'Folklore\Image\ImageController@serve'
-				))
-				->where('path', $pathPattern);
-		}
-	}
+        //Serve image
+        $serve = config('image.serve');
+        if ($serve) {
+            // Create a route that match pattern
+            $serveRoute = config('image.serve_route', '{image_path}');
+            $router->get($serveRoute, array(
+                'as' => 'image.serve',
+                'uses' => 'Folklore\Image\ImageController@serve'
+            ));
+        }
+        
+        //Proxy
+        $proxy = $this->app['config']['image.proxy'];
+        if ($proxy) {
+            $serveRoute = config('image.proxy_route', '{image_path}');
+            $router->get($serveRoute, array(
+                'as' => 'image.proxy',
+                'domain' => config('image.proxy_domain'),
+                'uses' => 'Folklore\Image\ImageController@proxy'
+            ));
+        }
+    }
 
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		$this->app->singleton('image', function($app)
-		{
-			return new ImageManager($app);
-		});
-	}
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->singleton('image', function ($app) {
+            return new ImageManager($app);
+        });
+    }
 
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array('image');
-	}
-
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array('image');
+    }
 }
