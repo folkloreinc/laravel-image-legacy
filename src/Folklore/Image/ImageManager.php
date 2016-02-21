@@ -250,7 +250,7 @@ class ImageManager extends Manager
             'write_image' => $this->app['config']['image.proxy_write_image'],
             'cache_filesystem' => $this->app['config']['image.proxy_cache_filesystem']
         ), $config);
-
+        
         $serve = new ImageProxy($this, $config);
         return $serve->response($path);
     }
@@ -433,7 +433,6 @@ class ImageManager extends Manager
         ), $config);
 
         $parsedOptions = array();
-
         if (preg_match('#'.$this->pattern($config['url_parameter']).'#i', $path, $matches)) {
             //Get path and options
             $path = $matches[1].'.'.$matches[3];

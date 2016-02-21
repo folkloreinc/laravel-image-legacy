@@ -1,5 +1,6 @@
 <?php namespace Folklore\Image;
 
+use GuzzleHttp\Client as GuzzleClient;
 use Folklore\Image\Exception\FileMissingException;
 
 class ImageProxy
@@ -36,7 +37,7 @@ class ImageProxy
         $fullPath = $path;
         $cache = $this->config['cache'];
         $existsCache = $cache ? $this->existsOnProxyCache($fullPath):false;
-        $existsDisk = !$existsCache ? $this->existsOnProxyDisk($fullPath):false;
+        $existsDisk = !$existsCache && $disk ? $this->existsOnProxyDisk($fullPath):false;
         if ($existsCache) {
             return $this->getProxyResponseFromCache($fullPath);
         } elseif ($existsDisk) {
@@ -55,7 +56,6 @@ class ImageProxy
         $extension = pathinfo($originalPath, PATHINFO_EXTENSION);
         $tmpOriginalPath = tempnam($tmpPath, 'original').'.'.$extension;
         $tmpTransformedPath = tempnam($tmpPath, 'transformed').'.'.$extension;
-        
         if ($disk && !$disk->exists($originalPath)) {
             throw new FileMissingException();
         }
@@ -114,7 +114,7 @@ class ImageProxy
     protected function downloadFile($path)
     {
         $deleteOriginalFile = true;
-        $tmpPath = tempnam(config('image.proxy_tmp_path'), 'image');
+        $tmpPath = tempnam($this->config['tmp_path'], 'image');
         $client = new GuzzleClient();
         $response = $client->request('GET', $path, [
             'sink' => $tmpPath
@@ -127,9 +127,11 @@ class ImageProxy
     protected function getProxyDisk()
     {
         $filesystem = $this->config['filesystem'];
-        $disk = app('filesystem')->disk($filesystem);
+        if (!$filesystem) {
+            return null;
+        }
         
-        return $disk;
+        return app('filesystem')->disk($filesystem);
     }
     
     protected function getProxyCacheDisk()

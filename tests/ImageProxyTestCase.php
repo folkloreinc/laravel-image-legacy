@@ -37,6 +37,14 @@ class ImageProxyTestCase extends TestCase
         ]);
         $response = $this->call('GET', $url);
         $this->assertTrue($response->isOk());
+        
+        $image = imagecreatefromstring($response->getContent());
+        $this->assertTrue($image !== false);
+        
+        $this->assertEquals(imagesx($image), 300);
+        $this->assertEquals(imagesy($image), 300);
+        
+        imagedestroy($image);
     }
     
     /**
@@ -53,7 +61,7 @@ class ImageProxyTestCase extends TestCase
         $app['config']->set('image.proxy', true);
         $app['config']->set('image.proxy_route', '/proxy/{image_path}');
         $app['config']->set('image.proxy_filesystem', 'image_testbench');
-        $app['config']->set('image.proxy_cache_filesystem', 'image_testbench_cache');
+        $app['config']->set('image.proxy_cache_filesystem', null);
         
         $app['config']->set('filesystems.default', 'image_testbench');
         $app['config']->set('filesystems.cloud', 'image_testbench');
