@@ -406,14 +406,20 @@ class ImageManager extends Manager
      *
      * @return string
      */
-    public function pattern($parameter = null)
+    public function pattern($parameter = null, $pattern = null)
     {
         //Replace the {options} with the options regular expression
         $config = $this->app['config'];
-        $parameter = !isset($parameter) ? preg_quote($config['image.url_parameter']):preg_quote($parameter);
-        $parameter = str_replace('\{options\}', '([0-9a-zA-Z\(\),\-/._]+?)?', $parameter);
+        $parameter = !isset($parameter) ? $config['image.url_parameter']:$parameter;
+        $parameter = preg_replace('/\\\{\s*options\s*\\\}/', '([0-9a-zA-Z\(\),\-/._]+?)?', preg_quote($parameter));
+        
+        if(!$pattern)
+        {
+            $pattern = $config->get('image.pattern', '^(.*){parameters}\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$');
+        }
+        $pattern = preg_replace('/\{\s*parameters\s*\}/', $parameter, $pattern);
 
-        return '^(.*)'.$parameter.'\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
+        return $pattern;
     }
 
     /**

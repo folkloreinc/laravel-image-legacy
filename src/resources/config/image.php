@@ -29,6 +29,18 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
+    | Source directories
+    |--------------------------------------------------------------------------
+    |
+    | A list a directories to look for images
+    |
+    */
+    'src_dirs' => array(
+        public_path()
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
     | Host
     |--------------------------------------------------------------------------
     |
@@ -40,15 +52,15 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | Source directories
+    | Pattern
     |--------------------------------------------------------------------------
     |
-    | A list a directories to look for images
+    | The pattern that is used to match routes that will be handled by the
+    | ImageController. The {parameters} will be remplaced by the url parameters
+    | pattern.
     |
     */
-    'src_dirs' => array(
-        public_path()
-    ),
+    'pattern' => '^(.*){parameters}\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$',
 
     /*
     |--------------------------------------------------------------------------
@@ -164,7 +176,20 @@ return array(
     | The route that will be used to serve proxied image
     |
     */
-    'proxy_route' => '{image_pattern}',
+    'proxy_route' => '{image_proxy_pattern}',
+    
+    
+
+    /*
+    |--------------------------------------------------------------------------
+    | Proxy route pattern
+    |--------------------------------------------------------------------------
+    |
+    | The proxy route pattern that will be available as `image_proxy_pattern`.
+    | If the value is null, the default image pattern will be used.
+    |
+    */
+    'proxy_route_pattern' => null,
 
     /*
     |--------------------------------------------------------------------------
