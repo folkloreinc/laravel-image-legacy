@@ -46,6 +46,27 @@ class ImageProxyTestCase extends TestCase
         
         imagedestroy($image);
     }
+
+    public function testProxyURL()
+    {
+        $this->app['config']->set('image.host', '/proxy/http://placehold.it/');
+        $this->app['config']->set('image.proxy_filesystem', null);
+        $this->app['config']->set('image.proxy_route_pattern', '^(.*)$');
+        
+        $url = $this->image->url('/640x480.png', 300, 300, [
+            'crop' => true
+        ]);
+        $response = $this->call('GET', $url);
+        $this->assertTrue($response->isOk());
+        
+        $image = imagecreatefromstring($response->getContent());
+        $this->assertTrue($image !== false);
+        
+        $this->assertEquals(imagesx($image), 300);
+        $this->assertEquals(imagesy($image), 300);
+        
+        imagedestroy($image);
+    }
     
     /**
      * Define environment setup.
@@ -60,7 +81,7 @@ class ImageProxyTestCase extends TestCase
         $app['config']->set('image.host', '/proxy');
         $app['config']->set('image.serve', false);
         $app['config']->set('image.proxy', true);
-        $app['config']->set('image.proxy_route', '/proxy/{proxy_route_pattern}');
+        $app['config']->set('image.proxy_route', '/proxy/{image_proxy_pattern}');
         $app['config']->set('image.proxy_filesystem', 'image_testbench');
         $app['config']->set('image.proxy_cache_filesystem', null);
         

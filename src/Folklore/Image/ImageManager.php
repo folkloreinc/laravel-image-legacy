@@ -247,6 +247,7 @@ class ImageManager extends Manager
             'tmp_path' => $this->app['config']['image.proxy_tmp_path'],
             'filesystem' => $this->app['config']['image.proxy_filesystem'],
             'cache' => $this->app['config']['image.proxy_cache'],
+            'cache_expiration' => $this->app['config']['image.proxy_cache_expiration'],
             'write_image' => $this->app['config']['image.proxy_write_image'],
             'cache_filesystem' => $this->app['config']['image.proxy_cache_filesystem']
         ), $config);

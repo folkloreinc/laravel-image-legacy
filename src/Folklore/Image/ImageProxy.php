@@ -18,6 +18,7 @@ class ImageProxy
         $this->config = array_merge([
             'tmp_path' => sys_get_temp_dir(),
             'cache' => false,
+            'cache_expiration' => 60*24,
             'write_image' => false,
             'filesystem' => null,
             'cache_filesystem' => null
@@ -153,14 +154,21 @@ class ImageProxy
         return 'image/'.preg_replace('/^([0-9a-z]{2})([0-9a-z]{2})/i', '$1/$2/', $key);
     }
     
+    protected function getEscapedCacheKey($path)
+    {
+        $cacheKey = $this->getCacheKey($path);
+        return preg_replace('/[^a-zA-Z0-9]+/i', '_', $cacheKey);
+    }
+    
     protected function existsOnProxyCache($path)
     {
         $disk = $this->getCacheDisk();
-        $cacheKey = $this->getCacheKey($path);
         if ($disk) {
+            $cacheKey = $this->getCacheKey($path);
             return $disk->exists($cacheKey);
         }
         
+        $cacheKey = $this->getEscapedCacheKey($path);
         return app('cache')->has($cacheKey);
     }
     
@@ -179,10 +187,11 @@ class ImageProxy
     protected function getResponseFromCache($path)
     {
         $disk = $this->getCacheDisk();
-        $cacheKey = $this->getCacheKey($path);
         if ($disk) {
+            $cacheKey = $this->getCacheKey($path);
             $contents = $disk->get($cacheKey);
         } else {
+            $cacheKey = $this->getEscapedCacheKey($path);
             $contents = app('cache')->get($cacheKey);
         }
         
@@ -222,11 +231,20 @@ class ImageProxy
     protected function saveToProxyCache($path, $contents)
     {
         $disk = $this->getCacheDisk();
-        $cacheKey = $this->getCacheKey($path);
         if ($disk) {
-            $contents = $disk->put($cacheKey, $contents);
+            $cacheKey = $this->getCacheKey($path);
+            $disk->put($cacheKey, $contents);
         } else {
-            $contents = app('cache')->put($cacheKey, $contents);
+            $cacheKey = $this->getEscapedCacheKey($path);
+            $cacheExpiration = $this->config['cache_expiration'];
+            if($cacheExpiration === -1)
+            {
+                app('cache')->forever($cacheKey, $contents);
+            }
+            else
+            {
+                app('cache')->put($cacheKey, $contents, $cacheExpiration);
+            }
         }
     }
 }
