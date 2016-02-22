@@ -3,6 +3,8 @@
 use GuzzleHttp\Client as GuzzleClient;
 use Folklore\Image\Exception\FileMissingException;
 
+use finfo;
+
 class ImageProxy
 {
     protected $image = null;
@@ -31,7 +33,7 @@ class ImageProxy
         
         $app = app();
         
-        $disk = $this->getProxyDisk();
+        $disk = $this->getDisk();
         
         //Check if file exists
         $fullPath = $path;
@@ -39,9 +41,9 @@ class ImageProxy
         $existsCache = $cache ? $this->existsOnProxyCache($fullPath):false;
         $existsDisk = !$existsCache && $disk ? $this->existsOnProxyDisk($fullPath):false;
         if ($existsCache) {
-            return $this->getProxyResponseFromCache($fullPath);
+            return $this->getResponseFromCache($fullPath);
         } elseif ($existsDisk) {
-            $response = $this->getProxyResponseFromDisk($fullPath);
+            $response = $this->getResponseFromDisk($fullPath);
             
             if ($cache) {
                 $this->saveToProxyCache($path, $response->getContent());
@@ -92,9 +94,9 @@ class ImageProxy
         
         //Get response
         if (!$disk) {
-            $response = $this->getProxyResponseFromPath($tmpTransformedPath);
+            $response = $this->getResponseFromPath($tmpTransformedPath);
         } else {
-            $response = $this->getProxyResponseFromDisk($fullPath);
+            $response = $this->getResponseFromDisk($fullPath);
         }
         
         $response->header('Content-Type', $mime);
@@ -124,7 +126,7 @@ class ImageProxy
         return $tmpPath;
     }
     
-    protected function getProxyDisk()
+    protected function getDisk()
     {
         $filesystem = $this->config['filesystem'];
         if (!$filesystem) {
@@ -134,7 +136,7 @@ class ImageProxy
         return $filesystem === 'cloud' ? app('filesystem')->cloud():app('filesystem')->disk($filesystem);
     }
     
-    protected function getProxyCacheDisk()
+    protected function getCacheDisk()
     {
         $filesystem = $this->config['cache_filesystem'];
         if (!$filesystem) {
@@ -153,7 +155,7 @@ class ImageProxy
     
     protected function existsOnProxyCache($path)
     {
-        $disk = $this->getProxyCacheDisk();
+        $disk = $this->getCacheDisk();
         $cacheKey = $this->getCacheKey($path);
         if ($disk) {
             return $disk->exists($cacheKey);
@@ -164,13 +166,19 @@ class ImageProxy
     
     protected function existsOnProxyDisk($path)
     {
-        $disk = $this->getProxyDisk();
+        $disk = $this->getDisk();
         return $disk->exists($path);
     }
     
-    protected function getProxyResponseFromCache($path)
+    protected function getMimeFromContent($content)
     {
-        $disk = $this->getProxyCacheDisk();
+        $finfo = new finfo(FILEINFO_MIME);
+        return $finfo->buffer($content);
+    }
+    
+    protected function getResponseFromCache($path)
+    {
+        $disk = $this->getCacheDisk();
         $cacheKey = $this->getCacheKey($path);
         if ($disk) {
             $contents = $disk->get($cacheKey);
@@ -180,29 +188,32 @@ class ImageProxy
         
         $response = response()->make($contents, 200);
         $response->header('Cache-control', 'max-age='.(3600*24).', public');
+        $response->header('Content-type', $this->getMimeFromContent($contents));
         $contents = null;
         
         return $response;
     }
     
-    protected function getProxyResponseFromPath($path)
+    protected function getResponseFromPath($path)
     {
         $contents = file_get_contents($path);
         
         $response = response()->make($contents, 200);
         $response->header('Cache-control', 'max-age='.(3600*24).', public');
+        $response->header('Content-type', $this->getMimeFromContent($contents));
         $contents = null;
         
         return $response;
     }
     
-    protected function getProxyResponseFromDisk($path)
+    protected function getResponseFromDisk($path)
     {
-        $disk = $this->getProxyDisk();
+        $disk = $this->getDisk();
         $contents = $disk->get($path);
         
         $response = response()->make($contents, 200);
         $response->header('Cache-control', 'max-age='.(3600*24).', public');
+        $response->header('Content-type', $this->getMimeFromContent($contents));
         $contents = null;
         
         return $response;
@@ -210,7 +221,7 @@ class ImageProxy
     
     protected function saveToProxyCache($path, $contents)
     {
-        $disk = $this->getProxyCacheDisk();
+        $disk = $this->getCacheDisk();
         $cacheKey = $this->getCacheKey($path);
         if ($disk) {
             $contents = $disk->put($cacheKey, $contents);

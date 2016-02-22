@@ -181,18 +181,6 @@ class ImageServeTestCase extends TestCase
     protected function getEnvironmentSetUp($app)
     {
         $app->instance('path.public', __DIR__.'/fixture');
-        
-        $app['config']->set('image.proxy', true);
-        $app['config']->set('image.proxy_route', '/proxy/{image_path}');
-        $app['config']->set('image.proxy_filesystem', 'testbench');
-        
-        $app['config']->set('filesystem.default', 'testbench');
-        $app['config']->set('filesystem.cloud', 'testbench');
-        
-        $app['config']->set('filesystem.disks.testbench', [
-            'driver' => 'local',
-            'root' => storage_path('app'),
-        ]);
     }
 
     protected function getPackageProviders($app)

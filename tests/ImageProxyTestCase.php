@@ -58,8 +58,9 @@ class ImageProxyTestCase extends TestCase
         $app->instance('path.public', __DIR__.'/fixture');
         
         $app['config']->set('image.host', '/proxy');
+        $app['config']->set('image.serve', false);
         $app['config']->set('image.proxy', true);
-        $app['config']->set('image.proxy_route', '/proxy/{image_path}');
+        $app['config']->set('image.proxy_route', '/proxy/{image_pattern}');
         $app['config']->set('image.proxy_filesystem', 'image_testbench');
         $app['config']->set('image.proxy_cache_filesystem', null);
         
