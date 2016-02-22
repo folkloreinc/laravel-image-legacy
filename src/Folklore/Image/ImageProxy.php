@@ -131,7 +131,7 @@ class ImageProxy
             return null;
         }
         
-        return app('filesystem')->disk($filesystem);
+        return $filesystem === 'cloud' ? app('filesystem')->cloud():app('filesystem')->disk($filesystem);
     }
     
     protected function getProxyCacheDisk()
@@ -141,7 +141,7 @@ class ImageProxy
             return null;
         }
         
-        return app('filesystem')->disk($filesystem);
+        return $filesystem === 'cloud' ? app('filesystem')->cloud():app('filesystem')->disk($filesystem);
     }
     
     protected function getCacheKey($path)
