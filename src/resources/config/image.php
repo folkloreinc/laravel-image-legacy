@@ -98,10 +98,20 @@ return array(
     | Serve route
     |--------------------------------------------------------------------------
     |
-    | 
+    | If you want to restrict the route to a specific domain.
     |
     */
-    'serve_route' => '{image_path}',
+    'serve_domain' => null,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Serve route
+    |--------------------------------------------------------------------------
+    |
+    | The route where image are served
+    |
+    */
+    'serve_route' => '{image_pattern}',
 
     /*
     |--------------------------------------------------------------------------
@@ -151,10 +161,10 @@ return array(
     | Proxy route
     |--------------------------------------------------------------------------
     |
-    | The route that will be used to 
+    | The route that will be used to serve proxied image
     |
     */
-    'proxy_route' => '{image_path}',
+    'proxy_route' => '{image_pattern}',
 
     /*
     |--------------------------------------------------------------------------

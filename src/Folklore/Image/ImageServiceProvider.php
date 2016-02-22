@@ -38,14 +38,16 @@ class ImageServiceProvider extends ServiceProvider
         $app = $this->app;
         $router = $app['router'];
         $router->pattern('image_pattern', $app['image']->pattern());
+        $router->pattern('image_proxy_pattern', $app['image']->pattern(''));
 
         //Serve image
         $serve = config('image.serve');
         if ($serve) {
             // Create a route that match pattern
-            $serveRoute = config('image.serve_route', '{image_path}');
+            $serveRoute = config('image.serve_route', '{image_pattern}');
             $router->get($serveRoute, array(
                 'as' => 'image.serve',
+                'domain' => config('image.domain', null),
                 'uses' => 'Folklore\Image\ImageController@serve'
             ));
         }
@@ -53,7 +55,7 @@ class ImageServiceProvider extends ServiceProvider
         //Proxy
         $proxy = $this->app['config']['image.proxy'];
         if ($proxy) {
-            $serveRoute = config('image.proxy_route', '{image_path}');
+            $serveRoute = config('image.proxy_route', '{image_pattern}');
             $router->get($serveRoute, array(
                 'as' => 'image.proxy',
                 'domain' => config('image.proxy_domain'),
