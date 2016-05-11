@@ -1,6 +1,7 @@
 <?php namespace Folklore\Image;
 
 use Folklore\Image\Exception\FileMissingException;
+use Folklore\Image\Exception\Exception;
 
 class ImageServe
 {
