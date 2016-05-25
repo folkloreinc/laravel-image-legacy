@@ -6,13 +6,13 @@ use Folklore\Image\Exception\Exception;
 class ImageServe
 {
     protected $image;
-    
+
     protected $config = [];
-    
+
     public function __construct($image, $config = [])
     {
         $this->image = $image;
-        
+
         $this->config = array_merge([
             'custom_filters_only' => false,
             'write_image' => false,
@@ -21,7 +21,7 @@ class ImageServe
             'options' => []
         ], $config);
     }
-    
+
     public function response($path)
     {
         // Parse the current path
@@ -52,8 +52,14 @@ class ImageServe
 
         //Write the image
         if ($this->config['write_image']) {
-            $destinationFolder = isset($this->config['write_path']) ? $this->config['write_path']:dirname($imagePath);
-            $destinationPath = rtrim($destinationFolder, '/').'/'.basename($path);
+            $destinationFolder = isset($this->config['write_path']) ? $this->config['write_path'] : dirname($imagePath);
+
+            if (isset($this->config['write_path'])) {
+                $destinationFolder = public_path(trim($this->config['write_path'], '/') . '/' . ltrim(dirname($imagePath), '/'));
+                \File::makeDirectory($destinationFolder, 0770, true, true);
+            }
+
+            $destinationPath = rtrim($destinationFolder, '/') . '/' . basename($path);
             $image->save($destinationPath);
         }
 
@@ -66,7 +72,7 @@ class ImageServe
         if ($format === 'jpeg') {
             $saveOptions['jpeg_quality'] = $quality;
         } elseif ($format === 'png') {
-            $saveOptions['png_compression_level'] = round($quality/100 * 9);
+            $saveOptions['png_compression_level'] = round($quality / 100 * 9);
         }
         $contents = $image->get($format, $saveOptions);
 
@@ -74,7 +80,7 @@ class ImageServe
         $mime = $this->image->getMimeFromFormat($format);
         $response = response()->make($contents, 200);
         $response->header('Content-Type', $mime);
-        
+
         return $response;
     }
 }
