@@ -565,7 +565,7 @@ class ImageManager extends Manager
         // Loop through all the directories files may be uploaded to
         foreach ($dirs as $dir) {
             $dir = rtrim($dir, '/');
-            
+
             // Check that directory exists
             if (!is_dir($dir)) {
                 continue;

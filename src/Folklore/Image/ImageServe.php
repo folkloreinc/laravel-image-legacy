@@ -28,12 +28,25 @@ class ImageServe
         $parsedPath = $this->image->parse($path, array(
             'custom_filters_only' => $this->config['custom_filters_only']
         ));
-        $imagePath = $parsedPath['path'];
+        $writePath = isset($this->config['write_path']) ? trim($this->config['write_path'], '/') : null;
         $parsedOptions = $parsedPath['options'];
+        $imagePath = $parsedPath['path'];
+        if ($writePath && strpos($imagePath, $writePath) === 0) {
+            $imagePath = substr($imagePath, strlen($writePath)+1);
+        }
 
         // See if the referenced file exists and is an image
         if (!($imagePath = $this->image->getRealPath($imagePath))) {
             throw new FileMissingException('Image file missing');
+        }
+
+        // create the destination if it does not exist
+        if ($this->config['write_image']) {
+            $destinationFolder = $writePath ?: dirname($imagePath);
+            if (isset($writePath)) {
+                $destinationFolder = public_path(trim($writePath, '/') . '/' . ltrim(dirname($imagePath), '/'));
+                \File::makeDirectory($destinationFolder, 0770, true, true);
+            }
         }
 
         // Make sure destination is writeable
@@ -52,13 +65,6 @@ class ImageServe
 
         //Write the image
         if ($this->config['write_image']) {
-            $destinationFolder = isset($this->config['write_path']) ? $this->config['write_path'] : dirname($imagePath);
-
-            if (isset($this->config['write_path'])) {
-                $destinationFolder = public_path(trim($this->config['write_path'], '/') . '/' . ltrim(dirname($imagePath), '/'));
-                \File::makeDirectory($destinationFolder, 0770, true, true);
-            }
-
             $destinationPath = rtrim($destinationFolder, '/') . '/' . basename($path);
             $image->save($destinationPath);
         }
