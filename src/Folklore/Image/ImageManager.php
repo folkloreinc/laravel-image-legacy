@@ -114,6 +114,11 @@ class ImageManager extends Manager
 
         $path = array();
         $path[] = rtrim($host, '/');
+
+        if ($prefix = $this->app['config']->get('image.write_path')) {
+            $path[] = trim($prefix, '/');
+        }
+
         if (!empty($dir)) {
             $path[] = $dir;
         }
