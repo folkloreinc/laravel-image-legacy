@@ -16,8 +16,9 @@ matrix:
 
 before_script:
   - curl -s http://getcomposer.org/installer | php
-  - php composer.phar require "illuminate/support" "$LARAVEL.*"
-  - php composer.phar install --dev
+  - php -n -d extension=json.so composer.phar global require hirak/prestissimo --update-no-dev
+  - php -n -d extension=json.so composer.phar require "illuminate/support" $LARAVEL -vvv
+  - php -n -d extension=json.so composer.phar install --dev
 
 script: phpunit
 
