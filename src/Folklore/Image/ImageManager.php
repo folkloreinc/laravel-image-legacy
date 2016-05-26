@@ -552,8 +552,8 @@ class ImageManager extends Manager
      */
     public function getRealPath($path)
     {
-        if (is_file($path)) {
-            return $path;
+        if (is_file(realpath($path))) {
+            return realpath($path);
         }
         
         //Get directories

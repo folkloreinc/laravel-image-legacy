@@ -31,26 +31,32 @@ class ImageServe
         $writePath = isset($this->config['write_path']) ? trim($this->config['write_path'], '/') : null;
         $parsedOptions = $parsedPath['options'];
         $imagePath = $parsedPath['path'];
+
         if ($writePath && strpos($imagePath, $writePath) === 0) {
             $imagePath = substr($imagePath, strlen($writePath)+1);
         }
 
         // See if the referenced file exists and is an image
-        if (!($imagePath = $this->image->getRealPath($imagePath))) {
+        if (!($realPath = $this->image->getRealPath($imagePath))) {
             throw new FileMissingException('Image file missing');
         }
 
         // create the destination if it does not exist
         if ($this->config['write_image']) {
+            // make sure the path is relative to the document root
+            if (strpos($realPath, public_path()) === 0) {
+                $imagePath = substr($realPath, strlen(public_path()));
+            }
             $destinationFolder = $writePath ?: dirname($imagePath);
+            $destinationFolder = public_path(trim($writePath, '/') . '/' . ltrim(dirname($imagePath), '/'));
+            
             if (isset($writePath)) {
-                $destinationFolder = public_path(trim($writePath, '/') . '/' . ltrim(dirname($imagePath), '/'));
                 \File::makeDirectory($destinationFolder, 0770, true, true);
             }
         }
 
         // Make sure destination is writeable
-        if ($this->config['write_image'] && !is_writable(dirname($path))) {
+        if ($this->config['write_image'] && !is_writable(dirname($realPath))) {
             throw new Exception('Destination is not writeable');
         }
 
@@ -70,7 +76,7 @@ class ImageServe
         }
 
         //Get the image format
-        $format = $this->image->format($imagePath);
+        $format = $this->image->format($realPath);
 
         //Get the image content
         $saveOptions = array();
