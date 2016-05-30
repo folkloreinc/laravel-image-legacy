@@ -19,12 +19,12 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "~5.2",
-        "guzzlehttp/guzzle": "~5.3|~6.0",
+        "illuminate/support": ">=5.1",
+        "guzzlehttp/guzzle": "5.3|~6.0",
         "imagine/imagine": "0.6.*"
     },
     "require-dev": {
-        "orchestra/testbench": "~3.2"
+        "orchestra/testbench": "3.*"
     },
     "repositories": [
         {

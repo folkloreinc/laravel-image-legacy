@@ -114,6 +114,11 @@ class ImageManager extends Manager
 
         $path = array();
         $path[] = rtrim($host, '/');
+
+        if ($prefix = $this->app['config']->get('image.write_path')) {
+            $path[] = trim($prefix, '/');
+        }
+
         if (!empty($dir)) {
             $path[] = $dir;
         }
@@ -547,8 +552,8 @@ class ImageManager extends Manager
      */
     public function getRealPath($path)
     {
-        if (is_file($path)) {
-            return $path;
+        if (is_file(realpath($path))) {
+            return realpath($path);
         }
         
         //Get directories
@@ -560,7 +565,7 @@ class ImageManager extends Manager
         // Loop through all the directories files may be uploaded to
         foreach ($dirs as $dir) {
             $dir = rtrim($dir, '/');
-            
+
             // Check that directory exists
             if (!is_dir($dir)) {
                 continue;
