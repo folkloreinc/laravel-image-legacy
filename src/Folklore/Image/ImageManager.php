@@ -716,7 +716,19 @@ class ImageManager extends Manager
      */
     protected function filterColorize(ImageInterface $image, $color)
     {
-        $color = $image->palette()->color($color);
+        $palettes = ['RGB','CMYK'];
+        $parts = explode(',', $color);
+        $color = $parts[0];
+        if(isset($parts[1]) && in_array(strtoupper($parts[1]), $palettes))
+        {
+            $className = '\\Imagine\\Image\\Palette\\'.strtoupper($parts[1]);
+            $palette = new $className();
+        }
+        else
+        {
+            $palette = $image->palette();
+        }
+        $color = $palette->color($color);
         $image->effects()->colorize($color);
         return $image;
     }
