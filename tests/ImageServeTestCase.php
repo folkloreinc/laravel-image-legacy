@@ -33,45 +33,47 @@ class ImageServeTestCase extends TestCase
     public function testServeWriteImage()
     {
         $this->app['config']->set('image.write_image', true);
-        
+
         $url = $this->image->url($this->imagePath, 300, 300, [
             'crop' => true
         ]);
-        
+
         $response = $this->call('GET', $url);
 
         $this->assertTrue($response->isOk());
 
         $imagePath = $this->app['path.public'].'/'.basename($url);
         $this->assertFileExists($imagePath);
-        
+
         $sizeManipulated = getimagesize($imagePath);
         $this->assertEquals($sizeManipulated[0], 300);
         $this->assertEquals($sizeManipulated[1], 300);
-        
+
         $this->app['config']->set('image.write_image', false);
     }
 
     public function testServeWriteImagePath()
     {
-        $customPath = $this->app['path.public'].'/custom';
+        $customPath = 'custom';
+
         $this->app['config']->set('image.write_image', true);
         $this->app['config']->set('image.write_path', $customPath);
-        
+
         $url = $this->image->url($this->imagePath, 300, 300, [
             'crop' => true
         ]);
+
         $response = $this->call('GET', $url);
 
         $this->assertTrue($response->isOk());
 
-        $imagePath = $customPath.'/'.basename($url);
+        $imagePath = public_path($customPath.'/'.basename($url));
         $this->assertFileExists($imagePath);
-        
+
         $sizeManipulated = getimagesize($imagePath);
         $this->assertEquals($sizeManipulated[0], 300);
         $this->assertEquals($sizeManipulated[1], 300);
-        
+
         $this->app['config']->set('image.write_image', false);
         $this->app['config']->set('image.write_path', null);
     }
