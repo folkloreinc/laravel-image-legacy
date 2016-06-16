@@ -53,12 +53,13 @@ class ImageServe
             if (isset($writePath)) {
                 \File::makeDirectory($destinationFolder, 0770, true, true);
             }
+
+            // Make sure destination is writeable
+            if (!is_writable(dirname($destinationFolder))) {
+                throw new Exception('Destination is not writeable');
+            }
         }
 
-        // Make sure destination is writeable
-        if ($this->config['write_image'] && !is_writable(dirname($realPath))) {
-            throw new Exception('Destination is not writeable');
-        }
 
         // Merge all options with the following priority:
         // Options passed as an argument to the serve method
