@@ -225,9 +225,14 @@ class ImageManager extends Manager
      */
     public function serve($path, $config = array())
     {
+        //Use user supplied quality or the config value
+        $quality = array_get($config, 'quality', $this->app['config']['image.quality']);
+        //if nothing works fallback to the hardcoded value
+        $quality = $quality ?: $this->defaultOptions['quality'];
+
         //Merge config with defaults
         $config = array_merge(array(
-            'quality' => array_get($config, 'quality', $this->defaultOptions['quality']),
+            'quality' => $quality,
             'custom_filters_only' => $this->app['config']['image.serve_custom_filters_only'],
             'write_image' => $this->app['config']['image.write_image'],
             'write_path' => $this->app['config']['image.write_path']
