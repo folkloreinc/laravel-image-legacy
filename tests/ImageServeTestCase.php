@@ -151,8 +151,15 @@ class ImageServeTestCase extends TestCase
             'crop' => true,
             'wrong' => true
         ));
-        $response = $this->call('GET', $url);
-        $this->assertSame(404, $response->getStatusCode());
+        
+        try {
+            $response = $this->call('GET', $url);
+            $this->assertSame(404, $response->getStatusCode());
+        }
+        catch(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e)
+        {
+            $this->assertInstanceOf('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException', $e);
+        }
     }
 
     public function testServeWrongFile()
@@ -161,8 +168,15 @@ class ImageServeTestCase extends TestCase
             'crop' => true,
             'wrong' => true
         ));
-        $response = $this->call('GET', $url);
-        $this->assertSame(404, $response->getStatusCode());
+        
+        try {
+            $response = $this->call('GET', $url);
+            $this->assertSame(404, $response->getStatusCode());
+        }
+        catch(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e)
+        {
+            $this->assertInstanceOf('\Symfony\Component\HttpKernel\Exception\NotFoundHttpException', $e);
+        }
     }
 
     public function testServeWrongFormat()
@@ -170,8 +184,15 @@ class ImageServeTestCase extends TestCase
         $url = $this->image->url('/wrong.jpg', 300, 300, array(
             'crop' => true
         ));
-        $response = $this->call('GET', $url);
-        $this->assertSame(500, $response->getStatusCode());
+        
+        try {
+            $response = $this->call('GET', $url);
+            $this->assertSame(500, $response->getStatusCode());
+        }
+        catch(\Symfony\Component\HttpKernel\Exception\HttpException $e)
+        {
+            $this->assertInstanceOf('\Symfony\Component\HttpKernel\Exception\HttpException', $e);
+        }
     }
     
     /**
