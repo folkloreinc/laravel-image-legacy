@@ -87,13 +87,27 @@ class ImageServe
         } elseif ($format === 'png') {
             $saveOptions['png_compression_level'] = round($quality / 100 * 9);
         }
-        $contents = $image->get($format, $saveOptions);
+        $content = $image->get($format, $saveOptions);
 
         //Create the response
         $mime = $this->image->getMimeFromFormat($format);
-        $response = response()->make($contents, 200);
-        $response->header('Content-Type', $mime);
+        $response = $this->createResponseFromContent($content);
+        $response->header('Content-type', $mime);
 
+        return $response;
+    }
+    
+    protected function getResponseExpires()
+    {
+        return config('image.serve_expires', 3600*24*31);
+    }
+    
+    protected function createResponseFromContent($content)
+    {
+        $expires = $this->getResponseExpires();
+        $response = response()->make($content, 200);
+        $response->header('Cache-control', 'max-age='.$expires.', public');
+        $response->header('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + $expires));
         return $response;
     }
 }

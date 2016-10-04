@@ -5,7 +5,7 @@ use Folklore\Image\Exception\FileMissingException;
 
 use finfo;
 
-class ImageProxy
+class ImageProxy extends ImageServe
 {
     protected $image = null;
     
@@ -205,12 +205,10 @@ class ImageProxy
     
     protected function getResponseFromPath($path)
     {
-        $contents = file_get_contents($path);
-        
-        $response = response()->make($contents, 200);
-        $response->header('Cache-control', 'max-age='.(3600*24).', public');
-        $response->header('Content-type', $this->getMimeFromContent($contents));
-        $contents = null;
+        $content = file_get_contents($path);
+        $response = $this->createResponseFromContent($content);
+        $response->header('Content-type', $this->getMimeFromContent($content));
+        $content = null;
         
         return $response;
     }
@@ -218,14 +216,18 @@ class ImageProxy
     protected function getResponseFromDisk($path)
     {
         $disk = $this->getDisk();
-        $contents = $disk->get($path);
-        
-        $response = response()->make($contents, 200);
-        $response->header('Cache-control', 'max-age='.(3600*24).', public');
-        $response->header('Content-type', $this->getMimeFromContent($contents));
-        $contents = null;
+        $content = $disk->get($path);
+        $response = $this->createResponseFromContent($content);
+        $response->header('Content-type', $this->getMimeFromContent($content));
+        $content = null;
         
         return $response;
+    }
+    
+    protected function getResponseExpires()
+    {
+        $proxyExpires = config('image.proxy_expires', null);
+        return $proxyExpires ? $proxyExpires:config('image.serve_expires', 3600*24*31);
     }
     
     protected function saveToProxyCache($path, $contents)
