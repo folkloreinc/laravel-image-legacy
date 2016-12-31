@@ -34,11 +34,10 @@
     ],
     "autoload": {
         "classmap": [
-            "tests/ImageTestCase.php"
+            "tests/"
         ],
         "psr-0": {
-            "Folklore\\Image\\": "src/",
-            "Folklore\\Image\\Tests": "tests/"
+            "Folklore\\Image\\": "src/"
         }
     },
     "minimum-stability": "stable"

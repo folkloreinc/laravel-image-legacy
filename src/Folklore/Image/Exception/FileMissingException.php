@@ -1,3 +1,6 @@
 <?php namespace Folklore\Image\Exception;
 
-class FileMissingException extends Exception { }
+class FileMissingException extends Exception
+{
+
+}

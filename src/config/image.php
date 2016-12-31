@@ -19,6 +19,79 @@ return array(
     
     /*
     |--------------------------------------------------------------------------
+    | Image Filters
+    |--------------------------------------------------------------------------
+    |
+    | 
+    |
+    */
+    'filters' => [
+        'blur' => \Folklore\Image\Filter\Blur::class,
+        'colorize' => \Folklore\Image\Filter\Colorize::class,
+        'gamma' => \Folklore\Image\Filter\Gamm::class,
+        'grayscale' => \Folklore\Image\Filter\Grayscale::class,
+        'interlace' => \Folklore\Image\Filter\Interlace::class,
+        'negative' => \Folklore\Image\Filter\Negative::class,
+        'rotate' => \Folklore\Image\Filter\Rotate::class
+    ],
+    
+    'source' => 'public',
+    
+    'sources' => [
+        
+        'public' => [
+            'driver' => 'local',
+            'path' => public_path()
+        ],
+        
+        'cloud' => [
+            'driver' => 'filesystem',
+            'disk' => 'local',
+            'cache' => true
+        ]
+        
+    ],
+    
+    'url' => [
+        'pattern' => '^(.*){parameters}\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$',
+        'parameters_format' => '-image({options})',
+        'option_format' => '{key}[{value}]',
+        'options_separator' => '-'
+    ],
+    
+    'routes' => [
+        'default' => [
+            'route' => '{pattern}',
+            'domain' => null,
+            'middleware' => [],
+            'filters_only' => true,
+            'expires' => 3600 * 24 * 31,
+            'headers' => [],
+            'cache' => true
+        ]
+    ],
+    
+    'memory_limit' => '128M',
+    
+    
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Default Image Driver
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the default image "driver" used by Imagine library
+    | to manipulate images.
+    |
+    | Supported: "gd", "imagick", "gmagick"
+    |
+    */
+    'driver' => 'gd',
+    
+    
+    
+    /*
+    |--------------------------------------------------------------------------
     | Memory limit
     |--------------------------------------------------------------------------
     |

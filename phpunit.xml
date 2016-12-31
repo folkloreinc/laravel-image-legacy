@@ -12,9 +12,7 @@
 >
     <testsuites>
         <testsuite name="Folklore/Image Test Suite">
-            <file>./tests/ImageTestCase.php</file>
-            <file>./tests/ImageServeTestCase.php</file>
-            <file>./tests/ImageProxyTestCase.php</file>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

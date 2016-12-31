@@ -1,6 +1,6 @@
 <?php namespace Folklore\Image\Exception;
 
-class ParseException extends Exception
+class InvalidSourceException extends Exception
 {
 
 }
