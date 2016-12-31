@@ -85,6 +85,29 @@ class ImageResponse extends StreamedResponse
     }
 
     /**
+     * Get mime type from image format
+     *
+     * @return string
+     */
+    protected function getMimeFromFormat($format)
+    {
+        switch ($format) {
+            case 'gif':
+                return 'image/gif';
+            break;
+            case 'jpg':
+            case 'jpeg':
+                return 'image/jpeg';
+            break;
+            case 'png':
+                return 'image/png';
+            break;
+        }
+
+        return null;
+    }
+
+    /**
      * Set the image of the response.
      *
      * @param  mixed  $content
@@ -139,6 +162,10 @@ class ImageResponse extends StreamedResponse
     public function setFormat($format)
     {
         $this->format = $format;
+        
+        // Set mime
+        $mime = $this->getMimeFromFormat($format);
+        $this->header('Content-type', $mime);
         
         return $this;
     }

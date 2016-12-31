@@ -2,9 +2,9 @@
 
 namespace Folklore\Image\Http;
 
+use Folklore\Image\Http\ImageResponse;
 use Closure;
 use File;
-use Folklore\Image\Http\ImageResponse;
 
 class CacheMiddleware
 {
@@ -17,15 +17,19 @@ class CacheMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $response = $next($request);
-        
         $path = $request->path();
-        $cachePath = rtrim(public_path(), '/').'/'.ltrim($path, '/');
-        $cacheDirectory = dirname($cachePath);
+        $route = $request->route();
+        $routeAction = $route ? $route->getAction():[];
+        $cachePath = array_get($routeAction, 'image.cache_path', public_path());
+        $cacheFilePath = rtrim($cachePath, '/').'/'.ltrim($path, '/');
+        $cacheDirectory = dirname($cacheFilePath);
         
-        if (file_exists($cachePath)) {
-            return $response;
+        if (file_exists($cacheFilePath)) {
+            return response()->image()
+                ->setImagePath($cacheFilePath);
         }
+    
+        $response = $next($request);
         
         if (!file_exists($cacheDirectory)) {
             File::makeDirectory($cacheDirectory, 0755, true, true);
@@ -39,11 +43,11 @@ class CacheMiddleware
         // Otherwise, get the response content and save it.
         if ($response instanceof ImageResponse) {
             $image = $response->getImage();
-            $image->save($cachePath);
-            $response->setImagePath($cachePath);
+            $image->save($cacheFilePath);
+            $response->setImagePath($cacheFilePath);
         } else {
             $content = $response->getContent();
-            File::put($cachePath, $content);
+            File::put($cacheFilePath, $content);
         }
 
         return $response;

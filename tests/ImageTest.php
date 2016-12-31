@@ -83,14 +83,14 @@ class ImageTest extends ImageTestCase
      */
     public function testRoutes()
     {
-        Image::source('cloud')->make('/image.jpg');
-        /*Image::routes();
+        Image::routes();
         
-        $url = Image::url('/image.jpg', 300, 300, [
-            'route' => 'default'
-        ]);
+        $routes = app('router')->getRoutes();
+        $route = $routes->getByName('image.default');
         
-        $response = $this->call('GET', $url);
-        dd($url, $response->getStatusCode());*/
+        $this->assertInstanceOf(\Illuminate\Routing\Route::class, $route);
+        
+        $action = $route->getAction();
+        $this->assertArrayHasKey('image', $action);
     }
 }

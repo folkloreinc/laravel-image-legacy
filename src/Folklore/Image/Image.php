@@ -1,10 +1,13 @@
 <?php namespace Folklore\Image;
 
 use Closure;
+use Illuminate\Foundation\Application;
 
 class Image
 {
     protected $app;
+    
+    protected $urlGenerator;
     
     /**
      * All sources
@@ -20,7 +23,7 @@ class Image
      */
     protected $filters = [];
     
-    public function __construct($app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
         
@@ -42,8 +45,7 @@ class Image
         }
         
         $source = $this->app['image.manager.source']->driver($name);
-        $urlGenerator = $this->app->make('\Folklore\Image\Contracts\UrlGenerator');
-        $factory =  $this->app->make('\Folklore\Image\Contracts\ImageFactory', [$source, $urlGenerator]);
+        $factory =  $this->app->make('\Folklore\Image\Contracts\ImageFactory', [$source]);
         
         return $this->factories[$key] = $factory;
     }

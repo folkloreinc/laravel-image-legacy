@@ -1,6 +1,7 @@
 <?php namespace Folklore\Image;
 
 use Folklore\Image\Exception\ParseException;
+use Illuminate\Foundation\Application;
 use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
 
 class UrlGenerator implements UrlGeneratorContract
@@ -9,32 +10,40 @@ class UrlGenerator implements UrlGeneratorContract
     
     protected $host = null;
     
-    protected $pattern = '^(.*){parameters}\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$';
+    protected $format = '{dirname}/{filename}/{filters}.{extension}';
     
-    protected $parametersFormat = '-image({options})';
+    protected $filtersFormat = '-image({filter})';
     
-    protected $optionFormat = '{key}({value})';
+    protected $filterFormat = '{key}({value})';
     
-    protected $optionsSeparator = '-';
+    protected $filterSeparator = '-';
     
-    public function __construct(Image $image, Router $router)
+    public function __construct(Application $app)
     {
-        $this->image = $image;
-        $this->router = $router;
+        $this->app = $app;
+        $this->image = $app['image'];
+        $this->router = $app['image.router'];
+        
+        // Set default values from config
+        $config = $this->app['config'];
+        $this->setFormat($config['image.url.format']);
+        $this->setFiltersFormat($config['image.url.filters_format']);
+        $this->setFilterFormat($config['image.url.filter_format']);
+        $this->setFilterSeparator($config['image.url.filter_separator']);
     }
     
     /**
-     * Make an URL from the options passed as argument
+     * Make an URL from the filters passed as argument
      *
      * @param   string      $src        The source path
-     * @param   int|array   $width      The width of the image, or and array of options
+     * @param   int|array   $width      The width of the image, or and array of filters
      * @param   int         $height     The height of the image
-     * @param   array       $options    An array of filters and config options
-     * @return  string      The url containing the options parameter
+     * @param   array       $filters    An array of filters and config filters
+     * @return  string      The url containing the filters
      */
-    public function make($src, $width = null, $height = null, $options = [])
+    public function make($src, $width = null, $height = null, $filters = [])
     {
-        // Don't allow empty strings
+        // Don't allow empty path
         if (empty($src)) {
             return;
         }
@@ -42,162 +51,200 @@ class UrlGenerator implements UrlGeneratorContract
         // Extract the path from a URL if a URL was provided instead of a path
         $src = parse_url($src, PHP_URL_PATH);
 
-        // If width parameter is an array, use it as options
+        // If width filter is an array, use it as filters
         if (is_array($width)) {
-            $options = $width;
+            $filters = $width;
             $width = null;
             $height = null;
         }
         
-        $configKeys = ['route', 'parameters_format', 'option_format', 'options_separator'];
-        $config = array_only($options, $configKeys);
-        $options = array_except($options, $configKeys);
+        // Separate config from filters
+        $configKeys = ['route', 'format', 'filters_format', 'filter_format', 'filter_separator'];
+        $config = array_only($filters, $configKeys);
+        $filters = array_except($filters, $configKeys);
         
         // Get config from route, if specified
         if (isset($config['route'])) {
             $route = $this->router->getRoute($config['route']);
-            $routeConfig = array_only($route, $configKeys);
+            $routeConfig = array_get($route, 'url');
             $config = array_merge($routeConfig, $config);
         }
 
-        // Get size
-        $width = $width !== null ? $width:array_get($options, 'width', -1);
-        $height = $height !== null ? $height:array_get($options, 'height', -1);
-
-        // Create the url options
-        $urlOptions = array();
-
-        // Add size only if present
-        if ($width !== -1 || $height !== -1) {
-            $urlOptions[] = ($width !== -1 ? $width:'_').'x'.($height !== -1 ? $height:'_');
-        }
-
-        // Add options
-        if ($options && is_array($options)) {
-            $optionFormat = array_get($config, 'option_format');
-            $urlOptions += $this->getUrlPartsFromOptions($options, $optionFormat);
-        }
-
-        // Create the url parameter
-        $parametersFormat = array_get($config, 'parameters_format');
-        $optionsSeparator = array_get($config, 'options_separator');
-        $parameter = $this->getUrlParameterFromOptions($urlOptions, $parametersFormat, $optionsSeparator);
-
-        // Get the host and path
-        $host = rtrim(array_get($config, 'host', ''), '/');
-        $path = $this->getPathFromSourceAndParameter($src, $parameter);
+        // Create the url filters. Add the size first and the filters after
+        $urlFilters = array();
         
-        // If a route is specified, it is used to generate the url.
+        $width = $width !== null ? $width:array_get($filters, 'width', -1);
+        $height = $height !== null ? $height:array_get($filters, 'height', -1);
+        if ($width !== -1 || $height !== -1) {
+            $urlFilters[] = ($width !== -1 ? $width:'_').'x'.($height !== -1 ? $height:'_');
+        }
+        
+        if ($filters && is_array($filters)) {
+            $filterFormat = array_get($config, 'filter_format');
+            $filtersParts = $this->getUrlPartsFromFilters($filters, $filterFormat);
+            $urlFilters = array_merge($urlFilters, $filtersParts);
+        }
+
+        // Create the parameter with filters
+        $filtersFormat = array_get($config, 'filters_format');
+        $filterSeparator = array_get($config, 'filter_separator');
+        $filtersParameter = $this->getFiltersParameter($urlFilters, $filtersFormat, $filterSeparator);
+
+        // Build the url by replacing the placeholders
+        $srcParts = pathinfo($src);
+        $placeholders = [
+            'host' => rtrim(array_get($config, 'host', ''), '/'),
+            'dirname' => trim($srcParts['dirname'], '/'),
+            'basename' => $srcParts['filename'],
+            'filename' => $srcParts['filename'].'.'.$srcParts['extension'],
+            'extension' => $srcParts['extension'],
+            'filters' => $filtersParameter
+        ];
+        $url = array_get($config, 'format', $this->getFormat());
+        foreach ($placeholders as $key => $replace) {
+            $url = preg_replace('/\{\s*'.$key.'\s*\}/i', $replace, $url);
+        }
+        
+        // If a route is specified, use it to generate the url.
         if (isset($config['route'])) {
             $routeName = $this->router->getRouteName($config['route']);
-            $url = route($routeName, ['__PATH__']);
-            return str_replace('__PATH__', $path, $url);
+            $routeUrl = route($routeName, ['__URL__']);
+            return str_replace('__URL__', ltrim($url, '/'), $routeUrl);
         }
 
-        return $host.'/'.$path;
+        return $url;
     }
 
     /**
      * Get the URL pattern
      *
-     * @param array $config Config options to change the pattern and parameters_format
+     * @param array $config Config options to change the format and filters_format
      * @return string
      */
     public function pattern($config = [])
     {
-        $pattern = array_get($config, 'pattern', $this->getPattern());
-        $parametersFormat = array_get($config, 'parameters_format', $this->getParametersFormat());
-        $format = preg_quote($parametersFormat);
-        $formatPattern = preg_replace('/\\\{\s*options\s*\\\}/', '(.*?)?', $format);
-        $pattern = preg_replace('/\{\s*parameters\s*\}/', $formatPattern, $pattern);
+        $pattern = array_get($this->patternAndMatches($config), 'pattern');
+        return '^'.$pattern.'$';
+    }
+    
+    protected function patternAndMatches($config = [])
+    {
+        $filtersFormat = array_get($config, 'filters_format', $this->getFiltersFormat());
+        $filtersPattern = preg_replace('#\\\{\s*filter\s*\\\}#', '(.*?)', preg_quote($filtersFormat, '#'));
+        
+        $placeholders = [
+            'host' => '(.*?)?',
+            'dirname' => '(.*?)?',
+            'basename' => '([^\/\.]+?)',
+            'filename' => '([^\/]+)',
+            'extension' => '([^\.]+)',
+            'filters' => '('.$filtersPattern.')?'
+        ];
+        $format = array_get($config, 'format', $this->getFormat());
+        $pattern = preg_quote($format, '#');
+        $pattern = preg_replace('#(\\\{\s*dirname\s*\\\})\/#i', '$1\/?', $pattern);
+        
+        // Get the positions of each placeholders in the path
+        $positions = [];
+        foreach ($placeholders as $key => $replace) {
+            if (preg_match('#\\\{\s*('.$key.')\s*\\\}#', $pattern, $matches, PREG_OFFSET_CAPTURE)) {
+                $positions[$key] = $matches[1][1];
+            }
+        }
+        asort($positions);
+        $keys = array_keys($positions);
+        $filtersPosition = array_search('filters', $keys);
+        
+        // Build the pattern and get the matches position of each placeholder.
+        $matches = [];
+        foreach ($placeholders as $key => $replace) {
+            $index = array_search($key, $keys);
+            if ($index === false) {
+                continue;
+            }
+            $index += 1;
+            $pattern = preg_replace('#\\\{\s*'.$key.'\s*\\\}#', $replace, $pattern);
+            if ($key === 'filters' || ($filtersPosition !== false && $index > $filtersPosition)) {
+                $index += 1;
+            }
+            $matches[$key] = $index;
+        }
 
-        return $pattern;
+        return [
+            'pattern' => $pattern,
+            'matches' => $matches
+        ];
     }
     
     /**
      * Parse an url
      *
      * @param string $path The path to be parsed
-     * @param array $config Config options to change the pattern and parameters_format
+     * @param array $config Config options to change the pattern and filters_format
      * @return array
      */
     public function parse($path, $config = [])
     {
-        $options = array();
-        if (preg_match('#'.$this->pattern($config).'#i', $path, $matches)) {
-            //Get path and options
-            $path = $matches[1].'.'.$matches[3];
+        // Check if the path matche the pattern,
+        // otherwise return the original path.
+        $filters = array();
+        $patternAndMatches = $this->patternAndMatches($config);
+        $pattern = array_get($patternAndMatches, 'pattern');
+        $patternMatches = array_get($patternAndMatches, 'matches');
+        if (preg_match('#'.$pattern.'#i', $path, $matches)) {
+            //Remove the filters from the path
+            $filtersPath = $matches[$patternMatches['filters']];
+            $filtersFormat = array_get($config, 'filters_format', $this->getFiltersFormat());
+            $filtersFormatPath = preg_replace('#\{\s*filter\s*\}#', $filtersPath, $filtersFormat);
+            $path = preg_replace('#'.preg_quote($filtersFormatPath, '#').'\/?#', '', $path);
             
-            // Parse options from path
-            $optionsPath = $matches[2];
-            $options = $this->parseOptions($optionsPath, $config);
+            //Parse the filters
+            $filters = $this->parseFilters($filtersPath, $config);
         }
 
         return [
             'path' => $path,
-            'options' => $options
+            'filters' => $filters
         ];
     }
     
-    protected function getUrlParameterFromOptions($options, $parametersFormat = null, $optionsSeparator = null)
+    protected function getFiltersParameter($filters, $filtersFormat = null, $filterSeparator = null)
     {
-        if (!sizeof($options)) {
+        if (!sizeof($filters)) {
             return '';
         }
         
-        if ($parametersFormat === null) {
-            $parametersFormat = $this->getParametersFormat();
+        if ($filtersFormat === null) {
+            $filtersFormat = $this->getFiltersFormat();
         }
         
-        if ($optionsSeparator === null) {
-            $optionsSeparator = $this->getOptionsSeparator();
+        if ($filterSeparator === null) {
+            $filterSeparator = $this->getFilterSeparator();
         }
         
-        $urlOptions = implode($optionsSeparator, $options);
-        return preg_replace('/\{\s*options\s*\}/i', $urlOptions, $parametersFormat);
+        $urlFilters = implode($filterSeparator, $filters);
+        return preg_replace('/\{\s*filter\s*\}/i', $urlFilters, $filtersFormat);
     }
     
-    protected function getPathFromSourceAndParameter($src, $parameter)
-    {
-        $srcParts = pathinfo($src);
-        $path = [];
-        
-        //Get directory
-        $dir = trim($srcParts['dirname'], '/');
-        if (!empty($dir)) {
-            $path[] = $dir;
-        }
-        
-        //Get filename
-        $filename = array();
-        $filename[] = $srcParts['filename'].$parameter;
-        if (!empty($srcParts['extension'])) {
-            $filename[] = $srcParts['extension'];
-        }
-        $path[] = implode('.', $filename);
-        
-        return implode('/', $path);
-    }
-    
-    protected function getUrlPartsFromOptions($options, $format = null)
+    protected function getUrlPartsFromFilters($filters, $format = null)
     {
         if ($format === null) {
-            $format = $this->getOptionFormat();
+            $format = $this->getFilterFormat();
         }
         
         // If the key as no value or is equal to
         // true or null, only the key is added.
         $parts = [];
-        foreach ($options as $key => $val) {
+        foreach ($filters as $key => $val) {
             if (is_numeric($key)) {
                 $parts[] = $val;
             } elseif ($val === true || $val === null) {
                 $parts[] = $key;
             } else {
                 $val = is_array($val) ? implode(',', $val):$val;
-                $option = preg_replace('/\{\s*key\s*\}/', $key, $format);
-                $option = preg_replace('/\{\s*value\s*\}/', $val, $option);
-                $parts[] = $option;
+                $filter = preg_replace('/\{\s*key\s*\}/i', $key, $format);
+                $filter = preg_replace('/\{\s*value\s*\}/i', $val, $filter);
+                $parts[] = $filter;
             }
         }
         
@@ -205,115 +252,100 @@ class UrlGenerator implements UrlGeneratorContract
     }
 
     /**
-     * Parse options from url string
+     * Parse filters from url string
      *
-     * @param  string   $optionPath The path contaning all the options
+     * @param  string   $path The path contaning all the filters
      * @param  array    $config Configuration options for the parsing
      * @return array
      */
-    protected function parseOptions($path, $config = [])
+    protected function parseFilters($path, $config = [])
     {
-        $options = array();
+        if (empty($path)) {
+            return [];
+        }
         
-        $optionFormat = array_get($config, 'option_format', $this->getOptionFormat());
-        $optionPattern = preg_replace('/\\\{\s*key\s*\\\}/i', '(\w+)', preg_quote($optionFormat));
-        $optionPattern = preg_replace('/\\\{\s*value\s*\\\}/i', '([a-z0-9\,\.]+)', $optionPattern);
+        $filters = array();
+        
+        $filterFormat = array_get($config, 'filter_format', $this->getFilterFormat());
+        $filterPattern = preg_replace('#\\\{\s*key\s*\\\}#i', '(\w+)', preg_quote($filterFormat, '#'));
+        $filterPattern = preg_replace('#\\\{\s*value\s*\\\}#i', '([a-z0-9\,\.]+)', $filterPattern);
         
         // Loop through the params and make the options key value pairs
-        $optionsSeparator = array_get($config, 'options_separator', $this->getOptionsSeparator());
-        $optionParts = explode($optionsSeparator, $path);
-        foreach ($optionParts as $option) {
-            //Check if the option is a size or is properly formatted
-            if (preg_match('#([0-9]+|_)x([0-9]+|_)#i', $option, $matches)) {
-                $options['width'] = $matches[1] === '_' ? null:(int)$matches[1];
-                $options['height'] = $matches[2] === '_' ? null:(int)$matches[2];
+        $filterSeparator = array_get($config, 'filter_separator', $this->getFilterSeparator());
+        $filterParts = explode($filterSeparator, $path);
+        foreach ($filterParts as $filter) {
+            //Check if the filter is a size or is properly formatted
+            if (preg_match('/([0-9]+|_)x([0-9]+|_)/i', $filter, $matches)) {
+                $filters['width'] = $matches[1] === '_' ? null:(int)$matches[1];
+                $filters['height'] = $matches[2] === '_' ? null:(int)$matches[2];
                 continue;
-            } elseif (!preg_match('#^(\w+)$#i', $option, $withoutValueMatches) &&
-                !preg_match('#^'.$optionPattern.'$#i', $option, $withValueMatches)
+            } elseif (!preg_match('#^(\w+)$#i', $filter, $withoutValueMatches) &&
+                !preg_match('/^'.$filterPattern.'$/i', $filter, $withValueMatches)
             ) {
-                throw new ParseException('Option "'.$option.'" has invalid pattern.');
+                throw new ParseException('Filter "'.$filter.'" has invalid pattern.');
             }
-            
             $key = array_get($withoutValueMatches, 1, array_get($withValueMatches, 1));
 
-            // If the option is a custom filter, check if it's a closure or an array.
-            // If it's an array, merge it with options
-            $filter = $this->image->getFilter($key);
+            // If the filter is a custom filter, check if it's a closure or an array.
+            // If it's an array, merge it with filters
+            $imagefilter = $this->image->getFilter($key);
             $value = isset($withValueMatches[2]) ? $withValueMatches[2]:null;
-            if (isset($filter)) {
-                if (is_object($filter) && is_callable($filter)) {
+            if (isset($imagefilter)) {
+                if (is_object($imagefilter) && is_callable($imagefilter)) {
                     $arguments = $value ? explode(',', $value):true;
-                    $options[$key] = $arguments;
-                } elseif (is_array($filter)) {
-                    $options = array_merge($options, $filter);
+                    $filters[$key] = $arguments;
+                } elseif (is_array($imagefilter)) {
+                    $filters = array_merge($filters, $imagefilter);
                 }
             } else {
                 if ($value) {
-                    $options[$key] = strpos($value, ',') === true ? explode(',', $value):$value;
+                    $filters[$key] = strpos($value, ',') === true ? explode(',', $value):$value;
                 } else {
-                    $options[$key] = true;
+                    $filters[$key] = true;
                 }
             }
         }
 
-        // Merge the options with defaults
-        return $options;
-    }
-
-    /**
-     * Check if an option key is valid by checking if a
-     * $this->filterName() method is present or if a custom filter
-     * is registered.
-     *
-     * @param  string  $key Option key to check
-     * @return boolean
-     */
-    protected function isValidOption($key)
-    {
-        if (in_array($key, array('crop','width','height'))) {
-            return true;
-        }
-
-        return $this->image->hasFilter($key);
+        return $filters;
     }
     
-    public function setPattern($value)
+    public function setFormat($value)
     {
-        $this->pattern = $value;
+        $this->format = $value;
     }
     
-    public function getPattern()
+    public function getFormat()
     {
-        return $this->pattern;
+        return $this->format;
     }
     
-    public function setOptionFormat($value)
+    public function setFilterFormat($value)
     {
-        $this->optionFormat = $value;
+        $this->filterFormat = $value;
     }
     
-    public function getOptionFormat()
+    public function getFilterFormat()
     {
-        return $this->optionFormat;
+        return $this->filterFormat;
     }
     
-    public function setOptionsSeparator($value)
+    public function setFilterSeparator($value)
     {
-        $this->optionsSeparator = $value;
+        $this->filterSeparator = $value;
     }
     
-    public function getOptionsSeparator()
+    public function getFilterSeparator()
     {
-        return $this->optionsSeparator;
+        return $this->filterSeparator;
     }
     
-    public function setParametersFormat($value)
+    public function setFiltersFormat($value)
     {
-        $this->parametersFormat = $value;
+        $this->filtersFormat = $value;
     }
     
-    public function getParametersFormat()
+    public function getFiltersFormat()
     {
-        return $this->parametersFormat;
+        return $this->filtersFormat;
     }
 }

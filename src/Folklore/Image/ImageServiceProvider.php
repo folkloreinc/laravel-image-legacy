@@ -13,6 +13,11 @@ class ImageServiceProvider extends ServiceProvider
      * @var bool
      */
     protected $defer = false;
+    
+    protected function getRouter()
+    {
+        return $this->app['router'];
+    }
 
     /**
      * Bootstrap the application events.
@@ -56,7 +61,7 @@ class ImageServiceProvider extends ServiceProvider
     
     public function bootHttp()
     {
-        Response::macro('image', function ($value) {
+        Response::macro('image', function ($value = null) {
             return new ImageResponse($value);
         });
     }
@@ -115,7 +120,8 @@ class ImageServiceProvider extends ServiceProvider
     public function registerRouter()
     {
         $this->app->singleton('image.router', function ($app) {
-            return new Router($app, $app['router']);
+            $router = $this->getRouter();
+            return new Router($app, $router);
         });
     }
 
@@ -138,17 +144,8 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerUrlGenerator()
     {
-        $this->app->bind('\Folklore\Image\Contracts\UrlGenerator', function ($app, $parameters) {
-            $config = $app['config'];
-            
-            $generator = new UrlGenerator($app['image'], $app['image.router']);
-            
-            $generator->setPattern($config['image.url.pattern']);
-            $generator->setParametersFormat($config['image.url.parameters_format']);
-            $generator->setOptionFormat($config['image.url.option_format']);
-            $generator->setOptionsSeparator($config['image.url.options_separator']);
-            
-            return $generator;
+        $this->app->singleton('image.url', function ($app, $parameters) {
+            return new UrlGenerator($app);
         });
     }
 
@@ -160,7 +157,7 @@ class ImageServiceProvider extends ServiceProvider
     public function registerImageFactory()
     {
         $this->app->bind('\Folklore\Image\Contracts\ImageFactory', function ($app, $parameters) {
-            return new ImageFactory($app, $parameters[0], $parameters[1]);
+            return new ImageFactory($app, $parameters[0]);
         });
     }
 

@@ -56,7 +56,6 @@ class Router
     {
         $router = $this->getRouter();
         
-        $patternOptions = array_only($route, ['pattern', 'parameters_format']);
         $source = array_get($route, 'source');
         $as = array_get($route, 'as', 'image.'.$name);
         $routePath = array_get($route, 'route', '{pattern}');
@@ -68,8 +67,10 @@ class Router
             $middleware[] = 'image.middleware.cache';
         }
         
+        // Here we check if the route contains any url config
+        $patternOptions = array_get($route, 'url', []);
         if (sizeof($patternOptions)) {
-            $patternName = 'image_pattern_'.str_replace('.', '_', preg_replace('/^image\./', '', $as));
+            $patternName = 'image_pattern_'.preg_replace('/[^a-z0-9]+/i', '_', preg_replace('/^image\./', '', $as));
             $routePattern = $this->app['image']->source($source)
                 ->pattern($patternOptions);
             $router->pattern($patternName, $routePattern);
@@ -77,7 +78,7 @@ class Router
             $patternName = 'image_pattern';
         }
         
-        $path = preg_replace('/\{\s*pattern\s*\}/', '{'.$patternName.'}', $routePath);
+        $path = preg_replace('/\{\s*pattern\s*\}/i', '{'.$patternName.'}', $routePath);
         
         $router->get($path, array(
             'as' => $as,

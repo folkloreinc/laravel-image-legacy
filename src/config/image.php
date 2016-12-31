@@ -19,6 +19,16 @@ return array(
     
     /*
     |--------------------------------------------------------------------------
+    | Memory limit
+    |--------------------------------------------------------------------------
+    |
+    | When manipulating an image, the memory limit is increased to this value
+    |
+    */
+    'memory_limit' => '128M',
+    
+    /*
+    |--------------------------------------------------------------------------
     | Image Filters
     |--------------------------------------------------------------------------
     |
@@ -28,334 +38,147 @@ return array(
     'filters' => [
         'blur' => \Folklore\Image\Filter\Blur::class,
         'colorize' => \Folklore\Image\Filter\Colorize::class,
-        'gamma' => \Folklore\Image\Filter\Gamm::class,
+        'gamma' => \Folklore\Image\Filter\Gamma::class,
         'grayscale' => \Folklore\Image\Filter\Grayscale::class,
         'interlace' => \Folklore\Image\Filter\Interlace::class,
         'negative' => \Folklore\Image\Filter\Negative::class,
         'rotate' => \Folklore\Image\Filter\Rotate::class
     ],
     
+    /*
+    |--------------------------------------------------------------------------
+    | Default Source
+    |--------------------------------------------------------------------------
+    |
+    | This option define the default source to be used by the Image facade. 
+    |
+    */
     'source' => 'public',
     
+    /*
+    |--------------------------------------------------------------------------
+    | Sources
+    |--------------------------------------------------------------------------
+    |
+    | The list of sources where you store images.
+    |
+    | Supported driver: "local", "filesystem", "url"
+    |
+    */
     'sources' => [
         
         'public' => [
+            // The local driver use a local path on the machine.
             'driver' => 'local',
+            
+            // The path where the images are stored.
             'path' => public_path()
         ],
         
         'cloud' => [
+            // The filesystem driver lets you use the filesystem from laravel.
             'driver' => 'filesystem',
+            
+            // The path on the disk where the images are stored. If set to null,
+            // it will start from the root.
+            'path' => null,
+            
+            // The disk where the images are stored.
             'disk' => 'local',
-            'cache' => true
+            
+            // Cache the filesystem file on local machine.
+            // Can be useful for remote file.
+            'cache' => true,
+            
+            // The path where you want to put cached files
+            'cache_path' => storage_path('image/cache')
         ]
         
     ],
     
+    /*
+    |--------------------------------------------------------------------------
+    | URL
+    |--------------------------------------------------------------------------
+    |
+    | You can define routes to handle images.
+    |
+    */
     'url' => [
-        'pattern' => '^(.*){parameters}\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$',
-        'parameters_format' => '-image({options})',
-        'option_format' => '{key}[{value}]',
-        'options_separator' => '-'
+        // The format of the url that will be generated. The {filters} placeholder
+        // will be replace by the filters according to the filters_format.
+        'format' => '{dirname}/{basename}{filters}.{extension}',
+        
+        // The format of the filters that will replace {filters} in the
+        // url format below. The {filter} placeholder will be replace by
+        // each filter according to the filter_format and joined
+        // by the filter_separator.
+        'filters_format' => '-image({filter})',
+        
+        // The format of a filter.
+        'filter_format' => '{key}({value})',
+        
+        // The separator for each filter
+        'filter_separator' => '-'
     ],
     
+    /*
+    |--------------------------------------------------------------------------
+    | Routes
+    |--------------------------------------------------------------------------
+    |
+    | You can define routes to handle images.
+    |
+    */
     'routes' => [
         'default' => [
+            // The path of the route. {pattern} will be replaced by the url pattern
+            // for this route according to the url format.
             'route' => '{pattern}',
+            
+            // A domain that will be used by the route
             'domain' => null,
+            
+            // Any middleware you want ot add on the route.
             'middleware' => [],
-            'filters_only' => true,
+            
+            // The name of the source to get the image. If it is set to null,
+            // it will get use the default source.
+            'source' => null,
+            
+            // Allow to specify a size as filter
+            'allow_size' => true,
+            
+            // Allow to specify filters in url. You can also set this to
+            // an array of specific filters to restrict this route to those filters.
+            // Example: ["negative"]
+            'allow_filters' => true,
+            
+            // Disallow some filters. Can be set to an array of filters.
+            'disallow_filters' => false,
+            
+            // Any url options you want to override.
+            'url' => [],
+            
+            // You can specify base filters that will be applied to any image
+            // on this route.
+            'filters' => [
+                'width' => 100
+            ],
+            
+            // Expires header in seconds
             'expires' => 3600 * 24 * 31,
+            
+            // Any headers you want to add on the image
             'headers' => [],
-            'cache' => true
+            
+            // Cache the file on local machine
+            'cache' => true,
+            
+            // The path where the images are stored. It is defined to public path,
+            // so the files would be statically served on next request.
+            'cache_path' => public_path()
         ]
-    ],
-    
-    'memory_limit' => '128M',
-    
-    
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Default Image Driver
-    |--------------------------------------------------------------------------
-    |
-    | This option controls the default image "driver" used by Imagine library
-    | to manipulate images.
-    |
-    | Supported: "gd", "imagick", "gmagick"
-    |
-    */
-    'driver' => 'gd',
-    
-    
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Memory limit
-    |--------------------------------------------------------------------------
-    |
-    | When manipulating an image, the memory limit is increased to this value
-    |
-    */
-    'memory_limit' => '128M',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Source directories
-    |--------------------------------------------------------------------------
-    |
-    | A list a directories to look for images
-    |
-    */
-    'src_dirs' => array(
-        public_path()
-    ),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Host
-    |--------------------------------------------------------------------------
-    |
-    | The http host where the image are served. Used by the Image::url() method
-    | to generate the right URL.
-    |
-    */
-    'host' => '',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Pattern
-    |--------------------------------------------------------------------------
-    |
-    | The pattern that is used to match routes that will be handled by the
-    | ImageController. The {parameters} will be remplaced by the url parameters
-    | pattern.
-    |
-    */
-    'pattern' => '^(.*){parameters}\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$',
-
-    /*
-    |--------------------------------------------------------------------------
-    | URL parameter
-    |--------------------------------------------------------------------------
-    |
-    | The URL parameter that will be appended to your image filename containing
-    | all the options for image manipulation. You have to put {options} where
-    | you want options to be placed. Keep in mind that this parameter is used
-    | in an url so all characters should be URL safe.
-    |
-    | Default: -image({options})
-    |
-    | Example: /uploads/photo-image(300x300-grayscale).jpg
-    |
-    */
-    'url_parameter' => '-image({options})',
-
-    /*
-    |--------------------------------------------------------------------------
-    | URL parameter separator
-    |--------------------------------------------------------------------------
-    |
-    | The URL parameter separator is used to build the parameters string
-    | that will replace {options} in url_parameter
-    |
-    | Default: -
-    |
-    | Example: /uploads/photo-image(300x300-grayscale).jpg
-    |
-    */
-    'url_parameter_separator' => '-',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Serve image
-    |--------------------------------------------------------------------------
-    |
-    | If true, a route will be added to catch image containing the
-    | URL parameter above.
-    |
-    */
-    'serve' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Serve route
-    |--------------------------------------------------------------------------
-    |
-    | If you want to restrict the route to a specific domain.
-    |
-    */
-    'serve_domain' => null,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Serve route
-    |--------------------------------------------------------------------------
-    |
-    | The route where image are served
-    |
-    */
-    'serve_route' => '{image_pattern}',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Serve custom Filters only
-    |--------------------------------------------------------------------------
-    |
-    | Restrict options in url to custom filters only. This prevent direct
-    | manipulation of the image.
-    |
-    */
-    'serve_custom_filters_only' => false,
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Serve expires
-    |--------------------------------------------------------------------------
-    |
-    | The expires headers that are sent when sending image.
-    |
-    */
-    'serve_expires' => (3600*24*31),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Write image
-    |--------------------------------------------------------------------------
-    |
-    | When serving an image, write the manipulated image in the same directory
-    | as the original image so the next request will serve this static file
-    |
-    */
-    'write_image' => false,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Write path
-    |--------------------------------------------------------------------------
-    |
-    | By default, the manipulated images are saved in the same path as the
-    | as the original image, you can override this path here
-    |
-    */
-    'write_path' => null,
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy
-    |--------------------------------------------------------------------------
-    |
-    | This enable or disable the proxy route
-    |
-    */
-    'proxy' => false,
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy expires
-    |--------------------------------------------------------------------------
-    |
-    | The expires headers that are sent when proxying image. Defaults to 
-    | serve_expires
-    |
-    */
-    'proxy_expires' => null,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy route
-    |--------------------------------------------------------------------------
-    |
-    | The route that will be used to serve proxied image
-    |
-    */
-    'proxy_route' => '{image_proxy_pattern}',
-    
-    
-
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy route pattern
-    |--------------------------------------------------------------------------
-    |
-    | The proxy route pattern that will be available as `image_proxy_pattern`.
-    | If the value is null, the default image pattern will be used.
-    |
-    */
-    'proxy_route_pattern' => null,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy route domain
-    |--------------------------------------------------------------------------
-    |
-    | If you wind to bind your route to a specific domain.
-    |
-    */
-    'proxy_route_domain' => null,
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy filesystem
-    |--------------------------------------------------------------------------
-    |
-    | The filesystem from which the file will be proxied
-    |
-    */
-    'proxy_filesystem' => 'cloud',
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy temporary directory
-    |--------------------------------------------------------------------------
-    |
-    | Write the manipulated image back to the file system
-    |
-    */
-    'proxy_write_image' => true,
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy cache
-    |--------------------------------------------------------------------------
-    |
-    | Cache the response of the proxy on the local filesystem. The proxy will be
-    | cached using the laravel cache driver.
-    |
-    */
-    'proxy_cache' => true,
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy cache filesystem
-    |--------------------------------------------------------------------------
-    |
-    | If you want the proxy to cache files on a filesystem instead of using the
-    | cache driver.
-    |
-    */
-    'proxy_cache_filesystem' => null,
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy cache expiration
-    |--------------------------------------------------------------------------
-    |
-    | The number of minuts that a proxied image can stay in cache. If the value
-    | is -1, the image is cached forever.
-    |
-    */
-    'proxy_cache_expiration' => 60*24,
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Proxy temporary path
-    |--------------------------------------------------------------------------
-    |
-    | The temporary path where the manipulated file are saved.
-    |
-    */
-    'proxy_tmp_path' => sys_get_temp_dir(),
+    ]
 
 );

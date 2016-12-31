@@ -3,7 +3,6 @@
 use Illuminate\Foundation\Application;
 use Folklore\Image\Contracts\ImageFactory as ImageFactoryContract;
 use Folklore\Image\Contracts\Source as SourceContract;
-use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
 use Folklore\Image\Contracts\FilterWithValue as FilterWithValueContract;
 use Folklore\Image\Exception\FileMissingException;
 use Folklore\Image\Exception\FormatException;
@@ -15,15 +14,12 @@ class ImageFactory implements ImageFactoryContract
 {
     protected $image;
     
-    protected $urlGenerator;
-    
     protected $config;
     
-    public function __construct(Application $app, SourceContract $source, UrlGeneratorContract $urlGenerator)
+    public function __construct(Application $app, SourceContract $source)
     {
         $this->app = $app;
         $this->source = $source;
-        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -79,7 +75,7 @@ class ImageFactory implements ImageFactoryContract
             $image = $this->thumbnail($image, $width, $height, $crop);
         }
         
-        // Apply the custom filter on the image. Replace the
+        // Apply the custom filter on the image and replace the
         // current image with the return value.
         if (sizeof($filters)) {
             foreach ($filters as $key => $arguments) {
@@ -92,7 +88,7 @@ class ImageFactory implements ImageFactoryContract
     }
 
     /**
-     * Server an image from a path
+     * Serve an image from a path
      *
      * @param  string  $path
      * @param  array   $config
@@ -100,44 +96,37 @@ class ImageFactory implements ImageFactoryContract
      */
     public function serve($path, $config = [])
     {
-        $parseData = $this->urlGenerator->parse($path, $config);
+        $parseData = $this->app['image.url']->parse($path, $config);
         $parsePath = $parseData['path'];
-        $parseOptions = $parseData['options'];
+        $parseFilters = $parseData['filters'];
+        $routeFilters = array_get($config, 'filters');
+        $filters = array_merge($parseFilters, $routeFilters);
         
         //Check if file exists
         if (!$this->source->pathExists($parsePath)) {
             throw new FileMissingException('Image file missing');
         }
         
-        //Make image
-        $image = $this->make($parsePath, $parseOptions);
+        //Make the image
+        $image = $this->make($parsePath, $filters);
         
         //Get format
         $format = $this->format($parsePath);
         
-        /*$saveOptions = array();
-        $quality = array_get($config, 'quality');
-        if ($format === 'jpeg') {
-            $saveOptions['jpeg_quality'] = $quality;
-        } elseif ($format === 'png') {
-            $saveOptions['png_compression_level'] = round($quality / 100 * 9);
-        }
-        $content = $image->get($format, $saveOptions);*/
+        //Create response
+        $response = response()->image($image);
         
-        
-        //$response = response()->make($content, 200);
-        $response = response()->image($image)
-            ->setFormat($format);
-        
-        // Set mime
-        $mime = $this->getMimeFromFormat($format);
-        $response->header('Content-type', $mime);
+        //Set output format and quality
+        $response->setFormat($format);
+        $response->setQuality(100);
         
         //Set expires
         $expires = array_get($config, 'expires');
         if ($expires) {
-            $response->header('Cache-control', 'max-age='.$expires.', public');
-            $response->header('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + $expires));
+            $response->setMaxAge($expires);
+            $expiresDate = new \DateTime();
+            $expiresDate->setTimestamp(time() + $expires);
+            $response->setExpires($expiresDate);
         }
         
         return $response;
@@ -156,6 +145,17 @@ class ImageFactory implements ImageFactoryContract
     /**
      * Return an URL to process the image
      *
+     * @param  string  $path
+     * @return array
+     */
+    public function format($path)
+    {
+        return $this->source->getFormatFromPath($path);
+    }
+
+    /**
+     * Return an URL to process the image
+     *
      * @param  string  $src
      * @param  int     $width
      * @param  int     $height
@@ -164,7 +164,7 @@ class ImageFactory implements ImageFactoryContract
      */
     public function url($src, $width = null, $height = null, $options = [])
     {
-        return $this->urlGenerator->make($src, $width, $height, $options);
+        return $this->app['image.url']->make($src, $width, $height, $options);
     }
 
     /**
@@ -175,7 +175,7 @@ class ImageFactory implements ImageFactoryContract
      */
     public function pattern($config = [])
     {
-        return $this->urlGenerator->pattern($config);
+        return $this->app['image.url']->pattern($config);
     }
 
     /**
@@ -186,18 +186,7 @@ class ImageFactory implements ImageFactoryContract
      */
     public function parse($path, $config = [])
     {
-        return $this->urlGenerator->parse($path, $config);
-    }
-
-    /**
-     * Return an URL to process the image
-     *
-     * @param  string  $path
-     * @return array
-     */
-    public function format($path)
-    {
-        return $this->source->getFormatFromPath($path);
+        return $this->app['image.url']->parse($path, $config);
     }
 
     /**
@@ -330,50 +319,26 @@ class ImageFactory implements ImageFactoryContract
         
         return $cropPositions;
     }
-
-    /**
-     * Get mime type from image format
-     *
-     * @return string
-     */
-    protected function getMimeFromFormat($format)
-    {
-        switch ($format) {
-            case 'gif':
-                return 'image/gif';
-            break;
-            case 'jpg':
-            case 'jpeg':
-                return 'image/jpeg';
-            break;
-            case 'png':
-                return 'image/png';
-            break;
-        }
-
-        return null;
-    }
     
+    /**
+     * Get the image source
+     *
+     * @return SourceContract
+     */
     public function getSource()
     {
         return $this->source;
     }
     
-    public function setSource($source)
+    /**
+     * Set the image source
+     *
+     * @param  SourceContract   $source The source of the factory
+     * @return $this
+     */
+    public function setSource(SourceContract $source)
     {
         $this->source = $source;
-        
-        return $this;
-    }
-    
-    public function getUrlGenerator()
-    {
-        return $this->urlGenerator;
-    }
-    
-    public function setUrlGenerator($urlGenerator)
-    {
-        $this->urlGenerator = $urlGenerator;
         
         return $this;
     }
