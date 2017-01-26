@@ -96,7 +96,10 @@ class ImageServiceProvider extends ServiceProvider
     public function registerImage()
     {
         $this->app->singleton('image', function ($app) {
-            return new Image($app);
+            $filters = $this->app['config']->get('image.filters', []);
+            $image = new Image($app);
+            $image->setFilters($filters);
+            return $image;
         });
     }
 
@@ -109,6 +112,18 @@ class ImageServiceProvider extends ServiceProvider
     {
         $this->app->singleton('image.imagine', function ($app) {
             return new ImagineManager($app);
+        });
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function registerSourceManager()
+    {
+        $this->app->singleton('image.source', function ($app) {
+            return new SourceManager($app);
         });
     }
 
@@ -128,18 +143,6 @@ class ImageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function registerSourceManager()
-    {
-        $this->app->singleton('image.source', function ($app) {
-            return new SourceManager($app, $app['image.imagine']);
-        });
-    }
-
-    /**
      * Register the url generator
      *
      * @return void
@@ -147,7 +150,7 @@ class ImageServiceProvider extends ServiceProvider
     public function registerUrlGenerator()
     {
         $this->app->singleton('image.url', function ($app) {
-            $generator = new UrlGenerator($app['image'], $app['image.router']);
+            $generator = new UrlGenerator($app['image']);
             // Set default values from config
             $config = $app['config'];
             $generator->setFormat($config['image.url.format']);

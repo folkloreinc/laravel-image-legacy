@@ -18,10 +18,9 @@ class UrlGenerator implements UrlGeneratorContract
 
     protected $filterSeparator = '-';
 
-    public function __construct(Image $image, Router $router)
+    public function __construct(Image $image)
     {
         $this->image = $image;
-        $this->router = $router;
     }
 
     /**
@@ -57,7 +56,9 @@ class UrlGenerator implements UrlGeneratorContract
 
         // Get config from route, if specified
         if (isset($config['route'])) {
-            $route = $this->router->getRoute($config['route']);
+            $route = $this->image
+                ->router()
+                ->getRoute($config['route']);
             $routeConfig = array_get($route, 'url', []);
             $config = array_merge($routeConfig, $config);
         }
@@ -101,7 +102,9 @@ class UrlGenerator implements UrlGeneratorContract
 
         // If a route is specified, use it to generate the url.
         if (isset($config['route'])) {
-            $routeName = $this->router->getRouteName($config['route']);
+            $routeName = $this->image
+                ->router()
+                ->getRouteName($config['route']);
             $routeUrl = route($routeName, ['__URL__']);
             return str_replace('__URL__', ltrim($url, '/'), $routeUrl);
         }

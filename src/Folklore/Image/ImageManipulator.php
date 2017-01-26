@@ -91,6 +91,17 @@ class ImageManipulator implements ImageManipulatorContract
     }
 
     /**
+     * Open an image from the source
+     *
+     * @param  string    $path The path of the image
+     * @return ImageInterface
+     */
+    public function open($path)
+    {
+        return $this->source->openFromPath($path);
+    }
+
+    /**
      * Save an image to the source
      *
      * @return string

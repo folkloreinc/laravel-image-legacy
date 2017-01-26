@@ -10,11 +10,11 @@ class Image
     protected $urlGenerator;
 
     /**
-     * All sources
+     * All manipulators
      *
      * @var array
      */
-    protected $factories = [];
+    protected $manipulators = [];
 
     /**
      * All registered filters.
@@ -26,8 +26,6 @@ class Image
     public function __construct(Application $app)
     {
         $this->app = $app;
-
-        $this->filters = $this->app['config']->get('image.filters', []);
     }
 
     /**
@@ -40,15 +38,16 @@ class Image
     {
         $key = $name ? $name:'default';
 
-        if (isset($this->factories[$key])) {
-            return $this->factories[$key];
+        if (isset($this->manipulators[$key])) {
+            return $this->manipulators[$key];
         }
 
-        $source = $this->app['image.source']->driver($name);
-        $factory =  $this->app->make('image.manipulator');
-        $factory->setSource($source);
+        $sourceManager = $this->getSourceManager();
+        $source = $sourceManager->driver($name);
+        $manipulator =  $this->app->make('image.manipulator');
+        $manipulator->setSource($source);
 
-        return $this->factories[$key] = $factory;
+        return $this->manipulators[$key] = $manipulator;
     }
 
     /**
@@ -60,7 +59,8 @@ class Image
      */
     public function extend($driver, Closure $callback)
     {
-        $this->app['image.source']->extend($driver, $callback);
+        $sourceManager = $this->getSourceManager();
+        $sourceManager->extend($driver, $callback);
 
         return $this;
     }
@@ -72,7 +72,8 @@ class Image
      */
     public function routes()
     {
-        return $this->app['image.router']->registerRoutesOnRouter();
+        $router = $this->getRouter();
+        return $router->registerRoutesOnRouter();
     }
 
     /**
@@ -86,7 +87,8 @@ class Image
      */
     public function url($src, $width = null, $height = null, $options = [])
     {
-        return $this->app['image.url']->make($src, $width, $height, $options);
+        $urlGenerator = $this->getUrlGenerator();
+        return $urlGenerator->make($src, $width, $height, $options);
     }
 
     /**
@@ -97,7 +99,8 @@ class Image
      */
     public function pattern($config = [])
     {
-        return $this->app['image.url']->pattern($config);
+        $urlGenerator = $this->getUrlGenerator();
+        return $urlGenerator->pattern($config);
     }
 
     /**
@@ -108,7 +111,8 @@ class Image
      */
     public function parse($path, $config = [])
     {
-        return $this->app['image.url']->parse($path, $config);
+        $urlGenerator = $this->getUrlGenerator();
+        return $urlGenerator->parse($path, $config);
     }
 
     /**
@@ -122,6 +126,18 @@ class Image
     {
         $this->filters[$name] = $filter;
 
+        return $this;
+    }
+
+    /**
+     * Set all filters
+     *
+     * @param  array    $filters
+     * @return $this
+     */
+    public function setFilters($filters)
+    {
+        $this->filters = $filters;
         return $this;
     }
 
@@ -189,6 +205,16 @@ class Image
     }
 
     /**
+     * Alias to getRouter
+     *
+     * @return \Folklore\Image\Router
+     */
+    public function router()
+    {
+        return $this->getRouter();
+    }
+
+    /**
      * Get the router
      *
      * @return \Folklore\Image\Router
@@ -209,7 +235,7 @@ class Image
     }
 
     /**
-     * Dynamically call the default driver instance.
+     * Dynamically call the default source manipulator
      *
      * @param  string  $method
      * @param  array   $parameters

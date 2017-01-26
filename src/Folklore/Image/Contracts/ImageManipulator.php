@@ -8,6 +8,8 @@ interface ImageManipulator
 {
     public function make($path, $config = []);
 
+    public function open($path);
+
     public function save(ImageInterface $image, $path);
 
     public function format($path);

@@ -24,7 +24,7 @@ class ImageTest extends ImageTestCase
      */
     public function testSourceWithName()
     {
-        $factory = Image::source('cloud');
+        $factory = Image::source('filesystem');
         $this->assertInstanceOf(ImageManipulatorContract::class, $factory);
         $this->assertInstanceOf(FilesystemSource::class, $factory->getSource());
     }
