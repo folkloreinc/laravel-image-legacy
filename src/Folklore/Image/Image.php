@@ -67,7 +67,7 @@ class Image
 
     public function routes()
     {
-        return $this->app['image.router']->addRoutesToRouter();
+        return $this->app['image.router']->registerRoutesOnRouter();
     }
 
     /**

@@ -58,7 +58,7 @@ class UrlGenerator implements UrlGeneratorContract
         // Get config from route, if specified
         if (isset($config['route'])) {
             $route = $this->router->getRoute($config['route']);
-            $routeConfig = array_get($route, 'url');
+            $routeConfig = array_get($route, 'url', []);
             $config = array_merge($routeConfig, $config);
         }
 
@@ -69,6 +69,8 @@ class UrlGenerator implements UrlGeneratorContract
         $height = $height !== null ? $height:array_get($filters, 'height', -1);
         if ($width !== -1 || $height !== -1) {
             $urlFilters[] = ($width !== -1 ? $width:'_').'x'.($height !== -1 ? $height:'_');
+            unset($filters['width']);
+            unset($filters['height']);
         }
 
         if ($filters && is_array($filters)) {
@@ -133,7 +135,7 @@ class UrlGenerator implements UrlGeneratorContract
             'filters' => '('.$filtersPattern.')?'
         ];
         $format = array_get($config, 'format', $this->getFormat());
-        $pattern = preg_quote($format, '#');
+        $pattern = preg_quote($format, '#').'$';
         $pattern = preg_replace('#(\\\{\s*dirname\s*\\\})\/#i', '$1\/?', $pattern);
 
         // Get the positions of each placeholders in the path
@@ -189,7 +191,6 @@ class UrlGenerator implements UrlGeneratorContract
             $filtersFormat = array_get($config, 'filters_format', $this->getFiltersFormat());
             $filtersFormatPath = preg_replace('#\{\s*filter\s*\}#', $filtersPath, $filtersFormat);
             $path = preg_replace('#'.preg_quote($filtersFormatPath, '#').'\/?#', '', $path);
-
             //Parse the filters
             $filters = $this->parseFilters($filtersPath, $config);
         }
@@ -266,6 +267,8 @@ class UrlGenerator implements UrlGeneratorContract
         $filterSeparator = array_get($config, 'filter_separator', $this->getFilterSeparator());
         $filterParts = explode($filterSeparator, $path);
         foreach ($filterParts as $filter) {
+            $matches = null;
+            $withValueMatches = null;
             //Check if the filter is a size or is properly formatted
             if (preg_match('/([0-9]+|_)x([0-9]+|_)/i', $filter, $matches)) {
                 $filters['width'] = $matches[1] === '_' ? null:(int)$matches[1];
@@ -282,13 +285,8 @@ class UrlGenerator implements UrlGeneratorContract
             // If it's an array, merge it with filters
             $imagefilter = $this->image->getFilter($key);
             $value = isset($withValueMatches[2]) ? $withValueMatches[2]:null;
-            if (isset($imagefilter)) {
-                if (is_object($imagefilter) && is_callable($imagefilter)) {
-                    $arguments = $value ? explode(',', $value):true;
-                    $filters[$key] = $arguments;
-                } elseif (is_array($imagefilter)) {
-                    $filters = array_merge($filters, $imagefilter);
-                }
+            if (isset($imagefilter) && is_array($imagefilter)) {
+                $filters = array_merge($filters, $imagefilter);
             } else {
                 if ($value) {
                     $filters[$key] = strpos($value, ',') === true ? explode(',', $value):$value;

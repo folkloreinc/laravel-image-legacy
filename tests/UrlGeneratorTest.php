@@ -9,11 +9,29 @@ class UrlGeneratorTest extends ImageTestCase
 {
     protected $generator;
 
+    protected $config;
+
+    protected $filters;
+
     public function setUp()
     {
         parent::setUp();
 
         $this->generator = new UrlGenerator(app('image'), app('image.router'));
+
+        $this->config = [
+            'format' => '{dirname}/{basename}{filters}.{extension}',
+            'filters_format' => '-filters({filter})',
+            'filter_format' => '{key}({value})',
+            'filter_separator' => '-'
+        ];
+
+        $this->filters = [
+            'width' => 300,
+            'height' => 300,
+            'rotate' => 90,
+            'negative' => true
+        ];
     }
 
     /**
@@ -25,7 +43,7 @@ class UrlGeneratorTest extends ImageTestCase
     public function testGetFormat()
     {
         $this->assertEquals('{dirname}/{basename}{filters}.{extension}', $this->generator->getFormat());
-        $value = '{dirname}/{basename}/{filters}.{extension}';
+        $value = '{dirname}/{filters}/{basename}.{extension}';
         $this->generator->setFormat($value);
         $this->assertEquals($value, $this->generator->getFormat());
     }
@@ -70,5 +88,101 @@ class UrlGeneratorTest extends ImageTestCase
         $value = '/';
         $this->generator->setFilterSeparator($value);
         $this->assertEquals($value, $this->generator->getFilterSeparator());
+    }
+
+    /**
+     * Test parsing a path
+     * @test
+     * @covers ::parse
+     * @covers ::patternAndMatches
+     * @covers ::parseFilters
+     */
+    public function testParse()
+    {
+        $this->generator->setFormat('{dirname}/{filters}/{basename}.{extension}');
+        $this->generator->setFiltersFormat('image/{filter}');
+        $this->generator->setFilterFormat('{key}-{value}');
+        $this->generator->setFilterSeparator('/');
+
+        $path = 'uploads/image/300x300/rotate-90/negative/image.jpg';
+        $return = $this->generator->parse($path);
+        $this->assertArrayHasKey('path', $return);
+        $this->assertArrayHasKey('filters', $return);
+        $this->assertEquals('uploads/image.jpg', $return['path']);
+        $this->assertEquals($this->filters, $return['filters']);
+    }
+
+    /**
+     * Test parsing a path with config
+     * @test
+     * @covers ::parse
+     * @covers ::patternAndMatches
+     * @covers ::parseFilters
+     */
+    public function testParseWithConfig()
+    {
+        $path = 'uploads/image-filters(300x300-rotate(90)-negative).jpg';
+        $return = $this->generator->parse($path, $this->config);
+        $this->assertArrayHasKey('path', $return);
+        $this->assertArrayHasKey('filters', $return);
+        $this->assertEquals('uploads/image.jpg', $return['path']);
+        $this->assertEquals($this->filters, $return['filters']);
+    }
+
+    /**
+     * Test making url
+     * @test
+     * @covers ::make
+     * @covers ::getUrlPartsFromFilters
+     * @covers ::getFiltersParameter
+     */
+    public function testMake()
+    {
+        $this->generator->setFormat('{dirname}/{filters}/{basename}.{extension}');
+        $this->generator->setFiltersFormat('image/{filter}');
+        $this->generator->setFilterFormat('{key}-{value}');
+        $this->generator->setFilterSeparator('/');
+
+        $url = 'uploads/image/300x300/rotate-90/negative/image.jpg';
+        $return = $this->generator->make('uploads/image.jpg', $this->filters);
+        $this->assertEquals($url, $return);
+    }
+
+    /**
+     * Test making url with config
+     * @test
+     * @covers ::make
+     * @covers ::getUrlPartsFromFilters
+     * @covers ::getFiltersParameter
+     */
+    public function testMakeWithConfig()
+    {
+        $url = 'uploads/image-filters(300x300-rotate(90)-negative).jpg';
+        $filters = array_merge($this->filters, $this->config);
+        $return = $this->generator->make('uploads/image.jpg', $filters);
+        $this->assertEquals($url, $return);
+    }
+
+    /**
+     * Test making url with route
+     * @test
+     * @covers ::make
+     * @covers ::getUrlPartsFromFilters
+     * @covers ::getFiltersParameter
+     */
+    public function testMakeWithRoute()
+    {
+        app('image')->routes();
+        app('image.router')->addRoute([
+            'route' => 'medias/{pattern}',
+            'domain' => 'example.com'
+        ], 'test');
+
+        $url = 'http://example.com/medias/uploads/image-filters(300x300-rotate(90)-negative).jpg';
+        $filters = array_merge([
+            'route' => 'test'
+        ], $this->filters, $this->config);
+        $return = $this->generator->make('uploads/image.jpg', $filters);
+        $this->assertEquals($url, $return);
     }
 }
