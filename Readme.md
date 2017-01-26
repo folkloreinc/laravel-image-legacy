@@ -3,6 +3,7 @@ Laravel Image is an image manipulation package for Laravel 4 and 5 based on the 
 
 [![Latest Stable Version](https://poser.pugx.org/folklore/image/v/stable.svg)](https://packagist.org/packages/folklore/image)
 [![Build Status](https://travis-ci.org/Folkloreatelier/laravel-image.png?branch=master)](https://travis-ci.org/Folkloreatelier/laravel-image)
+[![Coverage Status](https://coveralls.io/repos/Folkloreatelier/laravel-image/badge.svg?branch=master&service=github)](https://coveralls.io/github/Folkloreatelier/laravel-image?branch=v1)
 [![Total Downloads](https://poser.pugx.org/folklore/image/downloads.svg)](https://packagist.org/packages/folklore/image)
 
 The main difference between this package and other image manipulation libraries is that you can use parameters directly in the url to manipulate the image. A manipulated version of the image is then saved in the same path as the original image, **creating a static version of the file and bypassing PHP for all future requests**.
@@ -14,7 +15,7 @@ For example, if you have an image at this URL:
 To create a 300x300 version of this image in black and white, you use the URL:
 
     /uploads/photo-image(300x300-crop-grayscale).jpg
-    
+
 To help you generate the URL to an image, you can use the `Image::url()` method
 
 ```php
@@ -44,7 +45,7 @@ $thumbnail = Image::open('/uploads/photo.jpg')
 			->thumbnail(new Imagine\Image\Box(300,300));
 
 $thumbnail->effects()->grayscale();
-	
+
 $thumbnail->save('/path/to/the/thumbnail.jpg');
 ```
 
