@@ -7,31 +7,23 @@ use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
 class UrlGenerator implements UrlGeneratorContract
 {
     protected $image;
-    
+
     protected $host = null;
-    
-    protected $format = '{dirname}/{filename}/{filters}.{extension}';
-    
+
+    protected $format = '{dirname}/{basename}{filters}.{extension}';
+
     protected $filtersFormat = '-image({filter})';
-    
+
     protected $filterFormat = '{key}({value})';
-    
+
     protected $filterSeparator = '-';
-    
-    public function __construct(Application $app)
+
+    public function __construct(Image $image, Router $router)
     {
-        $this->app = $app;
-        $this->image = $app['image'];
-        $this->router = $app['image.router'];
-        
-        // Set default values from config
-        $config = $this->app['config'];
-        $this->setFormat($config['image.url.format']);
-        $this->setFiltersFormat($config['image.url.filters_format']);
-        $this->setFilterFormat($config['image.url.filter_format']);
-        $this->setFilterSeparator($config['image.url.filter_separator']);
+        $this->image = $image;
+        $this->router = $router;
     }
-    
+
     /**
      * Make an URL from the filters passed as argument
      *
@@ -57,12 +49,12 @@ class UrlGenerator implements UrlGeneratorContract
             $width = null;
             $height = null;
         }
-        
+
         // Separate config from filters
         $configKeys = ['route', 'format', 'filters_format', 'filter_format', 'filter_separator'];
         $config = array_only($filters, $configKeys);
         $filters = array_except($filters, $configKeys);
-        
+
         // Get config from route, if specified
         if (isset($config['route'])) {
             $route = $this->router->getRoute($config['route']);
@@ -72,13 +64,13 @@ class UrlGenerator implements UrlGeneratorContract
 
         // Create the url filters. Add the size first and the filters after
         $urlFilters = array();
-        
+
         $width = $width !== null ? $width:array_get($filters, 'width', -1);
         $height = $height !== null ? $height:array_get($filters, 'height', -1);
         if ($width !== -1 || $height !== -1) {
             $urlFilters[] = ($width !== -1 ? $width:'_').'x'.($height !== -1 ? $height:'_');
         }
-        
+
         if ($filters && is_array($filters)) {
             $filterFormat = array_get($config, 'filter_format');
             $filtersParts = $this->getUrlPartsFromFilters($filters, $filterFormat);
@@ -104,7 +96,7 @@ class UrlGenerator implements UrlGeneratorContract
         foreach ($placeholders as $key => $replace) {
             $url = preg_replace('/\{\s*'.$key.'\s*\}/i', $replace, $url);
         }
-        
+
         // If a route is specified, use it to generate the url.
         if (isset($config['route'])) {
             $routeName = $this->router->getRouteName($config['route']);
@@ -126,12 +118,12 @@ class UrlGenerator implements UrlGeneratorContract
         $pattern = array_get($this->patternAndMatches($config), 'pattern');
         return '^'.$pattern.'$';
     }
-    
+
     protected function patternAndMatches($config = [])
     {
         $filtersFormat = array_get($config, 'filters_format', $this->getFiltersFormat());
         $filtersPattern = preg_replace('#\\\{\s*filter\s*\\\}#', '(.*?)', preg_quote($filtersFormat, '#'));
-        
+
         $placeholders = [
             'host' => '(.*?)?',
             'dirname' => '(.*?)?',
@@ -143,7 +135,7 @@ class UrlGenerator implements UrlGeneratorContract
         $format = array_get($config, 'format', $this->getFormat());
         $pattern = preg_quote($format, '#');
         $pattern = preg_replace('#(\\\{\s*dirname\s*\\\})\/#i', '$1\/?', $pattern);
-        
+
         // Get the positions of each placeholders in the path
         $positions = [];
         foreach ($placeholders as $key => $replace) {
@@ -154,7 +146,7 @@ class UrlGenerator implements UrlGeneratorContract
         asort($positions);
         $keys = array_keys($positions);
         $filtersPosition = array_search('filters', $keys);
-        
+
         // Build the pattern and get the matches position of each placeholder.
         $matches = [];
         foreach ($placeholders as $key => $replace) {
@@ -175,7 +167,7 @@ class UrlGenerator implements UrlGeneratorContract
             'matches' => $matches
         ];
     }
-    
+
     /**
      * Parse an url
      *
@@ -197,7 +189,7 @@ class UrlGenerator implements UrlGeneratorContract
             $filtersFormat = array_get($config, 'filters_format', $this->getFiltersFormat());
             $filtersFormatPath = preg_replace('#\{\s*filter\s*\}#', $filtersPath, $filtersFormat);
             $path = preg_replace('#'.preg_quote($filtersFormatPath, '#').'\/?#', '', $path);
-            
+
             //Parse the filters
             $filters = $this->parseFilters($filtersPath, $config);
         }
@@ -207,31 +199,31 @@ class UrlGenerator implements UrlGeneratorContract
             'filters' => $filters
         ];
     }
-    
+
     protected function getFiltersParameter($filters, $filtersFormat = null, $filterSeparator = null)
     {
         if (!sizeof($filters)) {
             return '';
         }
-        
+
         if ($filtersFormat === null) {
             $filtersFormat = $this->getFiltersFormat();
         }
-        
+
         if ($filterSeparator === null) {
             $filterSeparator = $this->getFilterSeparator();
         }
-        
+
         $urlFilters = implode($filterSeparator, $filters);
         return preg_replace('/\{\s*filter\s*\}/i', $urlFilters, $filtersFormat);
     }
-    
+
     protected function getUrlPartsFromFilters($filters, $format = null)
     {
         if ($format === null) {
             $format = $this->getFilterFormat();
         }
-        
+
         // If the key as no value or is equal to
         // true or null, only the key is added.
         $parts = [];
@@ -247,7 +239,7 @@ class UrlGenerator implements UrlGeneratorContract
                 $parts[] = $filter;
             }
         }
-        
+
         return $parts;
     }
 
@@ -263,13 +255,13 @@ class UrlGenerator implements UrlGeneratorContract
         if (empty($path)) {
             return [];
         }
-        
+
         $filters = array();
-        
+
         $filterFormat = array_get($config, 'filter_format', $this->getFilterFormat());
         $filterPattern = preg_replace('#\\\{\s*key\s*\\\}#i', '(\w+)', preg_quote($filterFormat, '#'));
         $filterPattern = preg_replace('#\\\{\s*value\s*\\\}#i', '([a-z0-9\,\.]+)', $filterPattern);
-        
+
         // Loop through the params and make the options key value pairs
         $filterSeparator = array_get($config, 'filter_separator', $this->getFilterSeparator());
         $filterParts = explode($filterSeparator, $path);
@@ -308,42 +300,42 @@ class UrlGenerator implements UrlGeneratorContract
 
         return $filters;
     }
-    
+
     public function setFormat($value)
     {
         $this->format = $value;
     }
-    
+
     public function getFormat()
     {
         return $this->format;
     }
-    
+
     public function setFilterFormat($value)
     {
         $this->filterFormat = $value;
     }
-    
+
     public function getFilterFormat()
     {
         return $this->filterFormat;
     }
-    
+
     public function setFilterSeparator($value)
     {
         $this->filterSeparator = $value;
     }
-    
+
     public function getFilterSeparator()
     {
         return $this->filterSeparator;
     }
-    
+
     public function setFiltersFormat($value)
     {
         $this->filtersFormat = $value;
     }
-    
+
     public function getFiltersFormat()
     {
         return $this->filtersFormat;

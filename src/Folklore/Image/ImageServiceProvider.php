@@ -145,7 +145,14 @@ class ImageServiceProvider extends ServiceProvider
     public function registerUrlGenerator()
     {
         $this->app->singleton('image.url', function ($app) {
-            return new UrlGenerator($app);
+            $generator = new UrlGenerator($app['image'], $app['image.router']);
+            // Set default values from config
+            $config = $app['config'];
+            $generator->setFormat($config['image.url.format']);
+            $generator->setFiltersFormat($config['image.url.filters_format']);
+            $generator->setFilterFormat($config['image.url.filter_format']);
+            $generator->setFilterSeparator($config['image.url.filter_separator']);
+            return $generator;
         });
     }
 
