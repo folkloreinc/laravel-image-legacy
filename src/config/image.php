@@ -100,18 +100,19 @@ return array(
     | URL
     |--------------------------------------------------------------------------
     |
-    | You can define routes to handle images.
+    | The URL Generator configuration. These are the defaults values
+    | you can overide these values in each routes.
     |
     */
     'url' => [
-        // The format of the url that will be generated. The {filters} placeholder
-        // will be replace by the filters according to the filters_format.
+        // The format of the url that will be generated. The `{filters}` placeholder
+        // will be replaced by the filters according to the `filters_format`.
         'format' => '{dirname}/{basename}{filters}.{extension}',
 
-        // The format of the filters that will replace {filters} in the
-        // url format below. The {filter} placeholder will be replace by
-        // each filter according to the filter_format and joined
-        // by the filter_separator.
+        // The format of the filters that will replace `{filters}` in the
+        // url `format` above. The `{filter}` placeholder will be replaced by
+        // each filter according to the `filter_format` and joined
+        // by the `filter_separator`.
         'filters_format' => '-image({filter})',
 
         // The format of a filter.
