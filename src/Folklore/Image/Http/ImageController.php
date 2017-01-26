@@ -17,18 +17,35 @@ use Image;
 class ImageController extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
-    
+
     public function serve(Request $request, $path)
     {
+        // Get config from route
         $route = $request->route();
         $config = $route ? array_get($route->getAction(), 'image', []):[];
         $source = array_get($config, 'source');
-        
-        // Serve the image response. If there is a file missing
-        // exception or parse exception, throw a 404.
+        $quality = array_get($config, 'quality', 100);
+        $expires = array_get($config, 'expires', null);
+        $urlConfig = array_get($config, 'url', []);
+        $routeFilters = array_get($config, 'filters', []);
+
+        // Parse the path
+        $parseData = app('image.url')->parse($path, $urlConfig);
+        $path = $parseData['path'];
+        $pathFilters = $parseData['filters'];
+        $filters = array_merge($pathFilters, $routeFilters);
+
+        // Build the image
+        $manipulator = $source ? app('image')->source($this->source):app('image');
+        $image = $manipulator->make($path, $filters);
+        $format = $manipulator->format($path);
+
+        // Return the response
         try {
-            $image = $source ? app('image')->source($source):app('image');
-            return $image->serve($path, $config);
+            return response()->image($image)
+                ->setQuality($quality)
+                ->setFormat($format)
+                ->setExpiresIn($format);
         } catch (ParseException $e) {
             return abort(404);
         } catch (FileMissingException $e) {

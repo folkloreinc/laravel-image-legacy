@@ -9,13 +9,15 @@ use Imagine\Image\ImageInterface;
 class ImageResponse extends StreamedResponse
 {
     use ResponseTrait;
-    
+
     protected $image;
-    
+
+    protected $imagePath;
+
     protected $format = 'jpg';
-    
+
     protected $quality = 100;
-    
+
     /**
      * Constructor.
      *
@@ -29,7 +31,7 @@ class ImageResponse extends StreamedResponse
         $callback = function () {
             $this->sendImage();
         };
-        
+
         parent::__construct($callback, $status, $headers);
 
         if (null !== $image) {
@@ -62,12 +64,12 @@ class ImageResponse extends StreamedResponse
             $this->sendImageFromPath();
             return;
         }
-        
+
         echo $this->image->get($this->format, [
             'jpeg_quality' => $this->quality
         ]);
     }
-    
+
     /**
      * Output the image response from path
      *
@@ -77,7 +79,7 @@ class ImageResponse extends StreamedResponse
     {
         $output = fopen('php://output', 'w');
         $file = fopen($this->imagePath, 'r');
-        while ($buf = fread($file, 8192)) {
+        while ($buf = fread($file, 4096)) {
             fwrite($output, $buf);
         }
         fclose($file);
@@ -113,10 +115,10 @@ class ImageResponse extends StreamedResponse
      * @param  mixed  $content
      * @return $this
      */
-    public function setImage(ImageInterface $image)
+    public function setImage($image)
     {
         $this->image = $image;
-        
+
         return $this;
     }
 
@@ -139,7 +141,7 @@ class ImageResponse extends StreamedResponse
     public function setImagePath($path)
     {
         $this->imagePath = $path;
-        
+
         return $this;
     }
 
@@ -154,6 +156,17 @@ class ImageResponse extends StreamedResponse
     }
 
     /**
+     * Alias for setFormat
+     *
+     * @param  string  $format
+     * @return $this
+     */
+    public function format($format)
+    {
+        return $this->setFormat($format);
+    }
+
+    /**
      * Set the image output format
      *
      * @param  string  $format
@@ -162,11 +175,11 @@ class ImageResponse extends StreamedResponse
     public function setFormat($format)
     {
         $this->format = $format;
-        
+
         // Set mime
         $mime = $this->getMimeFromFormat($format);
         $this->header('Content-type', $mime);
-        
+
         return $this;
     }
 
@@ -181,6 +194,17 @@ class ImageResponse extends StreamedResponse
     }
 
     /**
+     * Alias for setQuality
+     *
+     * @param  int  $quality
+     * @return $this
+     */
+    public function quality($quality)
+    {
+        return $this->setQuality($quality);
+    }
+
+    /**
      * Set the image output quality
      *
      * @param  int  $quality
@@ -189,7 +213,7 @@ class ImageResponse extends StreamedResponse
     public function setQuality($quality)
     {
         $this->quality = $quality;
-        
+
         return $this;
     }
 
@@ -201,5 +225,31 @@ class ImageResponse extends StreamedResponse
     public function getQuality()
     {
         return $this->quality;
+    }
+
+    /**
+     * Alias for setExpiresIn
+     *
+     * @param  int  $expires
+     * @return $this
+     */
+    public function expiresIn($expires)
+    {
+        return $this->setExpiresIn($expires);
+    }
+
+    /**
+     * Set the expires and max-age headers
+     *
+     * @param  int  $expires
+     * @return $this
+     */
+    public function setExpiresIn($expires)
+    {
+        $this->setMaxAge($expires);
+        $expiresDate = new \DateTime();
+        $expiresDate->setTimestamp(time() + $expires);
+        $this->setExpires($expiresDate);
+        return $this;
     }
 }

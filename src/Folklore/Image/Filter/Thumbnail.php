@@ -77,4 +77,25 @@ class Thumbnail implements FilterWithValueContract
 
         return $thumbnail;
     }
+
+    /**
+     * Return crop positions from the crop parameter
+     *
+     * @return array
+     */
+    protected function getCropPositions($crop)
+    {
+        $crop = $crop === true ? 'center':$crop;
+
+        $cropPositions = explode('_', $crop);
+        if (sizeof($cropPositions) === 1) {
+            if ($cropPositions[0] === 'top' || $cropPositions[0] === 'bottom' || $cropPositions[0] === 'center') {
+                $cropPositions[] = 'center';
+            } elseif ($cropPositions[0] === 'left' || $cropPositions[0] === 'right') {
+                array_unshift($cropPositions, 'center');
+            }
+        }
+
+        return $cropPositions;
+    }
 }

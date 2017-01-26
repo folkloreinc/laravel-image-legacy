@@ -118,7 +118,7 @@ class UrlGenerator implements UrlGeneratorContract
     public function pattern($config = [])
     {
         $pattern = array_get($this->patternAndMatches($config), 'pattern');
-        return '^'.$pattern.'$';
+        return $pattern;
     }
 
     protected function patternAndMatches($config = [])
@@ -135,7 +135,7 @@ class UrlGenerator implements UrlGeneratorContract
             'filters' => '('.$filtersPattern.')?'
         ];
         $format = array_get($config, 'format', $this->getFormat());
-        $pattern = preg_quote($format, '#').'$';
+        $pattern = preg_quote($format, '#');
         $pattern = preg_replace('#(\\\{\s*dirname\s*\\\})\/#i', '$1\/?', $pattern);
 
         // Get the positions of each placeholders in the path
@@ -165,7 +165,7 @@ class UrlGenerator implements UrlGeneratorContract
         }
 
         return [
-            'pattern' => $pattern,
+            'pattern' => '^'.$pattern.'$',
             'matches' => $matches
         ];
     }

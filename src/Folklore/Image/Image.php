@@ -65,9 +65,50 @@ class Image
         return $this;
     }
 
+    /**
+     * Register routes on the router
+     *
+     * @return void
+     */
     public function routes()
     {
         return $this->app['image.router']->registerRoutesOnRouter();
+    }
+
+    /**
+     * Return an URL to process the image
+     *
+     * @param  string  $src
+     * @param  int     $width
+     * @param  int     $height
+     * @param  array   $options
+     * @return string
+     */
+    public function url($src, $width = null, $height = null, $options = [])
+    {
+        return $this->app['image.url']->make($src, $width, $height, $options);
+    }
+
+    /**
+     * Return an URL to process the image
+     *
+     * @param  string  $path
+     * @return array
+     */
+    public function pattern($config = [])
+    {
+        return $this->app['image.url']->pattern($config);
+    }
+
+    /**
+     * Return an URL to process the image
+     *
+     * @param  string  $path
+     * @return array
+     */
+    public function parse($path, $config = [])
+    {
+        return $this->app['image.url']->parse($path, $config);
     }
 
     /**
@@ -155,6 +196,16 @@ class Image
     public function getRouter()
     {
         return $this->app['image.router'];
+    }
+
+    /**
+     * Get the url generator
+     *
+     * @return \Folklore\Image\UrlGenerator
+     */
+    public function getUrlGenerator()
+    {
+        return $this->app['image.url'];
     }
 
     /**

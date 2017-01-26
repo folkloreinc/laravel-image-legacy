@@ -8,7 +8,6 @@ use Folklore\Image\Exception\FileMissingException;
 use Folklore\Image\Exception\FormatException;
 use Folklore\Image\Filters\Thumbnail;
 use Folklore\Image\Image;
-use Folklore\Image\UrlGenerator;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
@@ -17,16 +16,13 @@ class ImageManipulator implements ImageManipulatorContract
 {
     protected $manager;
 
-    protected $urlGenerator;
-
     protected $source;
 
     protected $memoryLimit = 256;
 
-    public function __construct(Image $manager, UrlGenerator $urlGenerator)
+    public function __construct(Image $manager)
     {
         $this->manager = $manager;
-        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -95,51 +91,6 @@ class ImageManipulator implements ImageManipulatorContract
     }
 
     /**
-     * Serve an image from a path
-     *
-     * @param  string  $path
-     * @param  array   $config
-     * @return \Illuminate\Http\Response
-     */
-    public function serve($path, $config = [])
-    {
-        $parseData = $this->urlGenerator->parse($path, $config);
-        $parsePath = $parseData['path'];
-        $parseFilters = $parseData['filters'];
-        $routeFilters = array_get($config, 'filters');
-        $filters = array_merge($parseFilters, $routeFilters);
-
-        //Check if file exists
-        if (!$this->source->pathExists($parsePath)) {
-            throw new FileMissingException('Image file missing');
-        }
-
-        //Make the image
-        $image = $this->make($parsePath, $filters);
-
-        //Get format
-        $format = $this->format($parsePath);
-
-        //Create response
-        $response = response()->image($image);
-
-        //Set output format and quality
-        $response->setFormat($format);
-        $response->setQuality(100);
-
-        //Set expires
-        $expires = array_get($config, 'expires');
-        if ($expires) {
-            $response->setMaxAge($expires);
-            $expiresDate = new \DateTime();
-            $expiresDate->setTimestamp(time() + $expires);
-            $response->setExpires($expiresDate);
-        }
-
-        return $response;
-    }
-
-    /**
      * Save an image to the source
      *
      * @return string
@@ -161,42 +112,6 @@ class ImageManipulator implements ImageManipulatorContract
     }
 
     /**
-     * Return an URL to process the image
-     *
-     * @param  string  $src
-     * @param  int     $width
-     * @param  int     $height
-     * @param  array   $options
-     * @return string
-     */
-    public function url($src, $width = null, $height = null, $options = [])
-    {
-        return $this->urlGenerator->make($src, $width, $height, $options);
-    }
-
-    /**
-     * Return an URL to process the image
-     *
-     * @param  string  $path
-     * @return array
-     */
-    public function pattern($config = [])
-    {
-        return $this->urlGenerator->pattern($config);
-    }
-
-    /**
-     * Return an URL to process the image
-     *
-     * @param  string  $path
-     * @return array
-     */
-    public function parse($path, $config = [])
-    {
-        return $this->urlGenerator->parse($path, $config);
-    }
-
-    /**
      * Create a thumbnail from an image
      *
      * @param  ImageInterface|string    $image An image instance or the path to an image
@@ -211,7 +126,7 @@ class ImageManipulator implements ImageManipulatorContract
         }
 
         //Create the thumbnail
-        return with(new Thumbnail())->handle($image, [
+        return with(new Thumbnail())->apply($image, [
             'width' => $width,
             'height' => $height,
             'crop' => $crop
@@ -255,27 +170,6 @@ class ImageManipulator implements ImageManipulatorContract
     }
 
     /**
-     * Return crop positions from the crop parameter
-     *
-     * @return array
-     */
-    protected function getCropPositions($crop)
-    {
-        $crop = $crop === true ? 'center':$crop;
-
-        $cropPositions = explode('_', $crop);
-        if (sizeof($cropPositions) === 1) {
-            if ($cropPositions[0] === 'top' || $cropPositions[0] === 'bottom' || $cropPositions[0] === 'center') {
-                $cropPositions[] = 'center';
-            } elseif ($cropPositions[0] === 'left' || $cropPositions[0] === 'right') {
-                array_unshift($cropPositions, 'center');
-            }
-        }
-
-        return $cropPositions;
-    }
-
-    /**
      * Get the image source
      *
      * @return SourceContract
@@ -305,8 +199,8 @@ class ImageManipulator implements ImageManipulatorContract
 
     public function getImagine()
     {
-        $manager = $this->getImagineManager();
-        return $manager->driver();
+        $imagine = $this->getImagineManager();
+        return $imagine->driver();
     }
 
     /**
@@ -318,7 +212,11 @@ class ImageManipulator implements ImageManipulatorContract
      */
     public function __call($method, $parameters)
     {
-        $manager = $this->getImagineManager();
-        return call_user_func_array([$manager, $method], $parameters);
+        if (method_exists($this->manager, $method)) {
+            return call_user_func_array([$this->manager, $method], $parameters);
+        }
+
+        $imagine = $this->getImagineManager();
+        return call_user_func_array([$imagine, $method], $parameters);
     }
 }

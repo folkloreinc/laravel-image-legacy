@@ -61,8 +61,8 @@ class ImageServiceProvider extends ServiceProvider
 
     public function bootHttp()
     {
-        Response::macro('image', function ($value = null) {
-            return new ImageResponse($value);
+        Response::macro('image', function ($image = null, $status = 200, $headers = []) {
+            return new ImageResponse($image, $status, $headers);
         });
     }
 
@@ -120,8 +120,10 @@ class ImageServiceProvider extends ServiceProvider
     public function registerRouter()
     {
         $this->app->singleton('image.router', function ($app) {
-            $router = $this->getRouter();
-            return new Router($app, $router);
+            $appRouter = $this->getRouter();
+            $routes = $app['config']->get('image.routes', []);
+            $router = new Router($appRouter, $app, $routes);
+            return $router;
         });
     }
 
@@ -164,7 +166,7 @@ class ImageServiceProvider extends ServiceProvider
     public function registerImageManipulator()
     {
         $this->app->bind('image.manipulator', function ($app) {
-            return new ImageManipulator($app['image'], $app['image.url']);
+            return new ImageManipulator($app['image']);
         });
     }
 
