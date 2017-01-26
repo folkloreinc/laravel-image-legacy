@@ -25,7 +25,7 @@ class ImageManager extends Manager
         'quality' => 80,
         'filters' => array()
     );
-    
+
     /**
      * All sources
      *
@@ -39,14 +39,14 @@ class ImageManager extends Manager
      * @var array
      */
     protected $filters = array();
-    
+
     public function source($name)
     {
         if (isset($this->sources[$name])) {
             return $this->sources[$name];
         }
-        
-        $source = $this->app['image.manager.source']->get($name);
+
+        $source = $this->app['image.source']->get($name);
         return $this->sources[$name] = new Image($this, $source);
     }
 
@@ -96,10 +96,10 @@ class ImageManager extends Manager
         ), $config);
 
         $serve = new ImageServe($this, $config);
-        
+
         return $serve->response($path);
     }
-    
+
     /**
      * Proxy an image
      *
@@ -118,7 +118,7 @@ class ImageManager extends Manager
             'write_image' => $this->app['config']['image.proxy_write_image'],
             'cache_filesystem' => $this->app['config']['image.proxy_cache_filesystem']
         ), $config);
-        
+
         $serve = new ImageProxy($this, $config);
         return $serve->response($path);
     }
@@ -168,7 +168,7 @@ class ImageManager extends Manager
         if (is_file(realpath($path))) {
             return realpath($path);
         }
-        
+
         //Get directories
         $dirs = $this->app['config']['image.src_dirs'];
         if ($this->app['config']['image.write_path']) {
@@ -233,7 +233,7 @@ class ImageManager extends Manager
                 $images[] = $directory.'/'.$file;
             }
         }
-        
+
         // Return the list
         return $images;
     }

@@ -1,25 +1,32 @@
 <?php namespace Folklore\Image;
 
 use Illuminate\Foundation\Application;
-use Folklore\Image\Contracts\ImageFactory as ImageFactoryContract;
+use Folklore\Image\Contracts\ImageManipulator as ImageManipulatorContract;
 use Folklore\Image\Contracts\Source as SourceContract;
 use Folklore\Image\Contracts\FilterWithValue as FilterWithValueContract;
 use Folklore\Image\Exception\FileMissingException;
 use Folklore\Image\Exception\FormatException;
+use Folklore\Image\Filters\Thumbnail;
+use Folklore\Image\Image;
+use Folklore\Image\UrlGenerator;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
-class ImageFactory implements ImageFactoryContract
+class ImageManipulator implements ImageManipulatorContract
 {
-    protected $image;
-    
-    protected $config;
-    
-    public function __construct(Application $app, SourceContract $source)
+    protected $manager;
+
+    protected $urlGenerator;
+
+    protected $source;
+
+    protected $memoryLimit = 256;
+
+    public function __construct(Image $manager, UrlGenerator $urlGenerator)
     {
-        $this->app = $app;
-        $this->source = $source;
+        $this->manager = $manager;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -33,11 +40,11 @@ class ImageFactory implements ImageFactoryContract
     {
         $configKeys = ['memory_limit'];
         $sizeKeys = ['width', 'height', 'crop'];
-        
+
         //Get config
         $configOptions = array_only($options, $configKeys);
         $config = array_merge([
-            'memory_limit' => $this->app['config']['image.memory_limit']
+            'memory_limit' => $this->memoryLimit
         ], $configOptions);
 
         // See if the referenced file exists and is an image
@@ -54,7 +61,7 @@ class ImageFactory implements ImageFactoryContract
         // Check if all filters exists
         $filters = array_except($options, array_merge($configKeys, $sizeKeys));
         foreach ($filters as $key => $value) {
-            if (!$this->app['image']->hasFilter($key)) {
+            if (!$this->manager->hasFilter($key)) {
                 throw new \Exception('Filter "'.$key.'" doesn\'t exists.');
             }
         }
@@ -74,7 +81,7 @@ class ImageFactory implements ImageFactoryContract
             $crop = array_get($options, 'crop', false);
             $image = $this->thumbnail($image, $width, $height, $crop);
         }
-        
+
         // Apply the custom filter on the image and replace the
         // current image with the return value.
         if (sizeof($filters)) {
@@ -96,30 +103,30 @@ class ImageFactory implements ImageFactoryContract
      */
     public function serve($path, $config = [])
     {
-        $parseData = $this->app['image.url']->parse($path, $config);
+        $parseData = $this->urlGenerator->parse($path, $config);
         $parsePath = $parseData['path'];
         $parseFilters = $parseData['filters'];
         $routeFilters = array_get($config, 'filters');
         $filters = array_merge($parseFilters, $routeFilters);
-        
+
         //Check if file exists
         if (!$this->source->pathExists($parsePath)) {
             throw new FileMissingException('Image file missing');
         }
-        
+
         //Make the image
         $image = $this->make($parsePath, $filters);
-        
+
         //Get format
         $format = $this->format($parsePath);
-        
+
         //Create response
         $response = response()->image($image);
-        
+
         //Set output format and quality
         $response->setFormat($format);
         $response->setQuality(100);
-        
+
         //Set expires
         $expires = array_get($config, 'expires');
         if ($expires) {
@@ -128,7 +135,7 @@ class ImageFactory implements ImageFactoryContract
             $expiresDate->setTimestamp(time() + $expires);
             $response->setExpires($expiresDate);
         }
-        
+
         return $response;
     }
 
@@ -164,7 +171,7 @@ class ImageFactory implements ImageFactoryContract
      */
     public function url($src, $width = null, $height = null, $options = [])
     {
-        return $this->app['image.url']->make($src, $width, $height, $options);
+        return $this->urlGenerator->make($src, $width, $height, $options);
     }
 
     /**
@@ -175,7 +182,7 @@ class ImageFactory implements ImageFactoryContract
      */
     public function pattern($config = [])
     {
-        return $this->app['image.url']->pattern($config);
+        return $this->urlGenerator->pattern($config);
     }
 
     /**
@@ -186,7 +193,7 @@ class ImageFactory implements ImageFactoryContract
      */
     public function parse($path, $config = [])
     {
-        return $this->app['image.url']->parse($path, $config);
+        return $this->urlGenerator->parse($path, $config);
     }
 
     /**
@@ -203,64 +210,12 @@ class ImageFactory implements ImageFactoryContract
             $image = $this->source->openFromPath($image);
         }
 
-        //Get new size
-        $imageSize = $image->getSize();
-        $newWidth = $width === null ? $imageSize->getWidth():$width;
-        $newHeight = $height === null ? $imageSize->getHeight():$height;
-        $size = new Box($newWidth, $newHeight);
-        
-        $ratios = array(
-            $size->getWidth() / $imageSize->getWidth(),
-            $size->getHeight() / $imageSize->getHeight()
-        );
-
-        $thumbnail = $image->copy();
-
-        $thumbnail->usePalette($image->palette());
-        $thumbnail->strip();
-
-        if (!$crop) {
-            $ratio = min($ratios);
-        } else {
-            $ratio = max($ratios);
-        }
-
-        if ($crop) {
-            $imageSize = $thumbnail->getSize()->scale($ratio);
-            $thumbnail->resize($imageSize);
-            
-            $x = max(0, round(($imageSize->getWidth() - $size->getWidth()) / 2));
-            $y = max(0, round(($imageSize->getHeight() - $size->getHeight()) / 2));
-            
-            $cropPositions = $this->getCropPositions($crop);
-            
-            if ($cropPositions[0] === 'top') {
-                $y = 0;
-            } elseif ($cropPositions[0] === 'bottom') {
-                $y = $imageSize->getHeight() - $size->getHeight();
-            }
-            
-            if ($cropPositions[1] === 'left') {
-                $x = 0;
-            } elseif ($cropPositions[1] === 'right') {
-                $x = $imageSize->getWidth() - $size->getWidth();
-            }
-            
-            $point = new Point($x, $y);
-            
-            $thumbnail->crop($point, $size);
-        } else {
-            if (!$imageSize->contains($size)) {
-                $imageSize = $imageSize->scale($ratio);
-                $thumbnail->resize($imageSize);
-            } else {
-                $imageSize = $thumbnail->getSize()->scale($ratio);
-                $thumbnail->resize($imageSize);
-            }
-        }
-
         //Create the thumbnail
-        return $thumbnail;
+        return with(new Thumbnail())->handle($image, [
+            'width' => $width,
+            'height' => $height,
+            'crop' => $crop
+        ]);
     }
 
     /**
@@ -272,8 +227,8 @@ class ImageFactory implements ImageFactoryContract
      */
     protected function applyFilter(ImageInterface $image, $name)
     {
-        $filters = $this->app['image']->getFilters();
-        
+        $filters = $this->manager->getFilters();
+
         // Get all arguments following $name and add $image as the first
         // arguments then call the filter.
         $arguments = array_slice(func_get_args(), 2);
@@ -298,7 +253,7 @@ class ImageFactory implements ImageFactoryContract
 
         return $image;
     }
-    
+
     /**
      * Return crop positions from the crop parameter
      *
@@ -307,7 +262,7 @@ class ImageFactory implements ImageFactoryContract
     protected function getCropPositions($crop)
     {
         $crop = $crop === true ? 'center':$crop;
-        
+
         $cropPositions = explode('_', $crop);
         if (sizeof($cropPositions) === 1) {
             if ($cropPositions[0] === 'top' || $cropPositions[0] === 'bottom' || $cropPositions[0] === 'center') {
@@ -316,10 +271,10 @@ class ImageFactory implements ImageFactoryContract
                 array_unshift($cropPositions, 'center');
             }
         }
-        
+
         return $cropPositions;
     }
-    
+
     /**
      * Get the image source
      *
@@ -329,7 +284,7 @@ class ImageFactory implements ImageFactoryContract
     {
         return $this->source;
     }
-    
+
     /**
      * Set the image source
      *
@@ -339,15 +294,15 @@ class ImageFactory implements ImageFactoryContract
     public function setSource(SourceContract $source)
     {
         $this->source = $source;
-        
+
         return $this;
     }
-    
+
     public function getImagineManager()
     {
-        return $this->app['image.manager.imagine'];
+        return $this->manager->getImagineManager();
     }
-    
+
     public function getImagine()
     {
         $manager = $this->getImagineManager();

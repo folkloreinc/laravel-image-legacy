@@ -11,13 +11,14 @@ use Imagine\Image\AbstractImagine as Imagine;
 class SourceManager extends Manager
 {
     protected $app;
-    protected $image;
-    
-    public function __construct($app)
+    protected $imagine;
+
+    public function __construct($app, ImagineManager $imagine)
     {
         $this->app = $app;
+        $this->imagine = $imagine;
     }
-    
+
     /**
      * Create an instance of the Imagine Gd driver.
      *
@@ -25,7 +26,7 @@ class SourceManager extends Manager
      */
     protected function createLocalDriver($config)
     {
-        return new LocalSource($this->app['image.manager.imagine'], $config);
+        return new LocalSource($this->imagine, $config);
     }
 
     /**
@@ -35,9 +36,9 @@ class SourceManager extends Manager
      */
     protected function createFilesystemDriver($config)
     {
-        return new FilesystemSource($this->app['image.manager.imagine'], $config);
+        return new FilesystemSource($this->imagine, $config);
     }
-    
+
     /**
      * Create a new driver instance.
      *

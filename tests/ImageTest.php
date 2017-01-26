@@ -1,6 +1,6 @@
 <?php
 
-use Folklore\Image\Contracts\ImageFactory as ImageFactoryContract;
+use Folklore\Image\Contracts\ImageManipulator as ImageManipulatorContract;
 use Folklore\Image\Sources\LocalSource;
 use Folklore\Image\Sources\FilesystemSource;
 use Folklore\Image\SourceManager;
@@ -14,10 +14,10 @@ class ImageTest extends ImageTestCase
     public function testSourceWithoutName()
     {
         $factory = Image::source();
-        $this->assertInstanceOf(ImageFactoryContract::class, $factory);
+        $this->assertInstanceOf(ImageManipulatorContract::class, $factory);
         $this->assertInstanceOf(LocalSource::class, $factory->getSource());
     }
-    
+
     /**
      * Test source method with a name
      * @test
@@ -25,10 +25,10 @@ class ImageTest extends ImageTestCase
     public function testSourceWithName()
     {
         $factory = Image::source('cloud');
-        $this->assertInstanceOf(ImageFactoryContract::class, $factory);
+        $this->assertInstanceOf(ImageManipulatorContract::class, $factory);
         $this->assertInstanceOf(FilesystemSource::class, $factory->getSource());
     }
-    
+
     /**
      * Test source method with an invalid name
      * @test
@@ -38,18 +38,18 @@ class ImageTest extends ImageTestCase
     {
         $factory = Image::source('invalid');
     }
-    
+
     /**
      * Test that source method keeps factory instance
      * @test
      */
-    public function testSourceKeepFactoryInstance()
+    public function testSourceKeepManipulatorInstance()
     {
         $factory = Image::source();
         $factorySecond = Image::source();
         $this->assertTrue($factory === $factorySecond);
     }
-    
+
     /**
      * Test that extend call the same method on source manager
      * @test
@@ -60,23 +60,23 @@ class ImageTest extends ImageTestCase
         $callback = function () {
             return null;
         };
-        
+
         $sourceManager = $this->getMockBuilder(SourceManager::class)
             ->disableOriginalConstructor()
             ->setMethods(['extend'])
             ->getMock();
-        
+
         $sourceManager->expects($this->once())
             ->method('extend')
             ->with($this->equalTo($driver), $this->equalTo($callback));
-        
-        app()->singleton('image.manager.source', function () use ($sourceManager) {
+
+        app()->singleton('image.source', function () use ($sourceManager) {
             return $sourceManager;
         });
-        
+
         $factory = Image::extend($driver, $callback);
     }
-    
+
     /**
      * Test routes
      * @test
@@ -84,12 +84,12 @@ class ImageTest extends ImageTestCase
     public function testRoutes()
     {
         Image::routes();
-        
+
         $routes = app('router')->getRoutes();
         $route = $routes->getByName('image.default');
-        
+
         $this->assertInstanceOf(\Illuminate\Routing\Route::class, $route);
-        
+
         $action = $route->getAction();
         $this->assertArrayHasKey('image', $action);
     }

@@ -13,7 +13,7 @@ class ImageServiceProvider extends ServiceProvider
      * @var bool
      */
     protected $defer = false;
-    
+
     protected function getRouter()
     {
         return $this->app['router'];
@@ -27,12 +27,12 @@ class ImageServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->bootPublishes();
-        
+
         $this->bootRouter();
-        
+
         $this->bootHttp();
     }
-    
+
     public function bootPublishes()
     {
         // Config file path
@@ -46,19 +46,19 @@ class ImageServiceProvider extends ServiceProvider
         $this->publishes([
             $configFile => config_path('image.php')
         ], 'config');
-        
+
         $this->publishes([
             $publicFile => public_path('vendor/folklore/image')
         ], 'public');
     }
-    
+
     public function bootRouter()
     {
         // Add default pattern to router
         $pattern = $this->app['image']->pattern();
         $this->app['router']->pattern('image_pattern', $pattern);
     }
-    
+
     public function bootHttp()
     {
         Response::macro('image', function ($value = null) {
@@ -74,17 +74,17 @@ class ImageServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerImage();
-        
+
         $this->registerImagineManager();
-        
+
         $this->registerSourceManager();
-        
+
         $this->registerRouter();
-        
+
         $this->registerUrlGenerator();
-        
-        $this->registerImageFactory();
-        
+
+        $this->registerImageManipulator();
+
         $this->registerMiddlewares();
     }
 
@@ -107,7 +107,7 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerImagineManager()
     {
-        $this->app->singleton('image.manager.imagine', function ($app) {
+        $this->app->singleton('image.imagine', function ($app) {
             return new ImagineManager($app);
         });
     }
@@ -132,8 +132,8 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerSourceManager()
     {
-        $this->app->singleton('image.manager.source', function ($app) {
-            return new SourceManager($app);
+        $this->app->singleton('image.source', function ($app) {
+            return new SourceManager($app, $app['image.imagine']);
         });
     }
 
@@ -144,20 +144,20 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerUrlGenerator()
     {
-        $this->app->singleton('image.url', function ($app, $parameters) {
+        $this->app->singleton('image.url', function ($app) {
             return new UrlGenerator($app);
         });
     }
 
     /**
-     * Register the image factory
+     * Register the image manipulator
      *
      * @return void
      */
-    public function registerImageFactory()
+    public function registerImageManipulator()
     {
-        $this->app->bind('\Folklore\Image\Contracts\ImageFactory', function ($app, $parameters) {
-            return new ImageFactory($app, $parameters[0]);
+        $this->app->bind('image.manipulator', function ($app) {
+            return new ImageManipulator($app['image'], $app['image.url']);
         });
     }
 
@@ -181,8 +181,9 @@ class ImageServiceProvider extends ServiceProvider
         return [
             'image',
             'image.router',
-            'image.manager.imagine',
-            'image.manager.source',
+            'image.imagine',
+            'image.manipulator',
+            'image.source',
             'image.middleware.cache'
         ];
     }

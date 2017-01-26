@@ -6,9 +6,9 @@ use Illuminate\Foundation\Application;
 class Image
 {
     protected $app;
-    
+
     protected $urlGenerator;
-    
+
     /**
      * All sources
      *
@@ -22,34 +22,35 @@ class Image
      * @var array
      */
     protected $filters = [];
-    
+
     public function __construct(Application $app)
     {
         $this->app = $app;
-        
+
         $this->filters = $this->app['config']->get('image.filters', []);
     }
-    
+
     /**
-     * Get an ImageFactory for a specific source
+     * Get an ImageManipulator for a specific source
      *
      * @param  string|null  $name
-     * @return Folklore\Image\ImageFactory
+     * @return Folklore\Image\ImageManipulator
      */
     public function source($name = null)
     {
         $key = $name ? $name:'default';
-        
+
         if (isset($this->factories[$key])) {
             return $this->factories[$key];
         }
-        
-        $source = $this->app['image.manager.source']->driver($name);
-        $factory =  $this->app->make('\Folklore\Image\Contracts\ImageFactory', [$source]);
-        
+
+        $source = $this->app['image.source']->driver($name);
+        $factory =  $this->app->make('image.manipulator');
+        $factory->setSource($source);
+
         return $this->factories[$key] = $factory;
     }
-    
+
     /**
      * Register a custom source creator Closure.
      *
@@ -59,16 +60,16 @@ class Image
      */
     public function extend($driver, Closure $callback)
     {
-        $this->app['image.manager.source']->extend($driver, $callback);
+        $this->app['image.source']->extend($driver, $callback);
 
         return $this;
     }
-    
+
     public function routes()
     {
         return $this->app['image.router']->addRoutesToRouter();
     }
-    
+
     /**
      * Register a filter
      *
@@ -79,10 +80,10 @@ class Image
     public function filter($name, $filter)
     {
         $this->filters[$name] = $filter;
-        
+
         return $this;
     }
-    
+
     /**
      * Get all filters
      *
@@ -92,7 +93,7 @@ class Image
     {
         return $this->filters;
     }
-    
+
     /**
      * Get a filter
      *
@@ -103,7 +104,7 @@ class Image
     {
         return array_get($this->filters, $name, null);
     }
-    
+
     /**
      * Check if a filter exists
      *
@@ -114,7 +115,7 @@ class Image
     {
         return $this->getFilter($name) !== null ? true:false;
     }
-    
+
     /**
      * Get the imagine manager
      *
@@ -122,9 +123,20 @@ class Image
      */
     public function getImagineManager()
     {
-        return $this->app['image.manager.imagine'];
+        return $this->app['image.imagine'];
     }
-    
+
+    /**
+     * Get the imagine instance from the manager
+     *
+     * @return \Imagine\Image\ImagineInterface
+     */
+    public function getImagine()
+    {
+        $manager = $this->getImagineManager();
+        return $manager->driver();
+    }
+
     /**
      * Get the source manager
      *
@@ -132,9 +144,9 @@ class Image
      */
     public function getSourceManager()
     {
-        return $this->app['image.manager.source'];
+        return $this->app['image.source'];
     }
-    
+
     /**
      * Get the router
      *
