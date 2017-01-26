@@ -10,7 +10,7 @@ env:
   - TESTBENCH_VERSION=3.1.* ILLUMINATE_VERSION=5.1.*
   - TESTBENCH_VERSION=3.2.* ILLUMINATE_VERSION=5.2.*
   - TESTBENCH_VERSION=3.3.* ILLUMINATE_VERSION=5.3.*
-  - TESTBENCH_VERSION=3.4.* ILLUMINATE_VERSION=5.4.*
+  - TESTBENCH_VERSION=3.4.*@dev ILLUMINATE_VERSION=5.4.*
 
 matrix:
   exclude:
@@ -20,6 +20,7 @@ matrix:
 before_install:
   - composer global require hirak/prestissimo --update-no-dev
   - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update
+  - composer require "orchestra/database:${TESTBENCH_VERSION}" --no-update
   - composer require "orchestra/testbench:${TESTBENCH_VERSION}" --no-update
 
 install: composer update --no-interaction
