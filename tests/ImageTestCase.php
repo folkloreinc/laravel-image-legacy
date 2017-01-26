@@ -15,19 +15,21 @@ class ImageTestCase extends TestCase
     protected function getEnvironmentSetUp($app)
     {
         $app->instance('path.public', __DIR__.'/fixture');
-        
+
         $app['config']->set('filesystems.disks.local.root', public_path());
     }
 
     protected function getPackageProviders($app)
     {
-        return array('Folklore\Image\ImageServiceProvider');
+        return [
+            \Folklore\Image\ImageServiceProvider::class
+        ];
     }
 
     protected function getPackageAliases($app)
     {
-        return array(
-            'Image' => 'Folklore\Image\Support\Facades\Image'
-        );
+        return [
+            'Image' => \Folklore\Image\Support\Facades\Image::class
+        ];
     }
 }
