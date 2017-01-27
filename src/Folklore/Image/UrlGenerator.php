@@ -3,6 +3,7 @@
 use Folklore\Image\Exception\ParseException;
 use Illuminate\Foundation\Application;
 use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
+use Illuminate\Routing\Router as BaseRouter;
 
 class UrlGenerator implements UrlGeneratorContract
 {
@@ -18,9 +19,10 @@ class UrlGenerator implements UrlGeneratorContract
 
     protected $filterSeparator = '-';
 
-    public function __construct(Image $image)
+    public function __construct(Image $image, BaseRouter $router)
     {
         $this->image = $image;
+        $this->router = $router;
     }
 
     /**
@@ -56,10 +58,10 @@ class UrlGenerator implements UrlGeneratorContract
 
         // Get config from route, if specified
         if (isset($config['route'])) {
-            $route = $this->image
-                ->router()
-                ->getRoute($config['route']);
-            $routeConfig = array_get($route, 'url', []);
+            $route = $this->router
+                ->getRoutes()
+                ->getByName($config['route']);
+            $routeConfig = array_get($route ? $route->getAction():[], 'image.url', []);
             $config = array_merge($routeConfig, $config);
         }
 
@@ -102,10 +104,7 @@ class UrlGenerator implements UrlGeneratorContract
 
         // If a route is specified, use it to generate the url.
         if (isset($config['route'])) {
-            $routeName = $this->image
-                ->router()
-                ->getRouteName($config['route']);
-            $routeUrl = route($routeName, ['__URL__']);
+            $routeUrl = route($config['route'], ['__URL__']);
             return str_replace('__URL__', ltrim($url, '/'), $routeUrl);
         }
 

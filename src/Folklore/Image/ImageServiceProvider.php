@@ -2,7 +2,8 @@
 
 use Illuminate\Support\ServiceProvider;
 use Folklore\Image\Http\ImageResponse;
-use Response;
+use Folklore\Image\RouteRegistrar;
+use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 
 class ImageServiceProvider extends ServiceProvider
 {
@@ -55,13 +56,29 @@ class ImageServiceProvider extends ServiceProvider
     public function bootRouter()
     {
         // Add default pattern to router
+        $app = $this->app;
+        $router = $this->app['router'];
         $pattern = $this->app['image']->pattern();
-        $this->app['router']->pattern('image_pattern', $pattern);
+        $router->pattern('image_pattern', $pattern);
+        $router->macro('image', function ($path, $config) use ($router, $app) {
+            return (new RouteRegistrar($router, $app))->image($path, $config);
+        });
+
+        // Map routes
+        if (is_file($appPath = $this->app->basePath().'/routes/images.php')) {
+            (new RouteRegistrar($router, $app))->group($appPath);
+        } else {
+            (new RouteRegistrar($router, $app))->group(__DIR__ . '/../../routes/images.php');
+        }
     }
 
     public function bootHttp()
     {
-        Response::macro('image', function ($image = null, $status = 200, $headers = []) {
+        $this->app[ResponseFactoryContract::class]->macro('image', function (
+            $image = null,
+            $status = 200,
+            $headers = []
+        ) {
             return new ImageResponse($image, $status, $headers);
         });
     }
@@ -134,12 +151,12 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerRouter()
     {
-        $this->app->singleton('image.router', function ($app) {
+        /*$this->app->singleton('image.router', function ($app) {
             $appRouter = $this->getRouter();
             $routes = $app['config']->get('image.routes', []);
             $router = new Router($appRouter, $app, $routes);
             return $router;
-        });
+        });*/
     }
 
     /**
@@ -150,13 +167,22 @@ class ImageServiceProvider extends ServiceProvider
     public function registerUrlGenerator()
     {
         $this->app->singleton('image.url', function ($app) {
-            $generator = new UrlGenerator($app['image']);
+            $generator = new UrlGenerator($app['image'], $app['router']);
+
             // Set default values from config
             $config = $app['config'];
-            $generator->setFormat($config['image.url.format']);
-            $generator->setFiltersFormat($config['image.url.filters_format']);
-            $generator->setFilterFormat($config['image.url.filter_format']);
-            $generator->setFilterSeparator($config['image.url.filter_separator']);
+            $generator->setFormat(
+                $config->get('image.url.format', '')
+            );
+            $generator->setFiltersFormat(
+                $config->get('image.url.filters_format', '')
+            );
+            $generator->setFilterFormat(
+                $config->get('image.url.filter_format', '')
+            );
+            $generator->setFilterSeparator(
+                $config->get('image.url.filter_separator', '')
+            );
             return $generator;
         });
     }

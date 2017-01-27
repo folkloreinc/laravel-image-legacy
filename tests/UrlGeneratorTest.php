@@ -17,7 +17,7 @@ class UrlGeneratorTest extends TestCase
     {
         parent::setUp();
 
-        $this->generator = new UrlGenerator(app('image'), app('image.router'));
+        $this->generator = new UrlGenerator(app('image'), app('router'));
 
         $this->config = [
             'format' => '{dirname}/{basename}{filters}.{extension}',
@@ -172,8 +172,8 @@ class UrlGeneratorTest extends TestCase
      */
     public function testMakeWithRoute()
     {
-        app('image.router')->addRoute([
-            'route' => 'medias/{pattern}',
+        app('router')->image('medias/{pattern}', [
+            'as' => 'image.test',
             'domain' => 'example.com',
             'url' => [
                 'format' => '{dirname}/{filters}/{basename}.{extension}',
@@ -181,12 +181,11 @@ class UrlGeneratorTest extends TestCase
                 'filter_format' => '{key}-{value}',
                 'filter_separator' => '/'
             ]
-        ], 'test');
-        app('image')->routes();
+        ]);
 
         $url = 'http://example.com/medias/uploads/image/300x300/rotate-90/negative/image.jpg';
         $filters = array_merge([
-            'route' => 'test'
+            'route' => 'image.test'
         ], $this->filters);
         $return = $this->generator->make('uploads/image.jpg', $filters);
         $this->assertEquals($url, $return);

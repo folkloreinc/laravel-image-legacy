@@ -4,7 +4,6 @@ namespace Folklore\Image\Http;
 
 use Folklore\Image\Http\ImageResponse;
 use Closure;
-use File;
 
 class CacheMiddleware
 {
@@ -41,7 +40,7 @@ class CacheMiddleware
             throw new \Exception('Destination is not writeable');
         }
         if (!$directoryExists) {
-            File::makeDirectory($cacheDirectory, 0755, true, true);
+            app('files')->makeDirectory($cacheDirectory, 0755, true, true);
         }
 
         // If it's an ImageResponse, save the image from the Image object.
@@ -52,7 +51,7 @@ class CacheMiddleware
             $response->setImagePath($cacheFilePath);
         } else {
             $content = $response->getContent();
-            File::put($cacheFilePath, $content);
+            app('files')->put($cacheFilePath, $content);
         }
 
         return $response;

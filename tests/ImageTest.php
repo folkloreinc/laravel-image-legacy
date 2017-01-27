@@ -76,21 +76,4 @@ class ImageTest extends TestCase
 
         $factory = Image::extend($driver, $callback);
     }
-
-    /**
-     * Test routes
-     * @test
-     */
-    public function testRoutes()
-    {
-        Image::routes();
-
-        $routes = app('router')->getRoutes();
-        $route = $routes->getByName('image.default');
-
-        $this->assertInstanceOf(\Illuminate\Routing\Route::class, $route);
-
-        $action = $route->getAction();
-        $this->assertArrayHasKey('image', $action);
-    }
 }

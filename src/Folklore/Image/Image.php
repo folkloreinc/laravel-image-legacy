@@ -66,17 +66,6 @@ class Image
     }
 
     /**
-     * Register routes on the router
-     *
-     * @return void
-     */
-    public function routes()
-    {
-        $router = $this->getRouter();
-        return $router->registerRoutesOnRouter();
-    }
-
-    /**
      * Return an URL to process the image
      *
      * @param  string  $src
@@ -202,26 +191,6 @@ class Image
     public function getSourceManager()
     {
         return $this->app['image.source'];
-    }
-
-    /**
-     * Alias to getRouter
-     *
-     * @return \Folklore\Image\Router
-     */
-    public function router()
-    {
-        return $this->getRouter();
-    }
-
-    /**
-     * Get the router
-     *
-     * @return \Folklore\Image\Router
-     */
-    public function getRouter()
-    {
-        return $this->app['image.router'];
     }
 
     /**
