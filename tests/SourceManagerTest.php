@@ -7,7 +7,7 @@ use Folklore\Image\Sources\FilesystemSource;
 /**
  * @coversDefaultClass Folklore\Image\SourceManager
  */
-class SourceManagerTest extends ImageTestCase
+class SourceManagerTest extends TestCase
 {
     protected $manager;
 

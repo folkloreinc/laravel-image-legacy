@@ -13,6 +13,7 @@
     <testsuites>
         <testsuite name="Folklore/Image Test Suite">
             <directory>./tests/</directory>
+            <exclude>./tests/ImageTestCase.php</exclude>
         </testsuite>
     </testsuites>
     <filter>

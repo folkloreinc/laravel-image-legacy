@@ -5,7 +5,7 @@ use Folklore\Image\Sources\LocalSource;
 use Folklore\Image\Sources\FilesystemSource;
 use Folklore\Image\SourceManager;
 
-class ImageTest extends ImageTestCase
+class ImageTest extends TestCase
 {
     /**
      * Test source method without a name

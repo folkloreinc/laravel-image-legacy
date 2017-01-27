@@ -5,7 +5,7 @@ use Folklore\Image\UrlGenerator;
 /**
  * @coversDefaultClass Folklore\Image\UrlGenerator
  */
-class UrlGeneratorTest extends ImageTestCase
+class UrlGeneratorTest extends TestCase
 {
     protected $generator;
 
@@ -172,16 +172,22 @@ class UrlGeneratorTest extends ImageTestCase
      */
     public function testMakeWithRoute()
     {
-        app('image')->routes();
         app('image.router')->addRoute([
             'route' => 'medias/{pattern}',
-            'domain' => 'example.com'
+            'domain' => 'example.com',
+            'url' => [
+                'format' => '{dirname}/{filters}/{basename}.{extension}',
+                'filters_format' => 'image/{filter}',
+                'filter_format' => '{key}-{value}',
+                'filter_separator' => '/'
+            ]
         ], 'test');
+        app('image')->routes();
 
-        $url = 'http://example.com/medias/uploads/image-filters(300x300-rotate(90)-negative).jpg';
+        $url = 'http://example.com/medias/uploads/image/300x300/rotate-90/negative/image.jpg';
         $filters = array_merge([
             'route' => 'test'
-        ], $this->filters, $this->config);
+        ], $this->filters);
         $return = $this->generator->make('uploads/image.jpg', $filters);
         $this->assertEquals($url, $return);
     }

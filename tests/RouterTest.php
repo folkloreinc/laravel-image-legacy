@@ -5,7 +5,7 @@ use Folklore\Image\Router;
 /**
  * @coversDefaultClass Folklore\Image\Router
  */
-class RouterTest extends ImageTestCase
+class RouterTest extends TestCase
 {
     protected $router;
 

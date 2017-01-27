@@ -2,9 +2,9 @@
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Folklore\Image\Exception\FormatException;
-use Orchestra\Testbench\TestCase;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 
-class ImageTestCase extends TestCase
+class TestCase extends BaseTestCase
 {
     /**
      * Define environment setup.

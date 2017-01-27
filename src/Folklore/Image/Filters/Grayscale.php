@@ -1,6 +1,6 @@
 <?php
 
-namespace Folklore\Image\Filter;
+namespace Folklore\Image\Filters;
 
 use Folklore\Image\Contracts\Filter as FilterContract;
 use Imagine\Image\ImageInterface;

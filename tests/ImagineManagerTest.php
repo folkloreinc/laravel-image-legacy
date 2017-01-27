@@ -8,7 +8,7 @@ use \Imagine\Gmagick\Imagine as ImagineGmagick;
 /**
  * @coversDefaultClass Folklore\Image\ImagineManager
  */
-class ImagineManagerTest extends ImageTestCase
+class ImagineManagerTest extends TestCase
 {
     protected $manager;
 

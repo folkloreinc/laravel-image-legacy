@@ -36,13 +36,13 @@ return array(
     |
     */
     'filters' => [
-        'blur' => \Folklore\Image\Filter\Blur::class,
-        'colorize' => \Folklore\Image\Filter\Colorize::class,
-        'gamma' => \Folklore\Image\Filter\Gamma::class,
-        'grayscale' => \Folklore\Image\Filter\Grayscale::class,
-        'interlace' => \Folklore\Image\Filter\Interlace::class,
-        'negative' => \Folklore\Image\Filter\Negative::class,
-        'rotate' => \Folklore\Image\Filter\Rotate::class
+        'blur' => \Folklore\Image\Filters\Blur::class,
+        'colorize' => \Folklore\Image\Filters\Colorize::class,
+        'gamma' => \Folklore\Image\Filters\Gamma::class,
+        'grayscale' => \Folklore\Image\Filters\Grayscale::class,
+        'interlace' => \Folklore\Image\Filters\Interlace::class,
+        'negative' => \Folklore\Image\Filters\Negative::class,
+        'rotate' => \Folklore\Image\Filters\Rotate::class
     ],
 
     /*

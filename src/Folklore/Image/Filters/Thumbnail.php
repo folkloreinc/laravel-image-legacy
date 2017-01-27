@@ -1,18 +1,20 @@
 <?php
 
-namespace Folklore\Image\Filter;
+namespace Folklore\Image\Filters;
 
 use Folklore\Image\Contracts\FilterWithValue as FilterWithValueContract;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\Box;
+use Imagine\Image\Point;
 
 class Thumbnail implements FilterWithValueContract
 {
-    public function apply(ImageInterface $image, $value)
+    public function apply(ImageInterface $image, $value = [])
     {
         if (is_array($value)) {
             $width = array_get($value, 'width', null);
             $height = array_get($value, 'height', null);
-            $crop = array_get($value, 'crop', true);
+            $crop = array_get($value, 'crop', false);
         } else {
             $values = explode(',', $value);
             list($width, $height) = $values;
