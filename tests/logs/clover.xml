@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1485475041">
-  <project timestamp="1485475041">
+<coverage generated="1485475708">
+  <project timestamp="1485475708">
     <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Contracts/Filter.php">
       <metrics loc="10" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
@@ -637,9 +637,20 @@
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/ImagineManager.php">
         <class name="ImagineManager" namespace="Folklore\Image">
-          <metrics complexity="5" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+          <metrics complexity="5" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="11" coveredelements="11"/>
         </class>
-        <metrics loc="57" ncloc="31" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        <line num="12" type="method" name="createGdDriver" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="14" type="stmt" count="1"/>
+        <line num="22" type="method" name="createImagickDriver" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="24" type="stmt" count="1"/>
+        <line num="32" type="method" name="createGmagickDriver" visibility="protected" complexity="1" crap="1" count="1"/>
+        <line num="34" type="stmt" count="1"/>
+        <line num="42" type="method" name="getDefaultDriver" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="44" type="stmt" count="1"/>
+        <line num="53" type="method" name="setDefaultDriver" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="56" type="stmt" count="1"/>
+        <metrics loc="57" ncloc="31" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="11" coveredelements="11"/>
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Router.php">
         <class name="Router" namespace="Folklore\Image">
@@ -942,6 +953,6 @@
         <metrics loc="11" ncloc="11" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
       </file>
     </package>
-    <metrics files="33" loc="2591" ncloc="1913" classes="20" methods="121" coveredmethods="51" conditionals="0" coveredconditionals="0" statements="625" coveredstatements="294" elements="746" coveredelements="345"/>
+    <metrics files="33" loc="2591" ncloc="1913" classes="21" methods="126" coveredmethods="56" conditionals="0" coveredconditionals="0" statements="631" coveredstatements="300" elements="757" coveredelements="356"/>
   </project>
 </coverage>

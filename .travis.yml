@@ -19,6 +19,10 @@ matrix:
     - php: 5.5
       env: TESTBENCH_VERSION=3.4.*@dev ILLUMINATE_VERSION=5.4.*
 
+before_script:
+  - pecl install imagick
+  - pecl install gmagick
+
 before_install:
   - composer global require hirak/prestissimo --update-no-dev
   - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update
