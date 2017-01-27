@@ -39,6 +39,7 @@ class ImageServiceProvider extends ServiceProvider
         // Config file path
         $configFile = __DIR__ . '/../../config/image.php';
         $publicFile = __DIR__ . '/../../resources/assets/';
+        $routesFile = __DIR__ . '/../../routes/images.php';
 
         // Merge files
         $this->mergeConfigFrom($configFile, 'image');
@@ -51,27 +52,44 @@ class ImageServiceProvider extends ServiceProvider
         $this->publishes([
             $publicFile => public_path('vendor/folklore/image')
         ], 'public');
+
+        $this->publishes([
+            $routesFile => is_dir(base_path('routes')) ?
+                base_path('routes/images.php'):app_path('Http/routesImages.php')
+        ], 'routes');
     }
 
     public function bootRouter()
     {
-        // Add default pattern to router
         $app = $this->app;
         $router = $this->app['router'];
+
+        // Add default pattern to router
         $pattern = $this->app['image']->pattern();
         $router->pattern('image_pattern', $pattern);
+
+        // Add a macro to the router for creating images route.
         $router->macro('image', function ($path, $config) use ($router, $app) {
             return (new RouteRegistrar($router, $app))->image($path, $config);
         });
 
-        // Map routes
-        if (is_file($appPath = $this->app->basePath().'/routes/images.php')) {
-            (new RouteRegistrar($router, $app))->group($appPath);
-        } else {
-            (new RouteRegistrar($router, $app))->group(__DIR__ . '/../../routes/images.php');
-        }
+        // Map routes defined in the routes files
+        $router->group([], function ($router) use ($app) {
+            $appPath = is_dir(base_path('routes')) ?
+                base_path('routes/images.php'):app_path('Http/routesImages.php');
+            if (is_file($appPath)) {
+                require $appPath;
+            } else {
+                require __DIR__ . '/../../routes/images.php';
+            }
+        });
     }
 
+    /**
+     * Add the macro for image response
+     *
+     * @return void
+     */
     public function bootHttp()
     {
         $this->app[ResponseFactoryContract::class]->macro('image', function (

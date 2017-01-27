@@ -1,14 +1,22 @@
 <?php
 namespace Folklore\Image;
 
-use Illuminate\Routing\RouteRegistrar as BaseRouteRegistrar;
 use Illuminate\Routing\Router;
 use Illuminate\Container\Container;
 use Folklore\Image\UrlGenerator;
 
-class RouteRegistrar extends BaseRouteRegistrar
+class RouteRegistrar
 {
     protected $container;
+
+    /**
+     * The attributes that can be set through this class.
+     *
+     * @var array
+     */
+    protected $allowedAttributes = [
+        'as', 'domain', 'middleware', 'name', 'namespace', 'prefix',
+    ];
 
     /**
      * Create a new route registrar instance.
@@ -46,7 +54,7 @@ class RouteRegistrar extends BaseRouteRegistrar
 
         $routePath = preg_replace('/\{\s*pattern\s*\}/i', '{'.$patternName.'}', $path);
 
-        return $this->get($routePath, array(
+        return $this->router->get($routePath, array(
             'as' => $as,
             'domain' => $domain,
             'middleware' => $middleware,
