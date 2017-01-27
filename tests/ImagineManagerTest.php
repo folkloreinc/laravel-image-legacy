@@ -39,8 +39,10 @@ class ImagineManagerTest extends ImageTestCase
      */
     public function testImagickDriver()
     {
-        $driver = $this->manager->driver('imagick');
-        $this->assertEquals(new ImagineImagick(), $driver);
+        if (extension_loaded('imagick')) {
+            $driver = $this->manager->driver('imagick');
+            $this->assertEquals(new ImagineImagick(), $driver);
+        }
     }
 
     /**
@@ -51,8 +53,10 @@ class ImagineManagerTest extends ImageTestCase
      */
     public function testGmagickDriver()
     {
-        $driver = $this->manager->driver('gmagick');
-        $this->assertEquals(new ImagineGmagick(), $driver);
+        if (extension_loaded('gmagick')) {
+            $driver = $this->manager->driver('gmagick');
+            $this->assertEquals(new ImagineGmagick(), $driver);
+        }
     }
 
     /**
