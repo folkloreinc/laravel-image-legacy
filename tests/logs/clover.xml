@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1485555341">
-  <project timestamp="1485555341">
+<coverage generated="1485557992">
+  <project timestamp="1485557992">
     <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Contracts/Filter.php">
       <metrics loc="10" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
@@ -662,33 +662,40 @@
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/RouteRegistrar.php">
         <class name="RouteRegistrar" namespace="Folklore\Image">
-          <metrics complexity="4" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="22" coveredstatements="19" elements="24" coveredelements="20"/>
+          <metrics complexity="4" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="29" coveredstatements="22" elements="31" coveredelements="23"/>
         </class>
-        <line num="27" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="5"/>
-        <line num="29" type="stmt" count="5"/>
-        <line num="30" type="stmt" count="5"/>
-        <line num="31" type="stmt" count="5"/>
-        <line num="33" type="method" name="image" visibility="public" complexity="3" crap="3.04" count="5"/>
+        <line num="33" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="5"/>
         <line num="35" type="stmt" count="5"/>
         <line num="36" type="stmt" count="5"/>
         <line num="37" type="stmt" count="5"/>
-        <line num="38" type="stmt" count="5"/>
-        <line num="40" type="stmt" count="5"/>
+        <line num="39" type="method" name="image" visibility="public" complexity="3" crap="3.18" count="5"/>
         <line num="41" type="stmt" count="5"/>
+        <line num="42" type="stmt" count="5"/>
+        <line num="43" type="stmt" count="5"/>
+        <line num="44" type="stmt" count="5"/>
+        <line num="45" type="stmt" count="5"/>
         <line num="46" type="stmt" count="5"/>
         <line num="47" type="stmt" count="5"/>
-        <line num="48" type="stmt" count="0"/>
-        <line num="49" type="stmt" count="0"/>
-        <line num="50" type="stmt" count="0"/>
-        <line num="52" type="stmt" count="5"/>
+        <line num="49" type="stmt" count="5"/>
+        <line num="50" type="stmt" count="5"/>
         <line num="55" type="stmt" count="5"/>
-        <line num="57" type="stmt" count="5"/>
-        <line num="58" type="stmt" count="5"/>
-        <line num="59" type="stmt" count="5"/>
-        <line num="60" type="stmt" count="5"/>
-        <line num="61" type="stmt" count="5"/>
-        <line num="62" type="stmt" count="5"/>
-        <metrics loc="65" ncloc="50" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="22" coveredstatements="19" elements="24" coveredelements="20"/>
+        <line num="56" type="stmt" count="5"/>
+        <line num="57" type="stmt" count="0"/>
+        <line num="58" type="stmt" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="60" type="stmt" count="0"/>
+        <line num="62" type="stmt" count="0"/>
+        <line num="63" type="stmt" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <line num="66" type="stmt" count="5"/>
+        <line num="69" type="stmt" count="5"/>
+        <line num="71" type="stmt" count="5"/>
+        <line num="72" type="stmt" count="5"/>
+        <line num="73" type="stmt" count="5"/>
+        <line num="74" type="stmt" count="5"/>
+        <line num="75" type="stmt" count="5"/>
+        <line num="76" type="stmt" count="5"/>
+        <metrics loc="79" ncloc="64" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="29" coveredstatements="22" elements="31" coveredelements="23"/>
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Router.php">
         <class name="Router" namespace="Folklore\Image">
@@ -989,6 +996,6 @@
         <metrics loc="11" ncloc="11" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
       </file>
     </package>
-    <metrics files="34" loc="2674" ncloc="1973" classes="22" methods="125" coveredmethods="53" conditionals="0" coveredconditionals="0" statements="662" coveredstatements="335" elements="787" coveredelements="388"/>
+    <metrics files="34" loc="2688" ncloc="1987" classes="22" methods="125" coveredmethods="53" conditionals="0" coveredconditionals="0" statements="669" coveredstatements="338" elements="794" coveredelements="391"/>
   </project>
 </coverage>
