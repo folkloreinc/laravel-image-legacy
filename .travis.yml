@@ -1,13 +1,5 @@
 language: php
 
-## Run on container environment
-sudo: false
-
-## Cache composer bits
-cache:
-  directories:
-    - $HOME/.composer/cache
-
 php:
   - 5.5
   - 5.6
@@ -29,11 +21,11 @@ matrix:
 
 before_install:
   - composer global require hirak/prestissimo --update-no-dev
-  - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update
-  - composer require "orchestra/database:${DATABASE_VERSION}" --no-update
-  - composer require "orchestra/testbench:${TESTBENCH_VERSION}" --no-update
+  - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
+  - composer require "orchestra/database:${DATABASE_VERSION}" --no-update --prefer-dist
+  - composer require "orchestra/testbench:${TESTBENCH_VERSION}" --no-update --prefer-dist
 
-install: composer update --no-interaction
+install: composer update --no-interaction --prefer-dist
 
 script: phpunit
 
