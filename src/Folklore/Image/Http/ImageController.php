@@ -24,8 +24,8 @@ class ImageController extends BaseController
         $route = $request->route();
         $config = $route ? array_get($route->getAction(), 'image', []):[];
         $source = array_get($config, 'source');
-        $quality = array_get($config, 'quality', 100);
-        $expires = array_get($config, 'expires', null);
+        $quality = (float)array_get($config, 'quality', 100);
+        $expires = (int)array_get($config, 'expires', null);
         $urlConfig = array_get($config, 'url', []);
         $routeFilters = array_get($config, 'filters', []);
 
