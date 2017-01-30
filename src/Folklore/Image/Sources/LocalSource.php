@@ -2,10 +2,19 @@
 
 namespace Folklore\Image\Sources;
 
+use Folklore\Image\ImagineManager;
+use Folklore\Image\UrlGenerator;
 use Imagine\Image\ImageInterface;
 
 class LocalSource extends AbstractSource
 {
+    public function __construct(ImagineManager $imagine, Urlgenerator $urlGenerator, $config)
+    {
+        $this->imagine = $imagine;
+        $this->urlGenerator = $urlGenerator;
+        $this->config = $config;
+    }
+
     public function getRealPath($path)
     {
         if (is_file(realpath($path))) {
@@ -48,7 +57,30 @@ class LocalSource extends AbstractSource
 
     public function getFilesFromPath($path)
     {
-        return scandir();
+        $images = array();
+
+        //Check path
+        $path = urldecode($path);
+        if (!($path = $this->getRealPath($path))) {
+            return $images;
+        }
+
+        // Loop through the contents of the source and write directory and get
+        // all files that match the pattern
+        $parts = pathinfo($path);
+        $dirs = [$parts['dirname']];
+        foreach ($dirs as $directory) {
+            $files = scandir($directory);
+            foreach ($files as $file) {
+                if (strpos($file, $parts['filename']) === false || !preg_match('#'.$this->urlGenerator->pattern().'#', $file)) {
+                    continue;
+                }
+                $images[] = $directory.'/'.$file;
+            }
+        }
+
+        // Return the list
+        return $images;
     }
 
     public function openFromPath($path)

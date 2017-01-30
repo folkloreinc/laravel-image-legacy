@@ -17,7 +17,7 @@ class SourceManager extends Manager
      */
     protected function createLocalDriver($config)
     {
-        return new LocalSource($this->app['image.imagine'], $config);
+        return new LocalSource($this->app['image.imagine'], $this->app['image.url'], $config);
     }
 
     /**

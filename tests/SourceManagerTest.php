@@ -28,7 +28,7 @@ class SourceManagerTest extends TestCase
     {
         $driver = $this->manager->driver('local');
         $config = app('config')->get('image.sources.local');
-        $this->assertEquals(new LocalSource(app('image.imagine'), $config), $driver);
+        $this->assertEquals(new LocalSource(app('image.imagine'), app('image.url'), $config), $driver);
     }
 
     /**
