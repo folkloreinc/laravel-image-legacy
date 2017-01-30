@@ -2,6 +2,7 @@
 
 use Closure;
 use Illuminate\Foundation\Application;
+use Folklore\Image\Contracts\ImageManipulator as ImageManipulatorContract;
 
 class Image
 {
@@ -44,7 +45,7 @@ class Image
 
         $sourceManager = $this->getSourceManager();
         $source = $sourceManager->driver($name);
-        $manipulator =  $this->app->make('image.manipulator');
+        $manipulator =  $this->app->make(ImageManipulatorContract::class);
         $manipulator->setSource($source);
 
         return $this->manipulators[$key] = $manipulator;

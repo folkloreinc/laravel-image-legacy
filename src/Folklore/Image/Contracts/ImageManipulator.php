@@ -13,4 +13,8 @@ interface ImageManipulator
     public function save(ImageInterface $image, $path);
 
     public function format($path);
+
+    public function setSource(Source $source);
+
+    public function getSource();
 }

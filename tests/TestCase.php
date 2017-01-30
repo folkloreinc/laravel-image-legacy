@@ -31,7 +31,7 @@ class TestCase extends BaseTestCase
             ]
         ]);
 
-        $app['config']->set('filesystems.disks.local.root', public_path());
+        $app['config']->set('filesystems.disks.local.root', public_path('filesystem'));
     }
 
     protected function getPackageProviders($app)

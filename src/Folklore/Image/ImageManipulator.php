@@ -9,6 +9,7 @@ use Folklore\Image\Exception\FormatException;
 use Folklore\Image\Filters\Thumbnail;
 use Folklore\Image\Image;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\ImagineInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
@@ -18,7 +19,7 @@ class ImageManipulator implements ImageManipulatorContract
 
     protected $source;
 
-    protected $memoryLimit = 256;
+    protected $memoryLimit = null;
 
     public function __construct(Image $manager)
     {
@@ -54,6 +55,21 @@ class ImageManipulator implements ImageManipulatorContract
             throw new FormatException('Image format is not supported');
         }
 
+        // Resize only if one or both width and height values are set.
+        $width = array_get($options, 'width', null);
+        $height = array_get($options, 'height', null);
+        if ($width !== null || $height !== null) {
+            $crop = array_get($options, 'crop', false);
+            $thumbnail = [
+                'width' => $width,
+                'height' => $height,
+                'crop' => $crop
+            ];
+            $options = array_merge([
+                'thumbnail' => $thumbnail
+            ], $options);
+        }
+
         // Check if all filters exists
         $filters = array_except($options, array_merge($configKeys, $sizeKeys));
         foreach ($filters as $key => $value) {
@@ -70,18 +86,11 @@ class ImageManipulator implements ImageManipulatorContract
         //Open the image
         $image = $this->source->openFromPath($path);
 
-        // Resize only if one or both width and height values are set.
-        $width = array_get($options, 'width', null);
-        $height = array_get($options, 'height', null);
-        if ($width !== null || $height !== null) {
-            $crop = array_get($options, 'crop', false);
-            $image = $this->thumbnail($image, $width, $height, $crop);
-        }
-
         // Apply the custom filter on the image and replace the
         // current image with the return value.
         if (sizeof($filters)) {
             foreach ($filters as $key => $arguments) {
+                $arguments = is_array($arguments) ? $arguments:[$arguments];
                 $arguments = array_merge([$image, $key], $arguments);
                 $image = call_user_func_array(array($this,'applyFilter'), $arguments);
             }
@@ -203,11 +212,44 @@ class ImageManipulator implements ImageManipulatorContract
         return $this;
     }
 
+    /**
+     * Get the memory limit
+     *
+     * @return string
+     */
+    public function getMemoryLimit()
+    {
+        return $this->memoryLimit;
+    }
+
+    /**
+     * Set the memory limit
+     *
+     * @param  string   $limit The memory limit
+     * @return $this
+     */
+    public function setMemoryLimit($limit)
+    {
+        $this->memoryLimit = $limit;
+
+        return $this;
+    }
+
+    /**
+     * Get the imagine manager
+     *
+     * @return ImagineManager
+     */
     public function getImagineManager()
     {
         return $this->manager->getImagineManager();
     }
 
+    /**
+     * Get the imagine driver
+     *
+     * @return ImagineInterface
+     */
     public function getImagine()
     {
         $imagine = $this->getImagineManager();

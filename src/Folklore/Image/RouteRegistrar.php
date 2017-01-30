@@ -7,7 +7,9 @@ use Folklore\Image\UrlGenerator;
 
 class RouteRegistrar
 {
-    protected $container;
+    protected $router;
+
+    protected $urlGenerator;
 
     /**
      * The attributes that can be set through this class.
@@ -30,10 +32,10 @@ class RouteRegistrar
      * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function __construct(Router $router, Container $container)
+    public function __construct(Router $router, UrlGenerator $urlGenerator)
     {
         $this->router = $router;
-        $this->container = $container;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function image($path, $config)
@@ -60,7 +62,7 @@ class RouteRegistrar
                 preg_replace('/^image\./', '', $as)
             );
             $patternName = array_get($config, 'pattern_name', $generatedPatternName);
-            $routePattern = $this->container['image.url']->pattern($patternOptions);
+            $routePattern = $this->urlGenerator->pattern($patternOptions);
             $this->router->pattern($patternName, $routePattern);
         } else {
             $patternName = array_get($config, 'pattern_name', $this->patternName);
@@ -75,5 +77,38 @@ class RouteRegistrar
             'image' => array_except($config, $this->allowedAttributes),
             'uses' => $controller
         ));
+    }
+
+    public function setPatternName($value)
+    {
+        $this->patternName = $value;
+        return $this;
+    }
+
+    public function getPatternName()
+    {
+        return $this->patternName;
+    }
+
+    public function setCacheMiddleware($value)
+    {
+        $this->cacheMiddleware = $value;
+        return $this;
+    }
+
+    public function getCacheMiddleware()
+    {
+        return $this->cacheMiddleware;
+    }
+
+    public function setController($value)
+    {
+        $this->controller = $value;
+        return $this;
+    }
+
+    public function getController()
+    {
+        return $this->controller;
     }
 }

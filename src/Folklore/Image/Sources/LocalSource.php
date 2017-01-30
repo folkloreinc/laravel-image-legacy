@@ -11,10 +11,9 @@ class LocalSource extends AbstractSource
         if (is_file(realpath($path))) {
             return realpath($path);
         }
-        
-        //Get directories
-        $dirs = (array) (isset($this->config['path']) ? $this->config['path']:base_path());
 
+        //Get directories
+        $dirs = (array) (isset($this->config['path']) ? $this->config['path']:public_path());
         // Loop through all the directories files may be uploaded to
         foreach ($dirs as $dir) {
             $dir = rtrim($dir, '/');
@@ -34,33 +33,34 @@ class LocalSource extends AbstractSource
         // None found
         return null;
     }
-    
+
     public function pathExists($path)
     {
         $realPath = $this->getRealPath($path);
         return $realPath ? file_exists($realPath):false;
     }
-    
+
     public function getFormatFromPath($path)
     {
         $path = $this->getRealPath($path);
         return parent::getFormatFromPath($path);
     }
-    
+
     public function getFilesFromPath($path)
     {
         return scandir();
     }
-    
+
     public function openFromPath($path)
     {
         $realPath = $this->getRealPath($path);
         return $this->imagine->open($realPath);
     }
-    
+
     public function saveToPath(ImageInterface $image, $path)
     {
-        $realPath = $this->getRealPath($path);
+        $dir = isset($this->config['path']) ? $this->config['path']:public_path();
+        $realPath = rtrim($dir, '/').'/'.ltrim($path, '/');
         return $image->save($realPath);
     }
 }

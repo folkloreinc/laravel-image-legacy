@@ -3,6 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use Folklore\Image\Http\ImageResponse;
 use Folklore\Image\RouteRegistrar;
+use Folklore\Image\Contracts\ImageManipulator as ImageManipulatorContract;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 
 class ImageServiceProvider extends ServiceProvider
@@ -64,14 +65,14 @@ class ImageServiceProvider extends ServiceProvider
         $app = $this->app;
         $router = $this->app['router'];
 
+        // Add a macro to the router for creating images route.
+        $router->macro('image', function ($path, $config) use ($router, $app) {
+            return $app['image.routes']->image($path, $config);
+        });
+
         // Add default pattern to router
         $pattern = $this->app['image']->pattern();
         $router->pattern('image_pattern', $pattern);
-
-        // Add a macro to the router for creating images route.
-        $router->macro('image', function ($path, $config) use ($router, $app) {
-            return (new RouteRegistrar($router, $app))->image($path, $config);
-        });
 
         // Map routes defined in the routes files
         $router->group([], function ($router) use ($app) {
@@ -114,7 +115,7 @@ class ImageServiceProvider extends ServiceProvider
 
         $this->registerSourceManager();
 
-        $this->registerRouter();
+        $this->registerRouteRegistrar();
 
         $this->registerUrlGenerator();
 
@@ -163,18 +164,20 @@ class ImageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the url generator
+     * Register the route registrar
      *
      * @return void
      */
-    public function registerRouter()
+    public function registerRouteRegistrar()
     {
-        /*$this->app->singleton('image.router', function ($app) {
-            $appRouter = $this->getRouter();
-            $routes = $app['config']->get('image.routes', []);
-            $router = new Router($appRouter, $app, $routes);
-            return $router;
-        });*/
+        $this->app->singleton('image.routes', function ($app) {
+            $router = $this->getRouter();
+            $registrar = new RouteRegistrar($router, $app['image.url']);
+            $registrar->setPatternName($app['config']['image.routes.pattern_name']);
+            $registrar->setCacheMiddleware($app['config']['image.routes.cache_middleware']);
+            $registrar->setController($app['config']['image.routes.controller']);
+            return $registrar;
+        });
     }
 
     /**
@@ -212,8 +215,10 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerImageManipulator()
     {
-        $this->app->bind('image.manipulator', function ($app) {
-            return new ImageManipulator($app['image']);
+        $this->app->bind(ImageManipulatorContract::class, function ($app) {
+            $manipulator = new ImageManipulator($app['image']);
+            $manipulator->setMemoryLimit($app['config']['image.memory_limit']);
+            return $manipulator;
         });
     }
 
