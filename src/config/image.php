@@ -42,7 +42,8 @@ return array(
         'grayscale' => \Folklore\Image\Filters\Grayscale::class,
         'interlace' => \Folklore\Image\Filters\Interlace::class,
         'negative' => \Folklore\Image\Filters\Negative::class,
-        'rotate' => \Folklore\Image\Filters\Rotate::class
+        'rotate' => \Folklore\Image\Filters\Rotate::class,
+        'thumbnail' => \Folklore\Image\Filters\Thumbnail::class
     ],
 
     /*

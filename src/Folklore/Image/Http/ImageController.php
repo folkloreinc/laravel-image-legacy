@@ -36,7 +36,7 @@ class ImageController extends BaseController
         $filters = array_merge($pathFilters, $routeFilters);
 
         // Build the image
-        $manipulator = $source ? app('image')->source($this->source):app('image');
+        $manipulator = $source ? app('image')->source($source):app('image');
         $image = $manipulator->make($path, $filters);
         $format = $manipulator->format($path);
 

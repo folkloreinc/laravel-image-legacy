@@ -3,10 +3,18 @@
 namespace Folklore\Image\Http;
 
 use Folklore\Image\Http\ImageResponse;
+use Illuminate\Contracts\Filesystem\Factory;
 use Closure;
 
 class CacheMiddleware
 {
+    protected $filesystem;
+
+    public function __construct(Factory $filesystem)
+    {
+        $this->filesystem = app('files');
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -24,7 +32,7 @@ class CacheMiddleware
         $cacheDirectory = dirname($cacheFilePath);
 
         // If the cache file exists, serve this file.
-        if (file_exists($cacheFilePath)) {
+        if ($this->filesystem->exists($cacheFilePath)) {
             return response()
                 ->image()
                 ->setImagePath($cacheFilePath);
@@ -40,7 +48,7 @@ class CacheMiddleware
             throw new \Exception('Destination is not writeable');
         }
         if (!$directoryExists) {
-            app('files')->makeDirectory($cacheDirectory, 0755, true, true);
+            $this->filesystem->makeDirectory($cacheDirectory, 0755, true, true);
         }
 
         // If it's an ImageResponse, save the image from the Image object.
@@ -51,7 +59,7 @@ class CacheMiddleware
             $response->setImagePath($cacheFilePath);
         } else {
             $content = $response->getContent();
-            app('files')->put($cacheFilePath, $content);
+            $this->filesystem->put($cacheFilePath, $content);
         }
 
         return $response;

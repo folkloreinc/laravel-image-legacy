@@ -110,6 +110,22 @@ class ImageResponse extends StreamedResponse
     }
 
     /**
+     * Get the image output format
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        if ($this->imagePath) {
+            return file_get_contents($this->imagePath);
+        }
+
+        return $this->image->get($this->format, [
+            'jpeg_quality' => $this->quality
+        ]);
+    }
+
+    /**
      * Set the image of the response.
      *
      * @param  mixed  $content

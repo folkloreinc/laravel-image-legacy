@@ -91,8 +91,7 @@ class ImageManipulator implements ImageManipulatorContract
         // current image with the return value.
         if (sizeof($filters)) {
             foreach ($filters as $key => $arguments) {
-                $arguments = is_array($arguments) ? $arguments:[$arguments];
-                $arguments = array_merge([$image, $key], $arguments);
+                $arguments = array_merge([$image, $key], [$arguments]);
                 $image = call_user_func_array(array($this,'applyFilter'), $arguments);
             }
         }

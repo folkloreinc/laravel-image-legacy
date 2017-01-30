@@ -91,7 +91,7 @@ class UrlGenerator implements UrlGeneratorContract
         $srcParts = pathinfo($src);
         $placeholders = [
             'host' => rtrim(array_get($config, 'host', ''), '/'),
-            'dirname' => trim($srcParts['dirname'], '/'),
+            'dirname' => $srcParts['dirname'] !== '.' ? trim($srcParts['dirname'], '/'):'',
             'basename' => $srcParts['filename'],
             'filename' => $srcParts['filename'].'.'.$srcParts['extension'],
             'extension' => $srcParts['extension'],
@@ -108,7 +108,7 @@ class UrlGenerator implements UrlGeneratorContract
             return str_replace('__URL__', ltrim($url, '/'), $routeUrl);
         }
 
-        return $url;
+        return '/'.ltrim($url, '/');
     }
 
     /**

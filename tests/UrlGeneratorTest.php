@@ -143,7 +143,7 @@ class UrlGeneratorTest extends TestCase
         $this->generator->setFilterFormat('{key}-{value}');
         $this->generator->setFilterSeparator('/');
 
-        $url = 'uploads/image/300x300/rotate-90/negative/image.jpg';
+        $url = '/uploads/image/300x300/rotate-90/negative/image.jpg';
         $return = $this->generator->make('uploads/image.jpg', $this->filters);
         $this->assertEquals($url, $return);
     }
@@ -157,7 +157,7 @@ class UrlGeneratorTest extends TestCase
      */
     public function testMakeWithConfig()
     {
-        $url = 'uploads/image-filters(300x300-rotate(90)-negative).jpg';
+        $url = '/uploads/image-filters(300x300-rotate(90)-negative).jpg';
         $filters = array_merge($this->filters, $this->config);
         $return = $this->generator->make('uploads/image.jpg', $filters);
         $this->assertEquals($url, $return);
