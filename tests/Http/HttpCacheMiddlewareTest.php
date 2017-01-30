@@ -47,7 +47,7 @@ class HttpCacheMiddlewareTest extends TestCase
             'height' => 100
         ]);
 
-        $response = $this->get($path);
+        $response = $this->call('GET', $path);
         $this->assertEquals(200, $response->status());
         $this->assertTrue(file_exists(public_path('cache/'.ltrim($path, '/'))));
     }

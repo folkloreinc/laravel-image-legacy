@@ -1,5 +1,13 @@
 language: php
 
+## Run on container environment
+sudo: false
+
+## Cache composer bits
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 php:
   - 5.5
   - 5.6
