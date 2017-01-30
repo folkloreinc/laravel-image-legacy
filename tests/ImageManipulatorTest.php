@@ -86,9 +86,10 @@ class ImageManipulatorTest extends TestCase
         $returnImage = $this->manipulator->open('image.jpg');
         $returnImage = with(new ThumbnailFilter())->apply($returnImage, [
             'width' => 100,
-            'height' => 100,
+            'height' => 90,
             'crop' => false
         ]);
+        $returnImage = with(new RotateFilter())->apply($returnImage, 90);
 
         $rotateFilterMock = $this->getMockBuilder(RotateFilter::class)
             ->setMethods(['apply'])
@@ -113,14 +114,56 @@ class ImageManipulatorTest extends TestCase
 
         $image = $this->manipulator->make('image.jpg', [
             'width' => 100,
-            'height' => 100,
+            'height' => 90,
+            'crop' => true,
             'rotate' => 90
         ]);
 
         $this->assertInstanceOf(ImageInterface::class, $image);
         $this->assertEquals(public_path('image.jpg'), $image->metadata()->get('filepath'));
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertEquals($returnImage->getSize()->getWidth(), $image->getSize()->getWidth());
+        $this->assertEquals($returnImage->getSize()->getHeight(), $image->getSize()->getHeight());
+    }
+
+    /**
+     * Test making an image with wrong path
+     * @test
+     * @expectedException \Folklore\Image\Exception\FileMissingException
+     * @covers ::make
+     */
+    public function testMakeWithWrongPath()
+    {
+        $this->manipulator->setSource(app('image.source')->driver('local'));
+
+        $image = $this->manipulator->make('doesnt-exists.jpg');
+    }
+
+    /**
+     * Test making an image with wrong format
+     * @test
+     * @expectedException \Folklore\Image\Exception\FormatException
+     * @covers ::make
+     */
+    public function testMakeWithWrongFormat()
+    {
+        $this->manipulator->setSource(app('image.source')->driver('local'));
+
+        $image = $this->manipulator->make('wrong.jpg');
+    }
+
+    /**
+     * Test making an image with wrong format
+     * @test
+     * @expectedException \Folklore\Image\Exception\FilterMissingException
+     * @covers ::make
+     */
+    public function testMakeWithWrongFilter()
+    {
+        $this->manipulator->setSource(app('image.source')->driver('local'));
+
+        $image = $this->manipulator->make('image.jpg', [
+            'wrong' => true
+        ]);
     }
 
     /**

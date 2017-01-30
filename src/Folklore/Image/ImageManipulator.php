@@ -5,6 +5,7 @@ use Folklore\Image\Contracts\ImageManipulator as ImageManipulatorContract;
 use Folklore\Image\Contracts\Source as SourceContract;
 use Folklore\Image\Contracts\FilterWithValue as FilterWithValueContract;
 use Folklore\Image\Exception\FileMissingException;
+use Folklore\Image\Exception\FilterMissingException;
 use Folklore\Image\Exception\FormatException;
 use Folklore\Image\Filters\Thumbnail;
 use Folklore\Image\Image;
@@ -74,7 +75,7 @@ class ImageManipulator implements ImageManipulatorContract
         $filters = array_except($options, array_merge($configKeys, $sizeKeys));
         foreach ($filters as $key => $value) {
             if (!$this->manager->hasFilter($key)) {
-                throw new \Exception('Filter "'.$key.'" doesn\'t exists.');
+                throw new FilterMissingException('Filter "'.$key.'" doesn\'t exists.');
             }
         }
 
