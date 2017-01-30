@@ -18,6 +18,8 @@ class Thumbnail implements FilterWithValueContract
         } else {
             $values = explode(',', $value);
             list($width, $height) = $values;
+            $width = isset($values[0]) ? $values[0]:null;
+            $height = isset($values[1]) ? $values[1]:null;
             $crop = isset($values[2]) ? $values[2]:true;
         }
 
@@ -43,7 +45,7 @@ class Thumbnail implements FilterWithValueContract
             $ratio = max($ratios);
         }
 
-        if ($crop) {
+        if ($crop && $crop !== 'false') {
             $imageSize = $thumbnail->getSize()->scale($ratio);
             $thumbnail->resize($imageSize);
 
@@ -87,7 +89,7 @@ class Thumbnail implements FilterWithValueContract
      */
     protected function getCropPositions($crop)
     {
-        $crop = $crop === true ? 'center':$crop;
+        $crop = $crop === true || $crop === 'true' ? 'center':$crop;
 
         $cropPositions = explode('_', $crop);
         if (sizeof($cropPositions) === 1) {

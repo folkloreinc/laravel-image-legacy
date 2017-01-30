@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1485749973">
-  <project timestamp="1485749973">
+<coverage generated="1485750840">
+  <project timestamp="1485750840">
     <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Contracts/Filter.php">
       <metrics loc="10" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
@@ -127,60 +127,62 @@
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Filters/Thumbnail.php">
         <class name="Thumbnail" namespace="Folklore\Image\Filters">
-          <metrics complexity="20" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="32" elements="51" coveredelements="32"/>
+          <metrics complexity="24" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="51" coveredstatements="40" elements="53" coveredelements="40"/>
         </class>
-        <line num="12" type="method" name="apply" visibility="public" complexity="12" crap="13.52" count="1"/>
-        <line num="14" type="stmt" count="1"/>
+        <line num="12" type="method" name="apply" visibility="public" complexity="15" crap="15.08" count="2"/>
+        <line num="14" type="stmt" count="2"/>
         <line num="15" type="stmt" count="1"/>
         <line num="16" type="stmt" count="1"/>
         <line num="17" type="stmt" count="1"/>
-        <line num="19" type="stmt" count="0"/>
-        <line num="20" type="stmt" count="0"/>
-        <line num="21" type="stmt" count="0"/>
-        <line num="25" type="stmt" count="1"/>
-        <line num="26" type="stmt" count="1"/>
-        <line num="27" type="stmt" count="1"/>
-        <line num="28" type="stmt" count="1"/>
-        <line num="31" type="stmt" count="1"/>
-        <line num="32" type="stmt" count="1"/>
-        <line num="35" type="stmt" count="1"/>
-        <line num="37" type="stmt" count="1"/>
-        <line num="38" type="stmt" count="1"/>
-        <line num="40" type="stmt" count="1"/>
-        <line num="41" type="stmt" count="1"/>
+        <line num="19" type="stmt" count="1"/>
+        <line num="20" type="stmt" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="2"/>
+        <line num="28" type="stmt" count="2"/>
+        <line num="29" type="stmt" count="2"/>
+        <line num="30" type="stmt" count="2"/>
+        <line num="33" type="stmt" count="2"/>
+        <line num="34" type="stmt" count="2"/>
+        <line num="37" type="stmt" count="2"/>
+        <line num="39" type="stmt" count="2"/>
+        <line num="40" type="stmt" count="2"/>
+        <line num="42" type="stmt" count="2"/>
         <line num="43" type="stmt" count="1"/>
-        <line num="46" type="stmt" count="1"/>
-        <line num="47" type="stmt" count="1"/>
-        <line num="48" type="stmt" count="1"/>
+        <line num="45" type="stmt" count="1"/>
+        <line num="48" type="stmt" count="2"/>
+        <line num="49" type="stmt" count="1"/>
         <line num="50" type="stmt" count="1"/>
-        <line num="51" type="stmt" count="1"/>
+        <line num="52" type="stmt" count="1"/>
         <line num="53" type="stmt" count="1"/>
         <line num="55" type="stmt" count="1"/>
-        <line num="56" type="stmt" count="0"/>
         <line num="57" type="stmt" count="1"/>
-        <line num="58" type="stmt" count="0"/>
-        <line num="61" type="stmt" count="1"/>
-        <line num="62" type="stmt" count="0"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="59" type="stmt" count="1"/>
+        <line num="60" type="stmt" count="1"/>
         <line num="63" type="stmt" count="1"/>
         <line num="64" type="stmt" count="0"/>
-        <line num="67" type="stmt" count="1"/>
+        <line num="65" type="stmt" count="1"/>
+        <line num="66" type="stmt" count="1"/>
         <line num="69" type="stmt" count="1"/>
         <line num="71" type="stmt" count="1"/>
-        <line num="72" type="stmt" count="0"/>
-        <line num="73" type="stmt" count="0"/>
-        <line num="75" type="stmt" count="1"/>
-        <line num="76" type="stmt" count="1"/>
-        <line num="80" type="stmt" count="1"/>
-        <line num="88" type="method" name="getCropPositions" visibility="protected" complexity="8" crap="72" count="0"/>
-        <line num="90" type="stmt" count="0"/>
+        <line num="73" type="stmt" count="1"/>
+        <line num="74" type="stmt" count="0"/>
+        <line num="75" type="stmt" count="0"/>
+        <line num="77" type="stmt" count="1"/>
+        <line num="78" type="stmt" count="1"/>
+        <line num="82" type="stmt" count="2"/>
+        <line num="90" type="method" name="getCropPositions" visibility="protected" complexity="9" crap="90" count="0"/>
         <line num="92" type="stmt" count="0"/>
-        <line num="93" type="stmt" count="0"/>
         <line num="94" type="stmt" count="0"/>
         <line num="95" type="stmt" count="0"/>
         <line num="96" type="stmt" count="0"/>
         <line num="97" type="stmt" count="0"/>
-        <line num="101" type="stmt" count="0"/>
-        <metrics loc="103" ncloc="96" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="32" elements="51" coveredelements="32"/>
+        <line num="98" type="stmt" count="0"/>
+        <line num="99" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <metrics loc="105" ncloc="98" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="51" coveredstatements="40" elements="53" coveredelements="40"/>
       </file>
     </package>
     <package name="Folklore\Image\Http">
@@ -888,6 +890,6 @@
         <metrics loc="11" ncloc="11" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
       </file>
     </package>
-    <metrics files="33" loc="2410" ncloc="1815" classes="21" methods="112" coveredmethods="62" conditionals="0" coveredconditionals="0" statements="580" coveredstatements="409" elements="692" coveredelements="471"/>
+    <metrics files="33" loc="2412" ncloc="1817" classes="21" methods="112" coveredmethods="62" conditionals="0" coveredconditionals="0" statements="582" coveredstatements="417" elements="694" coveredelements="479"/>
   </project>
 </coverage>
