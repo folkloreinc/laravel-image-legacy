@@ -25,7 +25,7 @@ class ImageController extends BaseController
         $config = $route ? array_get($route->getAction(), 'image', []):[];
         $source = array_get($config, 'source');
         $quality = (float)array_get($config, 'quality', 100);
-        $expires = (int)array_get($config, 'expires', null);
+        $expires = array_get($config, 'expires', null);
         $urlConfig = array_get($config, 'url', []);
         $routeFilters = array_get($config, 'filters', []);
 
@@ -45,7 +45,7 @@ class ImageController extends BaseController
             return response()->image($image)
                 ->setQuality($quality)
                 ->setFormat($format)
-                ->setExpiresIn($format);
+                ->setExpiresIn($expires);
         } catch (ParseException $e) {
             return abort(404);
         } catch (FileMissingException $e) {

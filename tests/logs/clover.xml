@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1485750840">
-  <project timestamp="1485750840">
+<coverage generated="1485752361">
+  <project timestamp="1485752361">
     <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Contracts/Filter.php">
       <metrics loc="10" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
@@ -188,12 +188,12 @@
     <package name="Folklore\Image\Http">
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Http/CacheMiddleware.php">
         <class name="CacheMiddleware" namespace="Folklore\Image\Http">
-          <metrics complexity="8" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="16" elements="27" coveredelements="16"/>
+          <metrics complexity="8" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="15" elements="27" coveredelements="15"/>
         </class>
         <line num="13" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
         <line num="15" type="stmt" count="0"/>
         <line num="16" type="stmt" count="0"/>
-        <line num="25" type="method" name="handle" visibility="public" complexity="7" crap="8.38" count="1"/>
+        <line num="25" type="method" name="handle" visibility="public" complexity="7" crap="9.06" count="1"/>
         <line num="27" type="stmt" count="1"/>
         <line num="28" type="stmt" count="1"/>
         <line num="29" type="stmt" count="1"/>
@@ -211,13 +211,13 @@
         <line num="50" type="stmt" count="1"/>
         <line num="51" type="stmt" count="0"/>
         <line num="56" type="stmt" count="1"/>
-        <line num="57" type="stmt" count="1"/>
-        <line num="58" type="stmt" count="1"/>
-        <line num="59" type="stmt" count="1"/>
-        <line num="61" type="stmt" count="0"/>
-        <line num="62" type="stmt" count="0"/>
+        <line num="57" type="stmt" count="0"/>
+        <line num="58" type="stmt" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="61" type="stmt" count="1"/>
+        <line num="62" type="stmt" count="1"/>
         <line num="65" type="stmt" count="1"/>
-        <metrics loc="67" ncloc="48" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="16" elements="27" coveredelements="16"/>
+        <metrics loc="67" ncloc="48" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="15" elements="27" coveredelements="15"/>
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Http/ImageController.php">
         <class name="ImageController" namespace="Folklore\Image\Http">
@@ -252,7 +252,7 @@
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Http/ImageResponse.php">
         <class name="ImageResponse" namespace="Folklore\Image\Http">
-          <metrics complexity="27" methods="18" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="0" elements="67" coveredelements="0"/>
+          <metrics complexity="28" methods="18" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="52" coveredstatements="0" elements="70" coveredelements="0"/>
         </class>
         <line num="31" type="method" name="anonymous function" complexity="1" crap="2" count="0"/>
         <line num="33" type="stmt" count="0"/>
@@ -319,13 +319,16 @@
         <line num="243" type="stmt" count="0"/>
         <line num="252" type="method" name="expiresIn" visibility="public" complexity="1" crap="2" count="0"/>
         <line num="254" type="stmt" count="0"/>
-        <line num="263" type="method" name="setExpiresIn" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="263" type="method" name="setExpiresIn" visibility="public" complexity="2" crap="6" count="0"/>
         <line num="265" type="stmt" count="0"/>
         <line num="266" type="stmt" count="0"/>
-        <line num="267" type="stmt" count="0"/>
         <line num="268" type="stmt" count="0"/>
         <line num="269" type="stmt" count="0"/>
-        <metrics loc="271" ncloc="163" classes="1" methods="18" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="53" coveredstatements="0" elements="71" coveredelements="0"/>
+        <line num="270" type="stmt" count="0"/>
+        <line num="271" type="stmt" count="0"/>
+        <line num="272" type="stmt" count="0"/>
+        <line num="273" type="stmt" count="0"/>
+        <metrics loc="275" ncloc="167" classes="1" methods="18" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="56" coveredstatements="0" elements="74" coveredelements="0"/>
       </file>
     </package>
     <package name="Folklore\Image">
@@ -890,6 +893,6 @@
         <metrics loc="11" ncloc="11" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
       </file>
     </package>
-    <metrics files="33" loc="2412" ncloc="1817" classes="21" methods="112" coveredmethods="62" conditionals="0" coveredconditionals="0" statements="582" coveredstatements="417" elements="694" coveredelements="479"/>
+    <metrics files="33" loc="2416" ncloc="1821" classes="21" methods="112" coveredmethods="62" conditionals="0" coveredconditionals="0" statements="585" coveredstatements="416" elements="697" coveredelements="478"/>
   </project>
 </coverage>

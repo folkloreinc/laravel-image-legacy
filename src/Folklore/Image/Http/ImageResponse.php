@@ -262,6 +262,10 @@ class ImageResponse extends StreamedResponse
      */
     public function setExpiresIn($expires)
     {
+        if ($expires === null) {
+            return;
+        }
+        $expires = (int)$expires;
         $this->setMaxAge($expires);
         $expiresDate = new \DateTime();
         $expiresDate->setTimestamp(time() + $expires);
