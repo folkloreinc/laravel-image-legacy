@@ -75,7 +75,11 @@ class ImageServiceProvider extends ServiceProvider
         $router->pattern('image_pattern', $pattern);
 
         // Map routes defined in the routes files
-        $router->group([], function ($router) use ($app) {
+        $router->group([
+            'namespace' => $app['config']->get('image.routes.namespace', null),
+            'domain' => $app['config']->get('image.routes.domain', null),
+            'middleware' => $app['config']->get('image.routes.middleware', [])
+        ], function ($router) use ($app) {
             $appPath = is_dir(base_path('routes')) ?
                 base_path('routes/images.php'):app_path('Http/routesImages.php');
             if (is_file($appPath)) {

@@ -25,7 +25,7 @@ $router->image('{pattern}', [
     'disallow_filters' => false,
 
     // Any url options you want to override.
-    'url' => [],
+    'pattern' => [],
 
     // You can specify base filters that will be applied to any image
     // on this route.

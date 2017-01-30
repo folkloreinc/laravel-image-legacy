@@ -102,7 +102,7 @@ return array(
     |--------------------------------------------------------------------------
     |
     | The URL Generator configuration. These are the defaults values
-    | you can overide these values in each routes.
+    | you can overide these values in each routes using the `pattern` parameter.
     |
     */
     'url' => [
@@ -132,8 +132,23 @@ return array(
     |
     */
     'routes' => [
-        'pattern_name' => 'image_pattern',
+
+        // Default domain for routes
+        'domain' => null,
+
+        // Default namespace for controller
+        'namespace' => null,
+
+        // Default middlewares for routes
+        'middleware' => [],
+
+        // The controller serving the images
         'controller' => '\Folklore\Image\Http\ImageController@serve',
+
+        // The name of the route pattern that will be created.
+        'pattern_name' => 'image_pattern',
+
+        // The middleware used when a route as cached enabled
         'cache_middleware' => 'image.middleware.cache'
     ]
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1485752361">
-  <project timestamp="1485752361">
+<coverage generated="1485754759">
+  <project timestamp="1485754759">
     <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Contracts/Filter.php">
       <metrics loc="10" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
@@ -476,7 +476,7 @@
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/ImageServiceProvider.php">
         <class name="ImageServiceProvider" namespace="Folklore\Image">
-          <metrics complexity="18" methods="14" coveredmethods="13" conditionals="0" coveredconditionals="0" statements="82" coveredstatements="81" elements="96" coveredelements="94"/>
+          <metrics complexity="18" methods="14" coveredmethods="13" conditionals="0" coveredconditionals="0" statements="86" coveredstatements="85" elements="100" coveredelements="98"/>
         </class>
         <line num="19" type="method" name="getRouter" visibility="protected" complexity="1" crap="1" count="5"/>
         <line num="21" type="stmt" count="5"/>
@@ -508,74 +508,78 @@
         <line num="71" type="stmt" count="5"/>
         <line num="74" type="stmt" count="5"/>
         <line num="75" type="stmt" count="5"/>
+        <line num="78" type="stmt" count="5"/>
         <line num="79" type="stmt" count="5"/>
         <line num="80" type="stmt" count="5"/>
         <line num="81" type="stmt" count="5"/>
+        <line num="83" type="stmt" count="5"/>
         <line num="84" type="stmt" count="5"/>
-        <line num="86" type="stmt" count="5"/>
-        <line num="87" type="stmt" count="5"/>
-        <line num="94" type="method" name="bootHttp" visibility="public" complexity="1" crap="1" count="5"/>
-        <line num="102" type="stmt" count="5"/>
-        <line num="103" type="stmt" count="5"/>
-        <line num="110" type="method" name="register" visibility="public" complexity="1" crap="1" count="5"/>
-        <line num="112" type="stmt" count="5"/>
-        <line num="114" type="stmt" count="5"/>
+        <line num="85" type="stmt" count="5"/>
+        <line num="88" type="stmt" count="5"/>
+        <line num="90" type="stmt" count="5"/>
+        <line num="91" type="stmt" count="5"/>
+        <line num="98" type="method" name="bootHttp" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="106" type="stmt" count="5"/>
+        <line num="107" type="stmt" count="5"/>
+        <line num="114" type="method" name="register" visibility="public" complexity="1" crap="1" count="5"/>
         <line num="116" type="stmt" count="5"/>
         <line num="118" type="stmt" count="5"/>
         <line num="120" type="stmt" count="5"/>
         <line num="122" type="stmt" count="5"/>
         <line num="124" type="stmt" count="5"/>
-        <line num="125" type="stmt" count="5"/>
-        <line num="132" type="method" name="registerImage" visibility="public" complexity="1" crap="1" count="5"/>
-        <line num="135" type="stmt" count="5"/>
-        <line num="136" type="stmt" count="5"/>
-        <line num="137" type="stmt" count="5"/>
-        <line num="138" type="stmt" count="5"/>
+        <line num="126" type="stmt" count="5"/>
+        <line num="128" type="stmt" count="5"/>
+        <line num="129" type="stmt" count="5"/>
+        <line num="136" type="method" name="registerImage" visibility="public" complexity="1" crap="1" count="5"/>
         <line num="139" type="stmt" count="5"/>
         <line num="140" type="stmt" count="5"/>
-        <line num="147" type="method" name="registerImagineManager" visibility="public" complexity="1" crap="1" count="5"/>
-        <line num="150" type="stmt" count="3"/>
-        <line num="151" type="stmt" count="5"/>
-        <line num="152" type="stmt" count="5"/>
-        <line num="159" type="method" name="registerSourceManager" visibility="public" complexity="1" crap="1" count="5"/>
-        <line num="162" type="stmt" count="4"/>
-        <line num="163" type="stmt" count="5"/>
-        <line num="164" type="stmt" count="5"/>
-        <line num="171" type="method" name="registerRouteRegistrar" visibility="public" complexity="1" crap="1" count="5"/>
-        <line num="174" type="stmt" count="5"/>
-        <line num="175" type="stmt" count="5"/>
-        <line num="176" type="stmt" count="5"/>
-        <line num="177" type="stmt" count="5"/>
+        <line num="141" type="stmt" count="5"/>
+        <line num="142" type="stmt" count="5"/>
+        <line num="143" type="stmt" count="5"/>
+        <line num="144" type="stmt" count="5"/>
+        <line num="151" type="method" name="registerImagineManager" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="154" type="stmt" count="3"/>
+        <line num="155" type="stmt" count="5"/>
+        <line num="156" type="stmt" count="5"/>
+        <line num="163" type="method" name="registerSourceManager" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="166" type="stmt" count="4"/>
+        <line num="167" type="stmt" count="5"/>
+        <line num="168" type="stmt" count="5"/>
+        <line num="175" type="method" name="registerRouteRegistrar" visibility="public" complexity="1" crap="1" count="5"/>
         <line num="178" type="stmt" count="5"/>
         <line num="179" type="stmt" count="5"/>
         <line num="180" type="stmt" count="5"/>
         <line num="181" type="stmt" count="5"/>
-        <line num="188" type="method" name="registerUrlGenerator" visibility="public" complexity="1" crap="1" count="5"/>
-        <line num="191" type="stmt" count="5"/>
-        <line num="194" type="stmt" count="5"/>
+        <line num="182" type="stmt" count="5"/>
+        <line num="183" type="stmt" count="5"/>
+        <line num="184" type="stmt" count="5"/>
+        <line num="185" type="stmt" count="5"/>
+        <line num="192" type="method" name="registerUrlGenerator" visibility="public" complexity="1" crap="1" count="5"/>
         <line num="195" type="stmt" count="5"/>
-        <line num="196" type="stmt" count="5"/>
         <line num="198" type="stmt" count="5"/>
         <line num="199" type="stmt" count="5"/>
-        <line num="201" type="stmt" count="5"/>
+        <line num="200" type="stmt" count="5"/>
         <line num="202" type="stmt" count="5"/>
-        <line num="204" type="stmt" count="5"/>
+        <line num="203" type="stmt" count="5"/>
         <line num="205" type="stmt" count="5"/>
-        <line num="207" type="stmt" count="5"/>
+        <line num="206" type="stmt" count="5"/>
         <line num="208" type="stmt" count="5"/>
         <line num="209" type="stmt" count="5"/>
-        <line num="218" type="method" name="anonymous function" complexity="1" crap="1" count="5"/>
-        <line num="219" type="stmt" count="3"/>
-        <line num="220" type="stmt" count="3"/>
-        <line num="221" type="stmt" count="3"/>
-        <line num="222" type="stmt" count="5"/>
-        <line num="223" type="stmt" count="5"/>
-        <line num="230" type="method" name="registerMiddlewares" visibility="public" complexity="1" crap="1" count="5"/>
-        <line num="232" type="stmt" count="5"/>
-        <line num="233" type="stmt" count="5"/>
-        <line num="240" type="method" name="provides" visibility="public" complexity="1" crap="2" count="0"/>
-        <line num="243" type="stmt" count="0"/>
-        <metrics loc="251" ncloc="177" classes="1" methods="14" coveredmethods="13" conditionals="0" coveredconditionals="0" statements="83" coveredstatements="82" elements="97" coveredelements="95"/>
+        <line num="211" type="stmt" count="5"/>
+        <line num="212" type="stmt" count="5"/>
+        <line num="213" type="stmt" count="5"/>
+        <line num="222" type="method" name="anonymous function" complexity="1" crap="1" count="5"/>
+        <line num="223" type="stmt" count="3"/>
+        <line num="224" type="stmt" count="3"/>
+        <line num="225" type="stmt" count="3"/>
+        <line num="226" type="stmt" count="5"/>
+        <line num="227" type="stmt" count="5"/>
+        <line num="234" type="method" name="registerMiddlewares" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="236" type="stmt" count="5"/>
+        <line num="237" type="stmt" count="5"/>
+        <line num="244" type="method" name="provides" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="247" type="stmt" count="0"/>
+        <metrics loc="255" ncloc="181" classes="1" methods="14" coveredmethods="13" conditionals="0" coveredconditionals="0" statements="87" coveredstatements="86" elements="101" coveredelements="99"/>
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/ImagineManager.php">
         <class name="ImagineManager" namespace="Folklore\Image">
@@ -596,13 +600,13 @@
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/RouteRegistrar.php">
         <class name="RouteRegistrar" namespace="Folklore\Image">
-          <metrics complexity="10" methods="8" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="38" coveredstatements="28" elements="46" coveredelements="32"/>
+          <metrics complexity="11" methods="8" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="38" coveredstatements="28" elements="46" coveredelements="32"/>
         </class>
         <line num="35" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="5"/>
         <line num="37" type="stmt" count="5"/>
         <line num="38" type="stmt" count="5"/>
         <line num="39" type="stmt" count="5"/>
-        <line num="41" type="method" name="image" visibility="public" complexity="3" crap="3.18" count="5"/>
+        <line num="41" type="method" name="image" visibility="public" complexity="4" crap="4.31" count="5"/>
         <line num="43" type="stmt" count="5"/>
         <line num="44" type="stmt" count="5"/>
         <line num="45" type="stmt" count="5"/>
@@ -893,6 +897,6 @@
         <metrics loc="11" ncloc="11" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
       </file>
     </package>
-    <metrics files="33" loc="2416" ncloc="1821" classes="21" methods="112" coveredmethods="62" conditionals="0" coveredconditionals="0" statements="585" coveredstatements="416" elements="697" coveredelements="478"/>
+    <metrics files="33" loc="2420" ncloc="1825" classes="21" methods="112" coveredmethods="62" conditionals="0" coveredconditionals="0" statements="589" coveredstatements="420" elements="701" coveredelements="482"/>
   </project>
 </coverage>

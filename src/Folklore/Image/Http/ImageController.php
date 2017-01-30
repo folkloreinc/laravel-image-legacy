@@ -26,7 +26,7 @@ class ImageController extends BaseController
         $source = array_get($config, 'source');
         $quality = (float)array_get($config, 'quality', 100);
         $expires = array_get($config, 'expires', null);
-        $urlConfig = array_get($config, 'url', []);
+        $urlConfig = array_get($config, 'pattern', []);
         $routeFilters = array_get($config, 'filters', []);
 
         // Parse the path

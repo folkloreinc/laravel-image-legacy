@@ -61,7 +61,7 @@ class UrlGenerator implements UrlGeneratorContract
             $route = $this->router
                 ->getRoutes()
                 ->getByName($config['route']);
-            $routeConfig = array_get($route ? $route->getAction():[], 'image.url', []);
+            $routeConfig = array_get($route ? $route->getAction():[], 'image.pattern', []);
             $config = array_merge($routeConfig, $config);
         }
 
