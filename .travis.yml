@@ -1,42 +1,35 @@
 language: php
-
 cache:
   directories:
-    - $COMPOSER_CACHE_DIR
-    - $HOME/.composer/cache
-    - vendor
-
+  - "$COMPOSER_CACHE_DIR"
+  - "$HOME/.composer/cache"
+  - vendor
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-
+- 5.5
+- 5.6
+- 7.0
+- 7.1
 env:
-  - TESTBENCH_VERSION=3.1.* DATABASE_VERSION=3.1.* ILLUMINATE_VERSION=5.1.*
-  - TESTBENCH_VERSION=3.2.* DATABASE_VERSION=3.2.* ILLUMINATE_VERSION=5.2.*
-  - TESTBENCH_VERSION=3.3.* DATABASE_VERSION=3.3.* ILLUMINATE_VERSION=5.3.*
-  - TESTBENCH_VERSION=3.4.* DATABASE_VERSION=3.4.*@dev ILLUMINATE_VERSION=5.4.*
-
+- TESTBENCH_VERSION=3.1.* DATABASE_VERSION=3.1.* ILLUMINATE_VERSION=5.1.*
+- TESTBENCH_VERSION=3.2.* DATABASE_VERSION=3.2.* ILLUMINATE_VERSION=5.2.*
+- TESTBENCH_VERSION=3.3.* DATABASE_VERSION=3.3.* ILLUMINATE_VERSION=5.3.*
+- TESTBENCH_VERSION=3.4.* DATABASE_VERSION=3.4.*@dev ILLUMINATE_VERSION=5.4.*
 matrix:
   exclude:
-    - php: 5.5
-      env: TESTBENCH_VERSION=3.3.* DATABASE_VERSION=3.3.* ILLUMINATE_VERSION=5.3.*
-    - php: 5.5
-      env: TESTBENCH_VERSION=3.4.* DATABASE_VERSION=3.4.*@dev ILLUMINATE_VERSION=5.4.*
-
+  - php: 5.5
+    env: TESTBENCH_VERSION=3.3.* DATABASE_VERSION=3.3.* ILLUMINATE_VERSION=5.3.*
+  - php: 5.5
+    env: TESTBENCH_VERSION=3.4.* DATABASE_VERSION=3.4.*@dev ILLUMINATE_VERSION=5.4.*
 before_install:
-  - composer global require hirak/prestissimo --update-no-dev
-  - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
-  - composer require "orchestra/database:${DATABASE_VERSION}" --no-update --prefer-dist
-  - composer require "orchestra/testbench:${TESTBENCH_VERSION}" --no-update --prefer-dist
-
+- composer global require hirak/prestissimo --update-no-dev
+- composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
+- composer require "orchestra/database:${DATABASE_VERSION}" --no-update --prefer-dist
+- composer require "orchestra/testbench:${TESTBENCH_VERSION}" --no-update --prefer-dist
 install: composer update --no-interaction --prefer-dist
-
 script: vendor/bin/phpunit
-
 after_success:
-  - travis_retry php vendor/bin/coveralls
-
+- travis_retry php vendor/bin/coveralls
 notifications:
   email: false
+  slack:
+    secure: ZilkSllOIo1vCtgUJrQ2ZQaCxW4/zpXZSFYL5Scl5o66fkgmymHR+cUqHsz9jHkXEkxOxORG1baRaJDKnyJ2A3XTfscmhOvAOupQ9jzc9M8yzugH7SrxcjDUJ02CX6LcXlOtOvPwPdkHVi9hR/qmx9D4QZEznVmvxZ2HJOVNJ18=
