@@ -4,6 +4,7 @@ use Folklore\Image\Contracts\ImageManipulator as ImageManipulatorContract;
 use Folklore\Image\Sources\LocalSource;
 use Folklore\Image\Sources\FilesystemSource;
 use Folklore\Image\SourceManager;
+use Folklore\Image\Image;
 use Folklore\Image\ImageManipulator;
 
 /**
@@ -18,6 +19,17 @@ class ImageTest extends TestCase
         parent::setUp();
 
         $this->image = app('image');
+    }
+
+    /**
+     * Test the constructor
+     *
+     * @test
+     * @covers ::__construct
+     */
+    public function testConstructor()
+    {
+        $image = new Image(app());
     }
 
     /**
@@ -128,6 +140,30 @@ class ImageTest extends TestCase
         });
 
         $this->image->testMethod('test');
+    }
+
+    /**
+     * Test the url method
+     *
+     * @test
+     * @covers ::url
+     */
+    public function testUrl()
+    {
+        $urlGenerator = app('image.url');
+
+        $path = 'medias/image.jpg';
+        $config = [
+            'width' => 300,
+            'height' => 300,
+            'rotate' => 90,
+            'format' => '{dirname}/{filters}/{basename}.{extension}',
+            'filters_format' => 'image/{filter}',
+            'filter_format' => '{key}-{value}',
+            'filter_separator' => '/'
+        ];
+        $this->assertEquals($this->image->url($path, $config), $urlGenerator->make($path, $config));
+        $this->assertEquals($this->image->url($path, 300, 300, $config), $urlGenerator->make($path, 300, 300, $config));
     }
 
     /**

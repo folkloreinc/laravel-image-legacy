@@ -78,6 +78,7 @@ class ImageManipulatorTest extends TestCase
      * Test making an image
      * @test
      * @covers ::make
+     * @covers ::applyFilter
      */
     public function testMake()
     {

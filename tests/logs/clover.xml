@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1485916781">
-  <project timestamp="1485916781">
+<coverage generated="1485917728">
+  <project timestamp="1485917728">
     <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Contracts/Filter.php">
       <metrics loc="10" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
@@ -334,11 +334,11 @@
     <package name="Folklore\Image">
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Image.php">
         <class name="Image" namespace="Folklore\Image">
-          <metrics complexity="19" methods="16" coveredmethods="14" conditionals="0" coveredconditionals="0" statements="32" coveredstatements="28" elements="48" coveredelements="42"/>
+          <metrics complexity="19" methods="16" coveredmethods="16" conditionals="0" coveredconditionals="0" statements="32" coveredstatements="32" elements="48" coveredelements="48"/>
         </class>
-        <line num="27" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
-        <line num="29" type="stmt" count="0"/>
-        <line num="30" type="stmt" count="0"/>
+        <line num="27" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="30" type="stmt" count="1"/>
         <line num="38" type="method" name="source" visibility="public" complexity="3" crap="3" count="4"/>
         <line num="40" type="stmt" count="4"/>
         <line num="42" type="stmt" count="4"/>
@@ -352,9 +352,9 @@
         <line num="63" type="stmt" count="1"/>
         <line num="64" type="stmt" count="1"/>
         <line num="66" type="stmt" count="1"/>
-        <line num="78" type="method" name="url" visibility="public" complexity="1" crap="2" count="0"/>
-        <line num="80" type="stmt" count="0"/>
-        <line num="81" type="stmt" count="0"/>
+        <line num="78" type="method" name="url" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="80" type="stmt" count="1"/>
+        <line num="81" type="stmt" count="1"/>
         <line num="90" type="method" name="pattern" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="92" type="stmt" count="1"/>
         <line num="93" type="stmt" count="1"/>
@@ -384,11 +384,11 @@
         <line num="204" type="stmt" count="1"/>
         <line num="214" type="method" name="__call" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="216" type="stmt" count="1"/>
-        <metrics loc="218" ncloc="117" classes="1" methods="16" coveredmethods="14" conditionals="0" coveredconditionals="0" statements="32" coveredstatements="28" elements="48" coveredelements="42"/>
+        <metrics loc="218" ncloc="117" classes="1" methods="16" coveredmethods="16" conditionals="0" coveredconditionals="0" statements="32" coveredstatements="32" elements="48" coveredelements="48"/>
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/ImageManipulator.php">
         <class name="ImageManipulator" namespace="Folklore\Image">
-          <metrics complexity="29" methods="14" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="68" coveredstatements="36" elements="82" coveredelements="41"/>
+          <metrics complexity="29" methods="14" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="68" coveredstatements="47" elements="82" coveredelements="52"/>
         </class>
         <line num="25" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
         <line num="27" type="stmt" count="0"/>
@@ -438,20 +438,20 @@
         <line num="150" type="stmt" count="0"/>
         <line num="151" type="stmt" count="0"/>
         <line num="152" type="stmt" count="0"/>
-        <line num="163" type="method" name="applyFilter" visibility="protected" complexity="5" crap="30" count="0"/>
-        <line num="165" type="stmt" count="0"/>
-        <line num="169" type="stmt" count="0"/>
-        <line num="170" type="stmt" count="0"/>
-        <line num="171" type="stmt" count="0"/>
-        <line num="172" type="stmt" count="0"/>
+        <line num="163" type="method" name="applyFilter" visibility="protected" complexity="5" crap="5.09" count="1"/>
+        <line num="165" type="stmt" count="1"/>
+        <line num="169" type="stmt" count="1"/>
+        <line num="170" type="stmt" count="1"/>
+        <line num="171" type="stmt" count="1"/>
+        <line num="172" type="stmt" count="1"/>
         <line num="173" type="stmt" count="0"/>
-        <line num="175" type="stmt" count="0"/>
-        <line num="176" type="stmt" count="0"/>
-        <line num="177" type="stmt" count="0"/>
+        <line num="175" type="stmt" count="1"/>
+        <line num="176" type="stmt" count="1"/>
+        <line num="177" type="stmt" count="1"/>
         <line num="179" type="stmt" count="0"/>
-        <line num="185" type="stmt" count="0"/>
-        <line num="186" type="stmt" count="0"/>
-        <line num="189" type="stmt" count="0"/>
+        <line num="185" type="stmt" count="1"/>
+        <line num="186" type="stmt" count="1"/>
+        <line num="189" type="stmt" count="1"/>
         <line num="197" type="method" name="getSource" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="199" type="stmt" count="1"/>
         <line num="208" type="method" name="setSource" visibility="public" complexity="1" crap="1" count="1"/>
@@ -472,7 +472,7 @@
         <line num="269" type="stmt" count="0"/>
         <line num="272" type="stmt" count="0"/>
         <line num="273" type="stmt" count="0"/>
-        <metrics loc="275" ncloc="168" classes="1" methods="14" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="68" coveredstatements="36" elements="82" coveredelements="41"/>
+        <metrics loc="275" ncloc="168" classes="1" methods="14" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="68" coveredstatements="47" elements="82" coveredelements="52"/>
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/ImageServiceProvider.php">
         <class name="ImageServiceProvider" namespace="Folklore\Image">
@@ -860,6 +860,6 @@
         <metrics loc="11" ncloc="11" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
       </file>
     </package>
-    <metrics files="33" loc="2420" ncloc="1825" classes="20" methods="111" coveredmethods="45" conditionals="0" coveredconditionals="0" statements="553" coveredstatements="297" elements="664" coveredelements="342"/>
+    <metrics files="33" loc="2420" ncloc="1825" classes="20" methods="111" coveredmethods="47" conditionals="0" coveredconditionals="0" statements="553" coveredstatements="312" elements="664" coveredelements="359"/>
   </project>
 </coverage>
