@@ -98,6 +98,8 @@ class SourcesLocalSourceTest extends TestCase
             public_path('wrong.jpg')
         ];
         $files = $this->source->getFilesFromPath('/');
+        sort($originalFiles);
+        sort($files);
         $this->assertEquals($originalFiles, $files);
 
         $originalFiles = [
@@ -105,6 +107,8 @@ class SourcesLocalSourceTest extends TestCase
             public_path('image.jpg')
         ];
         $files = $this->source->getFilesFromPath('image.jpg');
+        sort($originalFiles);
+        sort($files);
         $this->assertEquals($originalFiles, $files);
 
         $files = $this->source->getFilesFromPath('not-found');

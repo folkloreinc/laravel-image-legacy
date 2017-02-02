@@ -91,6 +91,8 @@ class SourcesFilesystemSourceTest extends TestCase
             '/wrong.jpg'
         ];
         $files = $this->source->getFilesFromPath('/');
+        sort($originalFiles);
+        sort($files);
         $this->assertEquals($originalFiles, $files);
 
         $originalFiles = [
@@ -98,6 +100,8 @@ class SourcesFilesystemSourceTest extends TestCase
             '/image.jpg'
         ];
         $files = $this->source->getFilesFromPath('image.jpg');
+        sort($originalFiles);
+        sort($files);
         $this->assertEquals($originalFiles, $files);
 
         $files = $this->source->getFilesFromPath('not-found');
