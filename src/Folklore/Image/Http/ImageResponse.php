@@ -65,9 +65,8 @@ class ImageResponse extends StreamedResponse
             return;
         }
 
-        echo $this->image->get($this->format, [
-            'jpeg_quality' => $this->quality
-        ]);
+        echo $this->getContent();
+        return;
     }
 
     /**
