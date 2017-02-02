@@ -32,9 +32,9 @@ class FilesystemSource extends AbstractSource
     {
         $fullPath = $this->getFullPath($path);
         $disk = $this->getDisk();
-
-        if ($disk instanceof Local) {
-            return parent::getFormatFromPath($fullPath);
+        if ($disk->getAdapter() instanceof Local) {
+            $localPath = $disk->getAdapter()->getPathPrefix();
+            return parent::getFormatFromPath(rtrim($localPath, '/').'/'.ltrim($fullPath, '/'));
         }
 
         $cache = array_get($this->config, 'cache', false);
@@ -60,8 +60,9 @@ class FilesystemSource extends AbstractSource
         $fullPath = $this->getFullPath($path);
         $disk = $this->getDisk();
 
-        if ($disk instanceof Local) {
-            return $imagine->open($fullPath);
+        if ($disk->getAdapter() instanceof Local) {
+            $localPath = $disk->getAdapter()->getPathPrefix();
+            return $this->imagine->open(rtrim($localPath, '/').'/'.ltrim($fullPath, '/'));
         }
 
         $cache = array_get($this->config, 'cache', false);
@@ -96,8 +97,9 @@ class FilesystemSource extends AbstractSource
         $fullPath = $this->getFullPath($path);
         $disk = $this->getDisk();
 
-        if ($disk instanceof Local) {
-            return $image->save($fullPath);
+        if ($disk->getAdapter() instanceof Local) {
+            $localPath = $disk->getAdapter()->getPathPrefix();
+            return $image->save(rtrim($localPath, '/').'/'.ltrim($fullPath, '/'));
         }
 
         $format = pathinfo($fullPath, \PATHINFO_EXTENSION);

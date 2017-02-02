@@ -35,13 +35,13 @@ class ImageController extends BaseController
         $pathFilters = $parseData['filters'];
         $filters = array_merge($pathFilters, $routeFilters);
 
-        // Build the image
-        $manipulator = $source ? app('image')->source($source):app('image');
-        $image = $manipulator->make($path, $filters);
-        $format = $manipulator->format($path);
-
         // Return the response
         try {
+            // Make the image
+            $manipulator = $source ? app('image')->source($source):app('image');
+            $image = $manipulator->make($path, $filters);
+            $format = $manipulator->format($path);
+
             return response()->image($image)
                 ->setQuality($quality)
                 ->setFormat($format)

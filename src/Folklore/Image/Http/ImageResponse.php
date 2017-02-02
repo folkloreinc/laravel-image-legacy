@@ -120,7 +120,8 @@ class ImageResponse extends StreamedResponse
         }
 
         return $this->image->get($this->format, [
-            'jpeg_quality' => $this->quality
+            'jpeg_quality' => $this->quality,
+            'png_compression_level' => ($this->quality / 100) * 9
         ]);
     }
 
