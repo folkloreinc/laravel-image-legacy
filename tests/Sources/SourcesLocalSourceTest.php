@@ -25,18 +25,25 @@ class SourcesLocalSourceTest extends TestCase
             unlink(public_path('image-test.jpg'));
         }
 
+        if (file_exists(public_path('image-image(300x300).jpg'))) {
+            unlink(public_path('image-image(300x300).jpg'));
+        }
+
         parent::tearDown();
     }
 
     /**
-     * Test getting the real path
+     * Test getting the full path
      * @test
-     * @covers ::getRealPath
+     * @covers ::__construct
+     * @covers ::getFullPath
      */
-    public function testGetRealPath()
+    public function testGetFullPath()
     {
         $path = 'image.jpg';
-        $this->assertEquals(public_path($path), $this->source->getRealPath($path));
+        $this->assertEquals(public_path($path), $this->source->getFullPath($path));
+        $this->assertNull($this->source->getFullPath('test/image.jpg'));
+        $this->assertNull($this->source->getFullPath('not-found.jpg'));
     }
 
     /**
@@ -71,6 +78,38 @@ class SourcesLocalSourceTest extends TestCase
         $originalImage = app('image.imagine')->open(public_path('image.jpg'));
         $image = $this->source->openFromPath('image.jpg');
         $this->assertEquals($originalImage->get('png'), $image->get('png'));
+    }
+
+    /**
+     * Test gettingFilesFromPath
+     * @test
+     * @covers ::getFilesFromPath
+     */
+    public function testGetFilesFromPath()
+    {
+        if (!file_exists(public_path('image-image(300x300).jpg'))) {
+            copy(public_path('image.jpg'), public_path('image-image(300x300).jpg'));
+        }
+
+        $originalFiles = [
+            public_path('image-image(300x300).jpg'),
+            public_path('image.jpg'),
+            public_path('image.png'),
+            public_path('image_small.jpg'),
+            public_path('wrong.jpg')
+        ];
+        $files = $this->source->getFilesFromPath('/');
+        $this->assertEquals($originalFiles, $files);
+
+        $originalFiles = [
+            public_path('image-image(300x300).jpg'),
+            public_path('image.jpg')
+        ];
+        $files = $this->source->getFilesFromPath('image.jpg');
+        $this->assertEquals($originalFiles, $files);
+
+        $files = $this->source->getFilesFromPath('not-found');
+        $this->assertEquals([], $files);
     }
 
     /**

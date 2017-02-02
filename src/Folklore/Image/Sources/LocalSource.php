@@ -15,7 +15,7 @@ class LocalSource extends AbstractSource
         $this->config = $config;
     }
 
-    public function getRealPath($path)
+    public function getFullPath($path)
     {
         if (is_file(realpath($path))) {
             return realpath($path);
@@ -34,7 +34,7 @@ class LocalSource extends AbstractSource
 
             // Look for the image in the directory
             $src = realpath($dir.'/'.ltrim($path, '/'));
-            if (is_file($src)) {
+            if (file_exists($src)) {
                 return $src;
             }
         }
@@ -45,13 +45,13 @@ class LocalSource extends AbstractSource
 
     public function pathExists($path)
     {
-        $realPath = $this->getRealPath($path);
+        $realPath = $this->getFullPath($path);
         return $realPath ? file_exists($realPath):false;
     }
 
     public function getFormatFromPath($path)
     {
-        $path = $this->getRealPath($path);
+        $path = $this->getFullPath($path);
         return parent::getFormatFromPath($path);
     }
 
@@ -61,22 +61,26 @@ class LocalSource extends AbstractSource
 
         //Check path
         $path = urldecode($path);
-        if (!($path = $this->getRealPath($path))) {
+        if (!($path = $this->getFullPath($path))) {
             return $images;
         }
 
         // Loop through the contents of the source and write directory and get
         // all files that match the pattern
+        $isFile = is_file($path);
         $parts = pathinfo($path);
-        $dirs = [$parts['dirname']];
-        foreach ($dirs as $directory) {
-            $files = scandir($directory);
-            foreach ($files as $file) {
-                if (strpos($file, $parts['filename']) === false || !preg_match('#'.$this->urlGenerator->pattern().'#', $file)) {
-                    continue;
-                }
-                $images[] = $directory.'/'.$file;
+        $directory = $isFile ? $parts['dirname']:$path;
+        $files = scandir($directory);
+        foreach ($files as $file) {
+            if (!preg_match('#'.$this->urlGenerator->pattern().'#', $file)) {
+                continue;
             }
+            $parsedPath = $this->urlGenerator->parse($file);
+            $parsedPathParts = pathinfo($parsedPath['path']);
+            if ($isFile && $parsedPathParts['basename'] !== $parts['basename']) {
+                continue;
+            }
+            $images[] = $directory.'/'.$file;
         }
 
         // Return the list
@@ -85,7 +89,7 @@ class LocalSource extends AbstractSource
 
     public function openFromPath($path)
     {
-        $realPath = $this->getRealPath($path);
+        $realPath = $this->getFullPath($path);
         return $this->imagine->open($realPath);
     }
 
