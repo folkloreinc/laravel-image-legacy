@@ -18,10 +18,9 @@ class FilesystemSource extends AbstractSource
     {
         $disk = $this->getDisk();
 
-        $filesystem = app('files');
-        $extension = $filesystem->extension($path);
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
         $isFile = !empty($extension);
-        $directory = $isFile ? $filesystem->dirname($path):$path;
+        $directory = $isFile ? pathinfo($path, PATHINFO_DIRNAME):$path;
 
         $files = $disk->allFiles($directory);
         $images = $this->getImagesFromFiles($files, $path);
@@ -194,7 +193,7 @@ class FilesystemSource extends AbstractSource
         if ($cachePath) {
             $filesystem = app('files');
             $fullPath = $this->getCacheFullPath($path);
-            $directory = $filesystem->dirname($fullPath);
+            $directory = pathinfo($fullPath, PATHINFO_DIRNAME);
             if (!$filesystem->isDirectory($directory)) {
                 $filesystem->makeDirectory($directory, 0755, true, true);
             }
