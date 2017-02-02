@@ -10,7 +10,7 @@ class CacheMiddleware
 {
     protected $filesystem;
 
-    public function __construct(Factory $filesystem)
+    public function __construct()
     {
         $this->filesystem = app('files');
     }

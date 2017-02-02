@@ -42,10 +42,11 @@ class ImageController extends BaseController
             $image = $manipulator->make($path, $filters);
             $format = $manipulator->format($path);
 
-            return response()->image($image)
+            $response = response()->image($image)
                 ->setQuality($quality)
                 ->setFormat($format)
                 ->setExpiresIn($expires);
+            return $response;
         } catch (ParseException $e) {
             return abort(404);
         } catch (FileMissingException $e) {

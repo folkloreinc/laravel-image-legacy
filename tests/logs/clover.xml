@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1486010475">
-  <project timestamp="1486010475">
+<coverage generated="1486012383">
+  <project timestamp="1486012383">
     <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Contracts/Filter.php">
       <metrics loc="10" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
@@ -188,12 +188,12 @@
     <package name="Folklore\Image\Http">
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Http/CacheMiddleware.php">
         <class name="CacheMiddleware" namespace="Folklore\Image\Http">
-          <metrics complexity="8" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="15" elements="27" coveredelements="15"/>
+          <metrics complexity="8" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="16" elements="27" coveredelements="16"/>
         </class>
         <line num="13" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
         <line num="15" type="stmt" count="0"/>
         <line num="16" type="stmt" count="0"/>
-        <line num="25" type="method" name="handle" visibility="public" complexity="7" crap="9.06" count="1"/>
+        <line num="25" type="method" name="handle" visibility="public" complexity="7" crap="8.38" count="1"/>
         <line num="27" type="stmt" count="1"/>
         <line num="28" type="stmt" count="1"/>
         <line num="29" type="stmt" count="1"/>
@@ -211,17 +211,17 @@
         <line num="50" type="stmt" count="1"/>
         <line num="51" type="stmt" count="0"/>
         <line num="56" type="stmt" count="1"/>
-        <line num="57" type="stmt" count="0"/>
-        <line num="58" type="stmt" count="0"/>
-        <line num="59" type="stmt" count="0"/>
-        <line num="61" type="stmt" count="1"/>
-        <line num="62" type="stmt" count="1"/>
+        <line num="57" type="stmt" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="59" type="stmt" count="1"/>
+        <line num="61" type="stmt" count="0"/>
+        <line num="62" type="stmt" count="0"/>
         <line num="65" type="stmt" count="1"/>
-        <metrics loc="67" ncloc="48" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="15" elements="27" coveredelements="15"/>
+        <metrics loc="67" ncloc="48" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="16" elements="27" coveredelements="16"/>
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Http/ImageController.php">
         <class name="ImageController" namespace="Folklore\Image\Http">
-          <metrics complexity="6" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="0" elements="25" coveredelements="0"/>
+          <metrics complexity="6" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="0" elements="26" coveredelements="0"/>
         </class>
         <line num="21" type="method" name="serve" visibility="public" complexity="6" crap="42" count="0"/>
         <line num="24" type="stmt" count="0"/>
@@ -248,7 +248,8 @@
         <line num="52" type="stmt" count="0"/>
         <line num="53" type="stmt" count="0"/>
         <line num="54" type="stmt" count="0"/>
-        <metrics loc="57" ncloc="49" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="0" elements="25" coveredelements="0"/>
+        <line num="55" type="stmt" count="0"/>
+        <metrics loc="58" ncloc="50" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="0" elements="26" coveredelements="0"/>
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Http/ImageResponse.php">
         <class name="ImageResponse" namespace="Folklore\Image\Http">
@@ -951,6 +952,6 @@
         <metrics loc="11" ncloc="11" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
       </file>
     </package>
-    <metrics files="33" loc="2457" ncloc="1868" classes="22" methods="123" coveredmethods="73" conditionals="0" coveredconditionals="0" statements="632" coveredstatements="428" elements="755" coveredelements="501"/>
+    <metrics files="33" loc="2458" ncloc="1869" classes="22" methods="123" coveredmethods="73" conditionals="0" coveredconditionals="0" statements="633" coveredstatements="429" elements="756" coveredelements="502"/>
   </project>
 </coverage>
