@@ -169,7 +169,9 @@ class HttpImageResponseTest extends TestCase
             ->with($this->equalTo($expires));
         $responseMock->expects($this->exactly(2))
             ->method('setExpires')
-            ->with($this->equalTo($expiresDate));
+            ->with($this->callback(function ($date) use ($expiresDate) {
+                return abs($date->getTimestamp() - $expiresDate->getTimestamp()) < 10;
+            }));
 
         $responseMock->setExpiresIn($expires);
         $responseMock->expiresIn($expires);

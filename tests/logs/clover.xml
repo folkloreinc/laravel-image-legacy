@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1486000028">
-  <project timestamp="1486000028">
+<coverage generated="1486001370">
+  <project timestamp="1486001370">
     <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Contracts/Filter.php">
       <metrics loc="10" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
@@ -844,9 +844,31 @@
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Sources/LocalSource.php">
         <class name="LocalSource" namespace="Folklore\Image\Sources">
-          <metrics complexity="19" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+          <metrics complexity="19" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="17" elements="22" coveredelements="22"/>
         </class>
-        <metrics loc="98" ncloc="80" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        <line num="18" type="method" name="getRealPath" visibility="public" complexity="6" crap="6" count="1"/>
+        <line num="20" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="31" type="stmt" count="1"/>
+        <line num="36" type="stmt" count="1"/>
+        <line num="37" type="stmt" count="1"/>
+        <line num="38" type="stmt" count="1"/>
+        <line num="46" type="method" name="pathExists" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="48" type="stmt" count="1"/>
+        <line num="49" type="stmt" count="1"/>
+        <line num="52" type="method" name="getFormatFromPath" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="54" type="stmt" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="86" type="method" name="openFromPath" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="88" type="stmt" count="1"/>
+        <line num="89" type="stmt" count="1"/>
+        <line num="92" type="method" name="saveToPath" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="94" type="stmt" count="1"/>
+        <line num="95" type="stmt" count="1"/>
+        <line num="96" type="stmt" count="1"/>
+        <metrics loc="98" ncloc="80" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="17" elements="22" coveredelements="22"/>
       </file>
     </package>
     <package name="Folklore\Image\Support\Facades">
@@ -859,6 +881,6 @@
         <metrics loc="11" ncloc="11" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
       </file>
     </package>
-    <metrics files="33" loc="2419" ncloc="1824" classes="20" methods="111" coveredmethods="61" conditionals="0" coveredconditionals="0" statements="552" coveredstatements="358" elements="663" coveredelements="419"/>
+    <metrics files="33" loc="2419" ncloc="1824" classes="21" methods="116" coveredmethods="66" conditionals="0" coveredconditionals="0" statements="569" coveredstatements="375" elements="685" coveredelements="441"/>
   </project>
 </coverage>

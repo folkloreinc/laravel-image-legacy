@@ -9,7 +9,7 @@ abstract class AbstractSource implements Source
 {
     protected $imagine;
     protected $config;
-    
+
     public function __construct(ImagineManager $imagine, $config)
     {
         $this->imagine = $imagine;
