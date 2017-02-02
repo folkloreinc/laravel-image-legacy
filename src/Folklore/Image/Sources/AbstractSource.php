@@ -21,18 +21,17 @@ abstract class AbstractSource implements Source
 
     protected function getImagesFromFiles($files, $path = null)
     {
-        $filesystem = app('files');
-        $extension = $filesystem->extension($path);
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
         $isFile = !empty($extension);
-        $basename = $isFile ? $filesystem->basename($path):null;
-        $directory = $isFile ? $filesystem->dirname($path):$path;
+        $basename = $isFile ? pathinfo($path, PATHINFO_BASENAME):null;
+        $directory = $isFile ? pathinfo($path, PATHINFO_DIRNAME):$path;
         $images = [];
         foreach ($files as $file) {
             if (!preg_match('#'.$this->urlGenerator->pattern().'#', $file)) {
                 continue;
             }
             $parsedPath = $this->urlGenerator->parse($file);
-            if ($isFile && $basename !== $filesystem->basename($parsedPath['path'])) {
+            if ($isFile && $basename !== pathinfo($parsedPath['path'], PATHINFO_BASENAME)) {
                 continue;
             }
             $images[] = rtrim(ltrim($directory, '.'), '/').'/'.ltrim(ltrim($file, './'), '/');

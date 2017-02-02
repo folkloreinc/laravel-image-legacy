@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1486008245">
-  <project timestamp="1486008245">
+<coverage generated="1486008752">
+  <project timestamp="1486008752">
     <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Contracts/Filter.php">
       <metrics loc="10" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
@@ -819,7 +819,7 @@
     <package name="Folklore\Image\Sources">
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Sources/AbstractSource.php">
         <class name="AbstractSource" namespace="Folklore\Image\Sources">
-          <metrics complexity="12" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="4" elements="29" coveredelements="5"/>
+          <metrics complexity="12" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="4" elements="28" coveredelements="5"/>
         </class>
         <line num="15" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="17" type="stmt" count="1"/>
@@ -835,22 +835,21 @@
         <line num="29" type="stmt" count="0"/>
         <line num="30" type="stmt" count="0"/>
         <line num="31" type="stmt" count="0"/>
-        <line num="32" type="stmt" count="0"/>
+        <line num="33" type="stmt" count="0"/>
         <line num="34" type="stmt" count="0"/>
         <line num="35" type="stmt" count="0"/>
-        <line num="36" type="stmt" count="0"/>
-        <line num="38" type="stmt" count="0"/>
-        <line num="41" type="stmt" count="0"/>
-        <line num="50" type="method" name="getFormatFromPath" visibility="public" complexity="4" crap="20" count="0"/>
-        <line num="52" type="stmt" count="0"/>
+        <line num="37" type="stmt" count="0"/>
+        <line num="40" type="stmt" count="0"/>
+        <line num="49" type="method" name="getFormatFromPath" visibility="public" complexity="4" crap="20" count="0"/>
+        <line num="51" type="stmt" count="0"/>
+        <line num="53" type="stmt" count="0"/>
         <line num="54" type="stmt" count="0"/>
-        <line num="55" type="stmt" count="0"/>
+        <line num="56" type="stmt" count="0"/>
         <line num="57" type="stmt" count="0"/>
-        <line num="58" type="stmt" count="0"/>
+        <line num="59" type="stmt" count="0"/>
         <line num="60" type="stmt" count="0"/>
-        <line num="61" type="stmt" count="0"/>
-        <line num="65" type="stmt" count="0"/>
-        <metrics loc="67" ncloc="61" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="4" elements="29" coveredelements="5"/>
+        <line num="64" type="stmt" count="0"/>
+        <metrics loc="66" ncloc="60" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="4" elements="28" coveredelements="5"/>
       </file>
       <file name="/Users/dmp/Code/laravel-image/src/Folklore/Image/Sources/FilesystemSource.php">
         <class name="FilesystemSource" namespace="Folklore\Image\Sources">
@@ -973,6 +972,6 @@
         <metrics loc="11" ncloc="11" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
       </file>
     </package>
-    <metrics files="33" loc="2456" ncloc="1867" classes="22" methods="123" coveredmethods="73" conditionals="0" coveredconditionals="0" statements="654" coveredstatements="449" elements="777" coveredelements="522"/>
+    <metrics files="33" loc="2455" ncloc="1866" classes="22" methods="123" coveredmethods="73" conditionals="0" coveredconditionals="0" statements="653" coveredstatements="449" elements="776" coveredelements="522"/>
   </project>
 </coverage>

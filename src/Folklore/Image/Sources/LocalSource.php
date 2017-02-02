@@ -51,8 +51,8 @@ class LocalSource extends AbstractSource
 
         $filesystem = app('files');
         $isFile = $filesystem->isFile($path);
-        $basename = $isFile ? $filesystem->basename($path):null;
-        $directory = $isFile ? $filesystem->dirname($path):$path;
+        $basename = $isFile ? pathinfo($path, PATHINFO_BASENAME):null;
+        $directory = $isFile ? pathinfo($path, PATHINFO_DIRNAME):$path;
 
         $files = $filesystem->allFiles($directory);
         $relativeFiles = [];
