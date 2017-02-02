@@ -1,12 +1,12 @@
 <?php
 
-use Folklore\Image\Sources\LocalSource;
+use Folklore\Image\Sources\FilesystemSource;
 use Folklore\Image\ImagineManager;
 
 /**
- * @coversDefaultClass Folklore\Image\Sources\LocalSource
+ * @coversDefaultClass Folklore\Image\Sources\FilesystemSource
  */
-class SourcesLocalSourceTest extends TestCase
+class SourcesFilesystemSourceTest extends TestCase
 {
     protected $source;
 
@@ -14,8 +14,8 @@ class SourcesLocalSourceTest extends TestCase
     {
         parent::setUp();
 
-        $config = $this->app['config']->get('image.sources.local');
-        $this->source = new LocalSource(app('image.imagine'), app('image.url'), $config);
+        $config = $this->app['config']->get('image.sources.filesystem');
+        $this->source = new FilesystemSource(app('image.imagine'), app('image.url'), $config);
     }
 
     public function tearDown()
@@ -28,21 +28,15 @@ class SourcesLocalSourceTest extends TestCase
             unlink(public_path('image-image(300x300).jpg'));
         }
 
-        parent::tearDown();
-    }
+        if (file_exists(public_path('filesystem/image-test.jpg'))) {
+            unlink(public_path('filesystem/image-test.jpg'));
+        }
 
-    /**
-     * Test getting the full path
-     * @test
-     * @covers ::__construct
-     * @covers ::getFullPath
-     */
-    public function testGetFullPath()
-    {
-        $path = 'image.jpg';
-        $this->assertEquals(public_path($path), $this->source->getFullPath($path));
-        $this->assertNull($this->source->getFullPath('test/image.jpg'));
-        $this->assertNull($this->source->getFullPath('not-found.jpg'));
+        if (file_exists(public_path('filesystem/image-image(300x300).jpg'))) {
+            unlink(public_path('filesystem/image-image(300x300).jpg'));
+        }
+
+        parent::tearDown();
     }
 
     /**
@@ -74,7 +68,7 @@ class SourcesLocalSourceTest extends TestCase
      */
     public function testOpenFromPath()
     {
-        $originalImage = app('image.imagine')->open(public_path('image.jpg'));
+        $originalImage = app('image.imagine')->open(public_path('filesystem/image.jpg'));
         $image = $this->source->openFromPath('image.jpg');
         $this->assertEquals($originalImage->get('png'), $image->get('png'));
     }
@@ -86,23 +80,22 @@ class SourcesLocalSourceTest extends TestCase
      */
     public function testGetFilesFromPath()
     {
-        if (!file_exists(public_path('image-image(300x300).jpg'))) {
-            copy(public_path('image.jpg'), public_path('image-image(300x300).jpg'));
+        if (!file_exists(public_path('filesystem/image-image(300x300).jpg'))) {
+            copy(public_path('filesystem/image.jpg'), public_path('filesystem/image-image(300x300).jpg'));
         }
 
         $originalFiles = [
-            public_path('image-image(300x300).jpg'),
-            public_path('image.jpg'),
-            public_path('image.png'),
-            public_path('image_small.jpg'),
-            public_path('wrong.jpg')
+            '/image-image(300x300).jpg',
+            '/image.jpg',
+            '/image.png',
+            '/wrong.jpg'
         ];
         $files = $this->source->getFilesFromPath('/');
         $this->assertEquals($originalFiles, $files);
 
         $originalFiles = [
-            public_path('image-image(300x300).jpg'),
-            public_path('image.jpg')
+            '/image-image(300x300).jpg',
+            '/image.jpg'
         ];
         $files = $this->source->getFilesFromPath('image.jpg');
         $this->assertEquals($originalFiles, $files);
@@ -118,9 +111,9 @@ class SourcesLocalSourceTest extends TestCase
      */
     public function testSaveToPath()
     {
-        $originalImage = app('image.imagine')->open(public_path('image.jpg'));
+        $originalImage = app('image.imagine')->open(public_path('filesystem/image.jpg'));
         $this->source->saveToPath($originalImage, 'image-test.jpg');
-        $image = app('image.imagine')->open(public_path('image-test.jpg'));
+        $image = app('image.imagine')->open(public_path('filesystem/image-test.jpg'));
         $this->assertEquals($originalImage->getSize(), $image->getSize());
     }
 }

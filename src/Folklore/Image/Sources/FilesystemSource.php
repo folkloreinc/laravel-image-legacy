@@ -16,7 +16,17 @@ class FilesystemSource extends AbstractSource
 
     public function getFilesFromPath($path)
     {
-        return file_exists($path);
+        $disk = $this->getDisk();
+
+        $filesystem = app('files');
+        $extension = $filesystem->extension($path);
+        $isFile = !empty($extension);
+        $directory = $isFile ? $filesystem->dirname($path):$path;
+
+        $files = $disk->allFiles($directory);
+        $images = $this->getImagesFromFiles($files, $path);
+
+        return $images;
     }
 
     public function getFormatFromPath($path)
@@ -168,7 +178,7 @@ class FilesystemSource extends AbstractSource
         switch ($matches[1]) {
             case 'jpg':
             case 'jpeg':
-                return 'jpg';
+                return 'jpeg';
                 break;
             case 'png':
                 return 'png';
@@ -182,12 +192,13 @@ class FilesystemSource extends AbstractSource
     {
         $cachePath = array_get($this->config, 'cache_path', null);
         if ($cachePath) {
+            $filesystem = app('files');
             $fullPath = $this->getCacheFullPath($path);
-            $directory = dirname($fullPath);
-            if (!is_dir($directory)) {
-                app('files')->makeDirectory($directory, 0755, true, true);
+            $directory = $filesystem->dirname($fullPath);
+            if (!$filesystem->isDirectory($directory)) {
+                $filesystem->makeDirectory($directory, 0755, true, true);
             }
-            file_put_contents($fullPath, $contents);
+            $filesystem->put($fullPath, $contents);
         } else {
             $cacheKey = $this->getCacheKey($path);
             $cacheExpiration = array_get($this->config, 'cache_expiration', -1);

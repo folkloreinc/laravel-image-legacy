@@ -3,40 +3,26 @@
 namespace Folklore\Image\Sources;
 
 use Folklore\Image\ImagineManager;
-use Folklore\Image\UrlGenerator;
 use Imagine\Image\ImageInterface;
 
 class LocalSource extends AbstractSource
 {
-    public function __construct(ImagineManager $imagine, Urlgenerator $urlGenerator, $config)
-    {
-        $this->imagine = $imagine;
-        $this->urlGenerator = $urlGenerator;
-        $this->config = $config;
-    }
-
     public function getFullPath($path)
     {
-        if (is_file(realpath($path))) {
-            return realpath($path);
+        $filesystem = app('files');
+
+        //Get path
+        $dir = isset($this->config['path']) ? $this->config['path']:'';
+
+        // Check that directory exists
+        if (!$filesystem->isDirectory($dir)) {
+            return null;
         }
 
-        //Get directories
-        $dirs = (array) (isset($this->config['path']) ? $this->config['path']:public_path());
-        // Loop through all the directories files may be uploaded to
-        foreach ($dirs as $dir) {
-            $dir = rtrim($dir, '/');
-
-            // Check that directory exists
-            if (!is_dir($dir)) {
-                continue;
-            }
-
-            // Look for the image in the directory
-            $src = realpath($dir.'/'.ltrim($path, '/'));
-            if (file_exists($src)) {
-                return $src;
-            }
+        // Check if the path exists
+        $src = rtrim($dir, '/').'/'.ltrim($path, '/');
+        if ($filesystem->exists($src)) {
+            return $src;
         }
 
         // None found
@@ -46,7 +32,7 @@ class LocalSource extends AbstractSource
     public function pathExists($path)
     {
         $realPath = $this->getFullPath($path);
-        return $realPath ? file_exists($realPath):false;
+        return $realPath ? app('files')->exists($realPath):false;
     }
 
     public function getFormatFromPath($path)
@@ -57,31 +43,42 @@ class LocalSource extends AbstractSource
 
     public function getFilesFromPath($path)
     {
-        $images = array();
-
         //Check path
         $path = urldecode($path);
-        if (!($path = $this->getFullPath($path))) {
-            return $images;
+        if (!$path = $this->getFullPath($path)) {
+            return [];
         }
 
-        // Loop through the contents of the source and write directory and get
-        // all files that match the pattern
-        $isFile = is_file($path);
-        $parts = pathinfo($path);
-        $directory = $isFile ? $parts['dirname']:$path;
-        $files = scandir($directory);
+        $filesystem = app('files');
+        $isFile = $filesystem->isFile($path);
+        $basename = $isFile ? $filesystem->basename($path):null;
+        $directory = $isFile ? $filesystem->dirname($path):$path;
+
+        $files = $filesystem->allFiles($directory);
+        $relativeFiles = [];
         foreach ($files as $file) {
-            if (!preg_match('#'.$this->urlGenerator->pattern().'#', $file)) {
-                continue;
-            }
-            $parsedPath = $this->urlGenerator->parse($file);
-            $parsedPathParts = pathinfo($parsedPath['path']);
-            if ($isFile && $parsedPathParts['basename'] !== $parts['basename']) {
-                continue;
-            }
-            $images[] = $directory.'/'.$file;
+            $relativeFiles[] = preg_replace('#'.$directory.'#', '', $file);
         }
+        $images = $this->getImagesFromFiles($relativeFiles, $path);
+
+        $ignore = isset($this->config['ignore']) ? (array)$this->config['ignore']:[];
+        if (sizeof($ignore)) {
+            $newImages = [];
+            foreach ($images as $image) {
+                $ignored = false;
+                foreach ($ignore as $ignorePath) {
+                    if (preg_match('#'.trim($ignorePath, '/').'#', $image)) {
+                        $ignored = true;
+                        continue;
+                    }
+                }
+                if (!$ignored) {
+                    $newImages[] = $image;
+                }
+            }
+            $images = $newImages;
+        }
+
 
         // Return the list
         return $images;

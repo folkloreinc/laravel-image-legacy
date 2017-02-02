@@ -41,7 +41,7 @@ class SourceManagerTest extends TestCase
     {
         $driver = $this->manager->driver('filesystem');
         $config = app('config')->get('image.sources.filesystem');
-        $this->assertEquals(new FilesystemSource(app('image.imagine'), $config), $driver);
+        $this->assertEquals(new FilesystemSource(app('image.imagine'), app('image.url'), $config), $driver);
     }
 
     /**

@@ -27,7 +27,7 @@ class SourceManager extends Manager
      */
     protected function createFilesystemDriver($config)
     {
-        return new FilesystemSource($this->app['image.imagine'], $config);
+        return new FilesystemSource($this->app['image.imagine'], $this->app['image.url'], $config);
     }
 
     /**

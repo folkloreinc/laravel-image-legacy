@@ -20,14 +20,19 @@ class TestCase extends BaseTestCase
         $app['config']->set('image.sources', [
             'local' => [
                 'driver' => 'local',
-                'path' => public_path()
+                'path' => public_path(),
+                'ignore' => [
+                    public_path('cache'),
+                    public_path('filesystem'),
+                    public_path('custom')
+                ]
             ],
             'filesystem' => [
                 'driver' => 'filesystem',
                 'disk' => 'local',
                 'path' => null,
                 'cache' => true,
-                'cache_path' => storage_path('image/cache')
+                'cache_path' => public_path('cache')
             ]
         ]);
 
