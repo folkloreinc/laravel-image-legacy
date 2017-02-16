@@ -56,6 +56,21 @@ class ImageManipulator implements ImageManipulatorContract
             throw new FormatException('Image format is not supported');
         }
 
+        // Merge array filters
+        $filters = array_except($options, array_merge($configKeys, $sizeKeys));
+        if (sizeof($filters)) {
+            $newFilters = [];
+            foreach ($filters as $key => $arguments) {
+                $filter = $this->manager->getFilter($key);
+                if (is_array($filter)) {
+                    $newFilters = array_merge($newFilters, $filter);
+                } else {
+                    $newFilters[$key] = $arguments;
+                }
+            }
+            $filters = $newFilters;
+        }
+
         // Resize only if one or both width and height values are set.
         $width = array_get($options, 'width', null);
         $height = array_get($options, 'height', null);
@@ -72,7 +87,6 @@ class ImageManipulator implements ImageManipulatorContract
         }
 
         // Check if all filters exists
-        $filters = array_except($options, array_merge($configKeys, $sizeKeys));
         foreach ($filters as $key => $value) {
             if (!$this->manager->hasFilter($key)) {
                 throw new FilterMissingException('Filter "'.$key.'" doesn\'t exists.');
