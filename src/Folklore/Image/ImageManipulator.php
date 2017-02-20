@@ -57,7 +57,7 @@ class ImageManipulator implements ImageManipulatorContract
         }
 
         // Merge array filters
-        $filters = array_except($options, array_merge($configKeys, $sizeKeys));
+        $filters = array_except($options, array_merge($configKeys));
         if (sizeof($filters)) {
             $newFilters = [];
             foreach ($filters as $key => $arguments) {
@@ -72,19 +72,20 @@ class ImageManipulator implements ImageManipulatorContract
         }
 
         // Resize only if one or both width and height values are set.
-        $width = array_get($options, 'width', null);
-        $height = array_get($options, 'height', null);
+        $width = array_get($filters, 'width', null);
+        $height = array_get($filters, 'height', null);
         if ($width !== null || $height !== null) {
-            $crop = array_get($options, 'crop', false);
+            $crop = array_get($filters, 'crop', false);
             $thumbnail = [
                 'width' => $width,
                 'height' => $height,
                 'crop' => $crop
             ];
-            $options = array_merge([
+            $filters = array_merge([
                 'thumbnail' => $thumbnail
-            ], $options);
+            ], $filters);
         }
+        $filters = array_except($filters, array_merge($sizeKeys));
 
         // Check if all filters exists
         foreach ($filters as $key => $value) {
