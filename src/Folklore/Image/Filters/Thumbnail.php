@@ -15,12 +15,14 @@ class Thumbnail implements FilterWithValueContract
             $width = array_get($value, 'width', null);
             $height = array_get($value, 'height', null);
             $crop = array_get($value, 'crop', false);
+            $upscale = array_get($value, 'upscale', false);
         } else {
             $values = explode(',', $value);
             list($width, $height) = $values;
             $width = isset($values[0]) ? $values[0]:null;
             $height = isset($values[1]) ? $values[1]:null;
             $crop = isset($values[2]) ? $values[2]:true;
+            $upscale = isset($values[3]) ? $values[3]:false;
         }
 
         //Get new size
@@ -71,6 +73,9 @@ class Thumbnail implements FilterWithValueContract
             $thumbnail->crop($point, $size);
         } else {
             if (!$imageSize->contains($size)) {
+                if (!$upscale) {
+                    return $thumbnail;
+                }
                 $imageSize = $imageSize->scale($ratio);
                 $thumbnail->resize($imageSize);
             } else {
