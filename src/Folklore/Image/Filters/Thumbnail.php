@@ -72,7 +72,7 @@ class Thumbnail implements FilterWithValueContract
 
             $thumbnail->crop($point, $size);
         } else {
-            if (!$imageSize->contains($size)) {
+            if ($imageSize->getWidth() < $size->getWidth() && $imageSize->getHeight() < $size->getHeight()) {
                 if (!$upscale) {
                     return $thumbnail;
                 }
