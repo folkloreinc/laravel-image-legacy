@@ -30,7 +30,7 @@ $router->image('{pattern}', [
     // You can specify base filters that will be applied to any image
     // on this route.
     'filters' => [
-        'width' => 100
+        // 'width' => 100
     ],
 
     // Expires header in seconds

@@ -41,6 +41,11 @@ class CacheMiddleware
         // Get the response
         $response = $next($request);
 
+        // Return the response if not successful
+        if ($response->status() !== 200) {
+            return $response;
+        }
+
         // Check if cache directory is writable and create the directory if
         // it doesn't exists.
         $directoryExists = file_exists($cacheDirectory);
