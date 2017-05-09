@@ -51,7 +51,7 @@ class ImageServe
             $destinationFolder = public_path(trim($writePath, '/') . '/' . ltrim(dirname($imagePath), '/'));
             
             if (isset($writePath)) {
-                \File::makeDirectory($destinationFolder, 0770, true, true);
+                \File::makeDirectory($destinationFolder, 0775, true, true);
             }
 
             // Make sure destination is writeable
