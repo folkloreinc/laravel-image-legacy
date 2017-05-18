@@ -21,9 +21,9 @@ env:
 matrix:
   exclude:
     - php: 5.5
-      env: TESTBENCH_VERSION=3.3.* DATABASE_VERSION=3.3.* ILLUMINATE_VERSION=5.3.*
+      env: TESTBENCH_VERSION=3.3.* ILLUMINATE_VERSION=5.3.*
     - php: 5.5
-      env: TESTBENCH_VERSION=3.4.* DATABASE_VERSION=3.4.*@dev ILLUMINATE_VERSION=5.4.*
+      env: TESTBENCH_VERSION=3.4.* ILLUMINATE_VERSION=5.4.*
 
 before_install:
   - composer global require hirak/prestissimo --update-no-dev
