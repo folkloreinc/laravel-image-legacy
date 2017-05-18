@@ -47,7 +47,6 @@ class ImageServe
             if (strpos($realPath, public_path()) === 0) {
                 $imagePath = substr($realPath, strlen(public_path()));
             }
-            $destinationFolder = $writePath ?: dirname($imagePath);
             $destinationFolder = public_path(trim($writePath, '/') . '/' . ltrim(dirname($imagePath), '/'));
             
             if (isset($writePath)) {
@@ -55,7 +54,7 @@ class ImageServe
             }
 
             // Make sure destination is writeable
-            if (!is_writable(dirname($destinationFolder))) {
+            if (!is_writable($destinationFolder)) {
                 throw new Exception('Destination is not writeable');
             }
         }
@@ -70,12 +69,6 @@ class ImageServe
         //Make the image
         $image = $this->image->make($imagePath, $options);
 
-        //Write the image
-        if ($this->config['write_image']) {
-            $destinationPath = rtrim($destinationFolder, '/') . '/' . basename($path);
-            $image->save($destinationPath);
-        }
-
         //Get the image format
         $format = $this->image->format($realPath);
 
@@ -87,6 +80,13 @@ class ImageServe
         } elseif ($format === 'png') {
             $saveOptions['png_compression_level'] = round($quality / 100 * 9);
         }
+        
+        //Write the image
+        if ($this->config['write_image']) {
+            $destinationPath = rtrim($destinationFolder, '/') . '/' . basename($path);
+            $image->save($destinationPath, $saveOptions);
+        }
+
         $content = $image->get($format, $saveOptions);
 
         //Create the response
