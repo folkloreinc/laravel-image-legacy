@@ -2,6 +2,7 @@
 
 use Folklore\Image\Exception\FileMissingException;
 use Folklore\Image\Exception\Exception;
+use Folklore\Image\Events\ImageSaved;
 
 class ImageServe
 {
@@ -87,7 +88,7 @@ class ImageServe
             $image->save($destinationPath, $saveOptions);
 
             // Trigger event
-            event(new ImageSaved($tmpTransformedPath));
+            event(new ImageSaved($destinationPath));
         }
 
         $content = $image->get($format, $saveOptions);

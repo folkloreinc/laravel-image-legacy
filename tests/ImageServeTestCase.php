@@ -14,7 +14,7 @@ class ImageServeTestCase extends TestCase
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->image = $this->app['image'];
         $this->imageSize = getimagesize(public_path().$this->imagePath);
         $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
@@ -24,9 +24,9 @@ class ImageServeTestCase extends TestCase
     {
         $customPath = $this->app['path.public'].'/custom';
         $this->app['config']->set('image.write_path', $customPath);
-        
+
         $this->image->deleteManipulated($this->imagePath);
-        
+
         parent::tearDown();
     }
 
@@ -129,7 +129,7 @@ class ImageServeTestCase extends TestCase
         $this->assertEquals($sizeManipulated[0], 300);
         $this->assertEquals($sizeManipulated[1], 300);
     }
-    
+
     public function testServeResizeCropSmall()
     {
         //Both height and width with crop
@@ -151,7 +151,7 @@ class ImageServeTestCase extends TestCase
             'crop' => true,
             'wrong' => true
         ));
-        
+
         try {
             $response = $this->call('GET', $url);
             $this->assertSame(404, $response->getStatusCode());
@@ -168,7 +168,7 @@ class ImageServeTestCase extends TestCase
             'crop' => true,
             'wrong' => true
         ));
-        
+
         try {
             $response = $this->call('GET', $url);
             $this->assertSame(404, $response->getStatusCode());
@@ -184,7 +184,7 @@ class ImageServeTestCase extends TestCase
         $url = $this->image->url('/wrong.jpg', 300, 300, array(
             'crop' => true
         ));
-        
+
         try {
             $response = $this->call('GET', $url);
             $this->assertSame(500, $response->getStatusCode());
@@ -194,7 +194,7 @@ class ImageServeTestCase extends TestCase
             $this->assertInstanceOf('\Symfony\Component\HttpKernel\Exception\HttpException', $e);
         }
     }
-    
+
     /**
      * Define environment setup.
      *
