@@ -48,7 +48,7 @@ class ImageServe
                 $imagePath = substr($realPath, strlen(public_path()));
             }
             $destinationFolder = public_path(trim($writePath, '/') . '/' . ltrim(dirname($imagePath), '/'));
-            
+
             if (isset($writePath)) {
                 \File::makeDirectory($destinationFolder, 0770, true, true);
             }
@@ -80,11 +80,14 @@ class ImageServe
         } elseif ($format === 'png') {
             $saveOptions['png_compression_level'] = round($quality / 100 * 9);
         }
-        
+
         //Write the image
         if ($this->config['write_image']) {
             $destinationPath = rtrim($destinationFolder, '/') . '/' . basename($path);
             $image->save($destinationPath, $saveOptions);
+
+            // Trigger event
+            event(new ImageSaved($tmpTransformedPath));
         }
 
         $content = $image->get($format, $saveOptions);
@@ -96,12 +99,12 @@ class ImageServe
 
         return $response;
     }
-    
+
     protected function getResponseExpires()
     {
         return config('image.serve_expires', 3600*24*31);
     }
-    
+
     protected function createResponseFromContent($content)
     {
         $expires = $this->getResponseExpires();
