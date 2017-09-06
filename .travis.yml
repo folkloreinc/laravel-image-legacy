@@ -32,9 +32,7 @@ matrix:
 before_install:
     - composer require "illuminate/support:${ILLUMINATE_VERSION}" "orchestra/database:${DATABASE_VERSION}" "orchestra/testbench:${TESTBENCH_VERSION}" "phpunit/phpunit:${PHPUNIT_VERSION}" --no-update --prefer-dist
 
-install:
-    - composer update --no-interaction --prefer-dist
-    - php artisan vendor:publish
+install: composer update --no-interaction --prefer-dist
 
 script: vendor/bin/phpunit
 
