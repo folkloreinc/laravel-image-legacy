@@ -1,35 +1,47 @@
 language: php
+
 cache:
   directories:
-  - "$COMPOSER_CACHE_DIR"
-  - "$HOME/.composer/cache"
-  - vendor
+    - $COMPOSER_CACHE_DIR
+    - $HOME/.composer/cache
+
 php:
-- 5.5
-- 5.6
-- 7.0
-- 7.1
+    - 5.5
+    - 5.6
+    - 7.0
+    - 7.1
+
 env:
-- TESTBENCH_VERSION=3.1.* DATABASE_VERSION=3.1.* ILLUMINATE_VERSION=5.1.*
-- TESTBENCH_VERSION=3.2.* DATABASE_VERSION=3.2.* ILLUMINATE_VERSION=5.2.*
-- TESTBENCH_VERSION=3.3.* DATABASE_VERSION=3.3.* ILLUMINATE_VERSION=5.3.*
-- TESTBENCH_VERSION=3.4.* DATABASE_VERSION=3.4.*@dev ILLUMINATE_VERSION=5.4.*
+    - TESTBENCH_VERSION=3.1.* DATABASE_VERSION=3.1.* ILLUMINATE_VERSION=5.1.* PHPUNIT_VERSION=~4.0
+    - TESTBENCH_VERSION=3.2.* DATABASE_VERSION=3.2.* ILLUMINATE_VERSION=5.2.* PHPUNIT_VERSION=~4.0
+    - TESTBENCH_VERSION=3.3.* DATABASE_VERSION=3.3.* ILLUMINATE_VERSION=5.3.* PHPUNIT_VERSION=~5.0
+    - TESTBENCH_VERSION=3.4.* DATABASE_VERSION=3.4.* ILLUMINATE_VERSION=5.4.* PHPUNIT_VERSION=~5.7
+    - TESTBENCH_VERSION=3.5.* DATABASE_VERSION=3.5.* ILLUMINATE_VERSION=5.5.* PHPUNIT_VERSION=~6.0
+
 matrix:
-  exclude:
-  - php: 5.5
-    env: TESTBENCH_VERSION=3.3.* DATABASE_VERSION=3.3.* ILLUMINATE_VERSION=5.3.*
-  - php: 5.5
-    env: TESTBENCH_VERSION=3.4.* DATABASE_VERSION=3.4.*@dev ILLUMINATE_VERSION=5.4.*
+    exclude:
+        - php: 5.5
+          env: TESTBENCH_VERSION=3.3.* DATABASE_VERSION=3.3.* ILLUMINATE_VERSION=5.3.* PHPUNIT_VERSION=~5.0
+        - php: 5.5
+          env: TESTBENCH_VERSION=3.4.* DATABASE_VERSION=3.4.* ILLUMINATE_VERSION=5.4.* PHPUNIT_VERSION=~5.7
+        - php: 5.5
+          env: TESTBENCH_VERSION=3.5.* DATABASE_VERSION=3.5.* ILLUMINATE_VERSION=5.5.* PHPUNIT_VERSION=~6.0
+        - php: 5.6
+          env: TESTBENCH_VERSION=3.5.* DATABASE_VERSION=3.5.* ILLUMINATE_VERSION=5.5.* PHPUNIT_VERSION=~6.0
+
 before_install:
-- composer global require hirak/prestissimo --update-no-dev
-- composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
-- composer require "orchestra/database:${DATABASE_VERSION}" --no-update --prefer-dist
-- composer require "orchestra/testbench:${TESTBENCH_VERSION}" --no-update --prefer-dist
-install: composer update --no-interaction --prefer-dist
+    - composer require "illuminate/support:${ILLUMINATE_VERSION}" "orchestra/database:${DATABASE_VERSION}" "orchestra/testbench:${TESTBENCH_VERSION}" "phpunit/phpunit:${PHPUNIT_VERSION}" --no-update --prefer-dist
+
+install:
+    - composer update --no-interaction --prefer-dist
+    - php artisan vendor:publish
+
 script: vendor/bin/phpunit
+
 after_success:
-- travis_retry php vendor/bin/coveralls
+    - travis_retry php vendor/bin/coveralls
+
 notifications:
-  email: false
-  slack:
-    secure: ZilkSllOIo1vCtgUJrQ2ZQaCxW4/zpXZSFYL5Scl5o66fkgmymHR+cUqHsz9jHkXEkxOxORG1baRaJDKnyJ2A3XTfscmhOvAOupQ9jzc9M8yzugH7SrxcjDUJ02CX6LcXlOtOvPwPdkHVi9hR/qmx9D4QZEznVmvxZ2HJOVNJ18=
+    email: false
+    slack:
+        secure: ZilkSllOIo1vCtgUJrQ2ZQaCxW4/zpXZSFYL5Scl5o66fkgmymHR+cUqHsz9jHkXEkxOxORG1baRaJDKnyJ2A3XTfscmhOvAOupQ9jzc9M8yzugH7SrxcjDUJ02CX6LcXlOtOvPwPdkHVi9hR/qmx9D4QZEznVmvxZ2HJOVNJ18=
