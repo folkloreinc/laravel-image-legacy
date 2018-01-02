@@ -105,4 +105,40 @@ class RouteRegistrarTest extends TestCase
         $patterns = app('router')->getPatterns();
         $this->assertEquals($patterns['image_pattern_test'], app('image.url')->pattern($urlConfig));
     }
+
+    /**
+     * Test setting/getting pattern name
+     * @test
+     * @covers ::getPatternName
+     * @covers ::setPatternName
+     */
+    public function testPatternName()
+    {
+        $this->registrar->setPatternName('test');
+        $this->assertEquals('test', $this->registrar->getPatternName());
+    }
+
+    /**
+     * Test setting/getting cache middleware
+     * @test
+     * @covers ::getCacheMiddleware
+     * @covers ::setCacheMiddleware
+     */
+    public function testCacheMiddleware()
+    {
+        $this->registrar->setCacheMiddleware('test');
+        $this->assertEquals('test', $this->registrar->getCacheMiddleware());
+    }
+
+    /**
+     * Test setting/getting controller
+     * @test
+     * @covers ::getController
+     * @covers ::setController
+     */
+    public function testController()
+    {
+        $this->registrar->setController('test');
+        $this->assertEquals('test', $this->registrar->getController());
+    }
 }
