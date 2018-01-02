@@ -1,19 +1,6 @@
-# Laravel Image Documentation
-
-The Laravel Image package is splitted into 3 components:
-
-- [Image Manipulator](manipulator.md)
-- [Url Generator](url.md)
-- [Router](router.md)
-
-Along with this components there is features you might want to understand:
-
-- [Sources](sources.md)
-- [Filters](filters.md)
-
-### Image Manager
-
-All these components can be accessed via the Image Manager.
+Image Manager
+================================================
+The Image Manager is the main interface with whom you interact. You can access it:
 
 With the facade:
 ```php
