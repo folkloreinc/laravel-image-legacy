@@ -16,13 +16,13 @@ For this documentation, we will be using the facade, but any call can be changed
 
 #### Methods
 
-- [`url($path, $width, $height, $filters)`]()
-- [`make($path, $filters)`]()
-- [`open($path)`]()
-- [`save($image, $path)`]()
-- [`source($source)`]()
-- [`pattern($config)`]()
-- [`parse($url, $config)`]()
+- [`url($path, $width, $height, $filters)`](#url-path-width-null-height-null-filters)
+- [`make($path, $filters)`](#make-path-filters)
+- [`open($path)`](#open-path)
+- [`save($image, $path)`](#save-image-path)
+- [`source($source)`](#source-source)
+- [`pattern($config)`](#pattern-config)
+- [`parse($url, $config)`](#parse-url-config)
 
 ---
 
