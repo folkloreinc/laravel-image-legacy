@@ -130,10 +130,41 @@ class UrlGeneratorTest extends TestCase
     }
 
     /**
+     * Test getting a pattern
+     * @test
+     * @covers ::pattern
+     * @covers ::patternAndMatches
+     */
+    public function testPattern()
+    {
+        $this->generator->setFormat('{dirname}/{filters}/{basename}.{extension}');
+        $this->generator->setFiltersFormat('image/{filter}');
+        $this->generator->setFilterFormat('{key}-{value}');
+        $this->generator->setFilterSeparator('/');
+
+        $pattern = '^(.*?)?\/?(image/(.*?))?/([^\/\.]+?)\.([^\.]+)$';
+        $return = $this->generator->pattern();
+        $this->assertEquals($pattern, $return);
+    }
+
+    /**
+     * Test getting a pattern with config
+     * @test
+     * @covers ::pattern
+     * @covers ::patternAndMatches
+     */
+    public function testPatternWithConfig()
+    {
+        $pattern = '^(.*?)?\/?([^\/\.]+?)(\-filters\((.*?)\))?\.([^\.]+)$';
+        $return = $this->generator->pattern($this->config);
+        $this->assertEquals($pattern, $return);
+    }
+
+    /**
      * Test making url
      * @test
      * @covers ::make
-     * @covers ::getUrlPartsFromFilters
+     * @covers ::getParametersFromFilters
      * @covers ::getFiltersParameter
      */
     public function testMake()
@@ -149,10 +180,37 @@ class UrlGeneratorTest extends TestCase
     }
 
     /**
+     * Test making with size
+     * @test
+     * @covers ::make
+     * @covers ::getParametersFromFilters
+     * @covers ::getFiltersParameter
+     */
+    public function testMakeWithSize()
+    {
+        $this->generator->setFormat('{dirname}/{filters}/{basename}.{extension}');
+        $this->generator->setFiltersFormat('image/{filter}');
+        $this->generator->setFilterFormat('{key}-{value}');
+        $this->generator->setFilterSeparator('/');
+
+        $url = '/uploads/image/300x300/image.jpg';
+        $return = $this->generator->make('uploads/image.jpg', 300, 300);
+        $this->assertEquals($url, $return);
+
+        $url = '/uploads/image/300x_/image.jpg';
+        $return = $this->generator->make('uploads/image.jpg', 300, null);
+        $this->assertEquals($url, $return);
+
+        $url = '/uploads/image/_x300/image.jpg';
+        $return = $this->generator->make('uploads/image.jpg', null, 300);
+        $this->assertEquals($url, $return);
+    }
+
+    /**
      * Test making url with config
      * @test
      * @covers ::make
-     * @covers ::getUrlPartsFromFilters
+     * @covers ::getParametersFromFilters
      * @covers ::getFiltersParameter
      */
     public function testMakeWithConfig()
@@ -167,7 +225,7 @@ class UrlGeneratorTest extends TestCase
      * Test making url with route
      * @test
      * @covers ::make
-     * @covers ::getUrlPartsFromFilters
+     * @covers ::getParametersFromFilters
      * @covers ::getFiltersParameter
      */
     public function testMakeWithRoute()
@@ -175,7 +233,7 @@ class UrlGeneratorTest extends TestCase
         app('router')->image('medias/{pattern}', [
             'as' => 'image.test',
             'domain' => 'example.com',
-            'url' => [
+            'pattern' => [
                 'format' => '{dirname}/{filters}/{basename}.{extension}',
                 'filters_format' => 'image/{filter}',
                 'filter_format' => '{key}-{value}',

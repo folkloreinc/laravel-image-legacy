@@ -97,7 +97,7 @@ class RouteRegistrarTest extends TestCase
         ];
         $this->registrar->image('{pattern}', [
             'as' => 'image.test',
-            'url' => $urlConfig,
+            'pattern' => $urlConfig,
         ]);
 
         $route = app('router')->getRoutes()->getByName('image.test');

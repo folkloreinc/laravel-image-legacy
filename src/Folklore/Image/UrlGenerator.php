@@ -60,7 +60,6 @@ class UrlGenerator implements UrlGeneratorContract
         // Separate config from filters
         $configKeys = ['route', 'format', 'filters_format', 'filter_format', 'filter_separator'];
         $config = array_only($filters, $configKeys);
-        $filters = array_except($filters, $configKeys);
 
         // Get config from route, if specified
         if (isset($config['route'])) {
@@ -68,18 +67,19 @@ class UrlGenerator implements UrlGeneratorContract
                 ->getRoutes()
                 ->getByName($config['route']);
             $routeActions = isset($route) && is_object($route) ? $route->getAction() : $route;
-            $routeConfig = is_array($routeActions) ? array_get($routeActions, 'image.url', []) : [];
+            $routeConfig = is_array($routeActions) ? array_get($routeActions, 'image.pattern', []) : [];
             $config = array_merge($routeConfig, $config);
         }
 
-        // Create the url filters
+        // Create the url parameters from filters
+        $filters = array_except($filters, $configKeys);
         $filterFormat = array_get($config, 'filter_format');
-        $urlFilters = $this->getUrlFilters($filters, $filterFormat);
+        $urlParameters = $this->getParametersFromFilters($filters, $filterFormat);
 
         // Create the parameter with filters
         $filtersFormat = array_get($config, 'filters_format');
         $filterSeparator = array_get($config, 'filter_separator');
-        $filtersParameter = $this->getFiltersParameter($urlFilters, $filtersFormat, $filterSeparator);
+        $filtersParameter = $this->getFiltersParameter($urlParameters, $filtersFormat, $filterSeparator);
 
         // Build the url by replacing the placeholders
         $srcParts = pathinfo($src);
@@ -103,25 +103,6 @@ class UrlGenerator implements UrlGeneratorContract
         }
 
         return '/'.ltrim($url, '/');
-    }
-
-    protected function getUrlFilters($filters, $filterFormat = null)
-    {
-        $urlFilters = [];
-
-        $width = array_get($filters, 'width', -1);
-        $height = array_get($filters, 'height', -1);
-        if ($width !== -1 || $height !== -1) {
-            $urlFilters[] = ($width !== -1 ? $width:'_').'x'.($height !== -1 ? $height:'_');
-            $filters = array_except($filters, ['width', 'height']);
-        }
-
-        if ($filters && is_array($filters)) {
-            $filtersParts = $this->getUrlPartsFromFilters($filters, $filterFormat);
-            $urlFilters = array_merge($urlFilters, $filtersParts);
-        }
-
-        return $urlFilters;
     }
 
     /**
@@ -216,9 +197,59 @@ class UrlGenerator implements UrlGeneratorContract
         ];
     }
 
-    protected function getFiltersParameter($filters, $filtersFormat = null, $filterSeparator = null)
+    /**
+     * Get the parameters to be used in an url according to the filter_format
+     *
+     * @param array $filters The array of filters
+     * @param string $format The format of each filter parameter
+     * @return array $parameters
+     */
+    protected function getParametersFromFilters($filters, $format = null)
     {
-        if (!sizeof($filters)) {
+        if ($format === null) {
+            $format = $this->getFilterFormat();
+        }
+
+        $parameters = [];
+
+        // Size parameters are treated separatly
+        $width = array_get($filters, 'width', -1);
+        $height = array_get($filters, 'height', -1);
+        if ($width !== -1 || $height !== -1) {
+            $parameters[] = ($width !== -1 ? $width:'_').'x'.($height !== -1 ? $height:'_');
+            $filters = array_except($filters, ['width', 'height']);
+        }
+
+        // If the key as no value or is equal to
+        // true or null, only the key is added.
+        foreach ($filters as $key => $val) {
+            if (is_numeric($key)) {
+                $parameters[] = $val;
+            } elseif ($val === true || $val === null) {
+                $parameters[] = $key;
+            } else {
+                $val = is_array($val) ? implode(',', $val) : $val;
+                $filter = preg_replace('/\{\s*key\s*\}/i', $key, $format);
+                $filter = preg_replace('/\{\s*value\s*\}/i', $val, $filter);
+                $parameters[] = $filter;
+            }
+        }
+
+        return $parameters;
+    }
+
+    /**
+     * Join the parameters into the filters parameter according to filters_format
+     * and filter_separator
+     *
+     * @param array $parameters The array of filters parameters
+     * @param string $filtersFormat The format of the filters parameter
+     * @param string $filterSeparator The separator for each filter parameters
+     * @return string $parameter
+     */
+    protected function getFiltersParameter($parameters, $filtersFormat = null, $filterSeparator = null)
+    {
+        if (!sizeof($parameters)) {
             return '';
         }
 
@@ -230,33 +261,8 @@ class UrlGenerator implements UrlGeneratorContract
             $filterSeparator = $this->getFilterSeparator();
         }
 
-        $urlFilters = implode($filterSeparator, $filters);
+        $urlFilters = implode($filterSeparator, $parameters);
         return preg_replace('/\{\s*filter\s*\}/i', $urlFilters, $filtersFormat);
-    }
-
-    protected function getUrlPartsFromFilters($filters, $format = null)
-    {
-        if ($format === null) {
-            $format = $this->getFilterFormat();
-        }
-
-        // If the key as no value or is equal to
-        // true or null, only the key is added.
-        $parts = [];
-        foreach ($filters as $key => $val) {
-            if (is_numeric($key)) {
-                $parts[] = $val;
-            } elseif ($val === true || $val === null) {
-                $parts[] = $key;
-            } else {
-                $val = is_array($val) ? implode(',', $val):$val;
-                $filter = preg_replace('/\{\s*key\s*\}/i', $key, $format);
-                $filter = preg_replace('/\{\s*value\s*\}/i', $val, $filter);
-                $parts[] = $filter;
-            }
-        }
-
-        return $parts;
     }
 
     /**
