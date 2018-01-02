@@ -26,7 +26,7 @@ For this documentation, we will be using the facade, but any call can be changed
 
 ---
 
-#### `url($path, $width = null, $height = null, $filters = [])`
+### `url($path, $width = null, $height = null, $filters = [])`
 Generates an url containing the filters, according to the url format in the config (more info can be found in the [Url Generator](url.md) documentation)
 
 ##### Arguments
@@ -64,7 +64,7 @@ You can change the format of the url by changing the configuration in the `confi
 
 ---
 
-#### `make($path, $filters = [])`
+### `make($path, $filters = [])`
 Make an Image object from a path and apply the filters.
 
 ##### Arguments
@@ -97,7 +97,7 @@ $image = image('path/to/image.jpg', [
 
 ---
 
-#### `open($path)`
+### `open($path)`
 Open an image from a path, without applying any filters. The image is opened according to the default source specified in the `config/image.php` file.
 
 ##### Arguments
@@ -115,7 +115,7 @@ $image = Image::open('path/to/image.jpg');
 
 ---
 
-#### `save($image, $path)`
+### `save($image, $path)`
 Save an Image object at a given path on the default source.
 
 ##### Arguments
@@ -149,7 +149,7 @@ Image::source('cloud')->save($image, 'path/to/image-resized.jpg');
 
 ---
 
-#### `source($source)`
+### `source($source)`
 Get an Image manipulator for a specific source. (more info can be found in the [Sources](sources.md) documentation)
 
 ##### Arguments
@@ -160,7 +160,7 @@ Get an Image manipulator for a specific source. (more info can be found in the [
 
 ---
 
-#### `filter($name, $filter)`
+### `filter($name, $filter)`
 Add a filter to the manager that can be used by the `Image::url()` and `Image::make` method.
 
 ##### Arguments
@@ -218,9 +218,9 @@ $image = Image::make('path/to/image.jpg', [
 
 ---
 
-#### `parse($url, $config)`
+### `parse($url, $config)`
 
 
 ---
 
-#### `pattern($config)`
+### `pattern($config)`
