@@ -39,10 +39,13 @@ class ImagineManagerTest extends TestCase
      */
     public function testImagickDriver()
     {
-        if (extension_loaded('imagick')) {
-            $driver = $this->manager->driver('imagick');
-            $this->assertEquals(new ImagineImagick(), $driver);
+        if (!extension_loaded('imagick')) {
+            $this->markTestSkipped('The Imagick extension is not available.');
+            return;
         }
+
+        $driver = $this->manager->driver('imagick');
+        $this->assertEquals(new ImagineImagick(), $driver);
     }
 
     /**
@@ -53,10 +56,13 @@ class ImagineManagerTest extends TestCase
      */
     public function testGmagickDriver()
     {
-        if (extension_loaded('gmagick')) {
-            $driver = $this->manager->driver('gmagick');
-            $this->assertEquals(new ImagineGmagick(), $driver);
+        if (!extension_loaded('gmagick')) {
+            $this->markTestSkipped('The GMagick extension is not available.');
+            return;
         }
+
+        $driver = $this->manager->driver('gmagick');
+        $this->assertEquals(new ImagineGmagick(), $driver);
     }
 
     /**

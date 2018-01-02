@@ -70,8 +70,8 @@ This package also provides some common filters ready to use ([more on this](http
 :---------|:----------
  4.2.x    | 0.1.x
  5.0.x    | 0.2.x
- 5.1.x    | 0.3.x
- 5.2.x    | 0.3.x
+ >= 5.1.x    | 0.3.x
+ >= 5.1.x    | 1.0.x
 
 ## Installation
 
@@ -89,55 +89,37 @@ This package also provides some common filters ready to use ([more on this](http
 
 **1-** Require the package via Composer in your `composer.json`.
 ```json
-{
-	"require": {
-		"folklore/image": "0.3.*"
-	}
-}
+$ composer require folklore/image
 ```
 
-**2-** Run Composer to install or update the new requirement.
-
-```bash
-$ composer install
-```
-
-or
-
-```bash
-$ composer update
-```
-
-**3-** Add the service provider to your `app/config/app.php` file
+**2-** Add the service provider to your `app/config/app.php` file
 ```php
-'Folklore\Image\ImageServiceProvider',
+Folklore\Image\ImageServiceProvider::class,
 ```
 
-**4-** Add the facade to your `app/config/app.php` file
+**3-** Add the facade to your `app/config/app.php` file
 ```php
-'Image' => 'Folklore\Image\Facades\Image',
+'Image' => Folklore\Image\Facades\Image::class,
 ```
 
-**5-** Publish the configuration file and public files
+**4-** Publish the configuration file and public files
 
 ```bash
 $ php artisan vendor:publish --provider="Folklore\Image\ImageServiceProvider"
 ```
 
-**6-** Review the configuration file
+**5-** Review the configuration file
 
 ```
 app/config/image.php
 ```
 
 ## Documentation
-* [Complete documentation](https://github.com/Folkloreatelier/image/wiki)
-* [Configuration options](https://github.com/Folkloreatelier/image/wiki/Configuration-options)
+* [Complete documentation](docs/index.md)
+* [Configuration options](docs/config.md)
 
 ## Roadmap
 Here are some features we would like to add in the future. Feel free to collaborate and improve this library.
 
-* More built-in filters such as Brightness and Contrast
-* More configuration when serving images
 * Artisan command to manipulate images
 * Support for batch operations on multiple files

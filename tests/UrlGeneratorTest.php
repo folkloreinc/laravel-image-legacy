@@ -175,7 +175,7 @@ class UrlGeneratorTest extends TestCase
         app('router')->image('medias/{pattern}', [
             'as' => 'image.test',
             'domain' => 'example.com',
-            'pattern' => [
+            'url' => [
                 'format' => '{dirname}/{filters}/{basename}.{extension}',
                 'filters_format' => 'image/{filter}',
                 'filter_format' => '{key}-{value}',

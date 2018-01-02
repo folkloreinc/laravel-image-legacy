@@ -30,6 +30,7 @@ class ImageTest extends TestCase
     public function testConstructor()
     {
         $image = new Image(app());
+        $this->assertInstanceOf(Image::class, $image);
     }
 
     /**

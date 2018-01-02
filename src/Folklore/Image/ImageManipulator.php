@@ -37,7 +37,6 @@ class ImageManipulator implements ImageManipulatorContract
     public function make($path, $options = [])
     {
         $configKeys = ['memory_limit'];
-        $sizeKeys = ['width', 'height', 'crop'];
 
         //Get config
         $configOptions = array_only($options, $configKeys);
@@ -57,35 +56,8 @@ class ImageManipulator implements ImageManipulatorContract
         }
 
         // Merge array filters
-        $filters = array_except($options, array_merge($configKeys));
-        if (sizeof($filters)) {
-            $newFilters = [];
-            foreach ($filters as $key => $arguments) {
-                $filter = $this->manager->getFilter($key);
-                if (is_array($filter)) {
-                    $newFilters = array_merge($newFilters, $filter);
-                } else {
-                    $newFilters[$key] = $arguments;
-                }
-            }
-            $filters = $newFilters;
-        }
-
-        // Resize only if one or both width and height values are set.
-        $width = array_get($filters, 'width', null);
-        $height = array_get($filters, 'height', null);
-        if ($width !== null || $height !== null) {
-            $crop = array_get($filters, 'crop', false);
-            $thumbnail = [
-                'width' => $width,
-                'height' => $height,
-                'crop' => $crop
-            ];
-            $filters = array_merge([
-                'thumbnail' => $thumbnail
-            ], $filters);
-        }
-        $filters = array_except($filters, array_merge($sizeKeys));
+        $filtersOptions = array_except($options, array_merge($configKeys));
+        $filters = $this->getFiltersFromOptions($filtersOptions);
 
         // Check if all filters exists
         foreach ($filters as $key => $value) {
@@ -166,6 +138,46 @@ class ImageManipulator implements ImageManipulatorContract
             'height' => $height,
             'crop' => $crop
         ]);
+    }
+
+    /**
+     * Get filters from options
+     *
+     * @param  array $options Options
+     * @return array $filters
+     */
+    protected function getFiltersFromOptions($options)
+    {
+        // Get filters and merge if it's an array
+        $newFilters = [];
+        foreach ($options as $key => $arguments) {
+            $filter = $this->manager->getFilter($key);
+            if (is_array($filter)) {
+                $newFilters = array_merge($newFilters, $filter);
+            } else {
+                $newFilters[$key] = $arguments;
+            }
+        }
+        $filters = $newFilters;
+
+        // Convert width, height, crop options to thumbnail filter
+        $sizeKeys = ['width', 'height', 'crop'];
+        $width = array_get($filters, 'width', null);
+        $height = array_get($filters, 'height', null);
+        if ($width !== null || $height !== null) {
+            $crop = array_get($filters, 'crop', false);
+            $thumbnail = [
+                'width' => $width,
+                'height' => $height,
+                'crop' => $crop
+            ];
+            $filters = array_merge([
+                'thumbnail' => $thumbnail
+            ], $filters);
+        }
+        $filters = array_except($filters, array_merge($sizeKeys));
+
+        return $filters;
     }
 
     /**

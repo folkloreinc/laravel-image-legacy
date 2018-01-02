@@ -56,7 +56,7 @@ class ImageServiceProvider extends ServiceProvider
 
         $this->publishes([
             $routesFile => is_dir(base_path('routes')) ?
-                base_path('routes/images.php'):app_path('Http/routesImages.php')
+                base_path('routes/images.php') : app_path('Http/routesImages.php')
         ], 'routes');
     }
 
@@ -233,7 +233,7 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerMiddlewares()
     {
-        $this->app->bind('image.middleware.cache', '\Folklore\Image\Http\CacheMiddleware');
+        $this->app->bind('image.middleware.cache', \Folklore\Image\Http\CacheMiddleware::class);
     }
 
     /**

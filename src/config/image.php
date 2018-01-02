@@ -128,7 +128,7 @@ return array(
     | Routes
     |--------------------------------------------------------------------------
     |
-    | You can define routes to handle images.
+    | Default configuration for image routes. See routes/image.php
     |
     */
     'routes' => [

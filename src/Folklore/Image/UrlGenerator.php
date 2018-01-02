@@ -44,11 +44,17 @@ class UrlGenerator implements UrlGeneratorContract
         // Extract the path from a URL if a URL was provided instead of a path
         $src = parse_url($src, PHP_URL_PATH);
 
-        // If width filter is an array, use it as filters
+        // If width is an array, use it as filters
         if (is_array($width)) {
             $filters = $width;
             $width = null;
             $height = null;
+        }
+        if ($width !== null) {
+            $filters['width'] = $width;
+        }
+        if ($height !== null) {
+            $filters['height'] = $height;
         }
 
         // Separate config from filters
@@ -61,26 +67,14 @@ class UrlGenerator implements UrlGeneratorContract
             $route = $this->router
                 ->getRoutes()
                 ->getByName($config['route']);
-            $routeConfig = array_get($route ? $route->getAction():[], 'image.pattern', []);
+            $routeActions = isset($route) && is_object($route) ? $route->getAction() : $route;
+            $routeConfig = is_array($routeActions) ? array_get($routeActions, 'image.url', []) : [];
             $config = array_merge($routeConfig, $config);
         }
 
-        // Create the url filters. Add the size first and the filters after
-        $urlFilters = array();
-
-        $width = $width !== null ? $width:array_get($filters, 'width', -1);
-        $height = $height !== null ? $height:array_get($filters, 'height', -1);
-        if ($width !== -1 || $height !== -1) {
-            $urlFilters[] = ($width !== -1 ? $width:'_').'x'.($height !== -1 ? $height:'_');
-            unset($filters['width']);
-            unset($filters['height']);
-        }
-
-        if ($filters && is_array($filters)) {
-            $filterFormat = array_get($config, 'filter_format');
-            $filtersParts = $this->getUrlPartsFromFilters($filters, $filterFormat);
-            $urlFilters = array_merge($urlFilters, $filtersParts);
-        }
+        // Create the url filters
+        $filterFormat = array_get($config, 'filter_format');
+        $urlFilters = $this->getUrlFilters($filters, $filterFormat);
 
         // Create the parameter with filters
         $filtersFormat = array_get($config, 'filters_format');
@@ -109,6 +103,25 @@ class UrlGenerator implements UrlGeneratorContract
         }
 
         return '/'.ltrim($url, '/');
+    }
+
+    protected function getUrlFilters($filters, $filterFormat = null)
+    {
+        $urlFilters = [];
+
+        $width = array_get($filters, 'width', -1);
+        $height = array_get($filters, 'height', -1);
+        if ($width !== -1 || $height !== -1) {
+            $urlFilters[] = ($width !== -1 ? $width:'_').'x'.($height !== -1 ? $height:'_');
+            $filters = array_except($filters, ['width', 'height']);
+        }
+
+        if ($filters && is_array($filters)) {
+            $filtersParts = $this->getUrlPartsFromFilters($filters, $filterFormat);
+            $urlFilters = array_merge($urlFilters, $filtersParts);
+        }
+
+        return $urlFilters;
     }
 
     /**
