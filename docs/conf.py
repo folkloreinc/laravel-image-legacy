@@ -20,9 +20,15 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-import recommonmark
 from recommonmark.parser import CommonMarkParser
+import recommonmark
 from recommonmark.transform import AutoStructify
+from sphinx.highlighting import lexers
+from pygments.lexers.web import PhpLexer
+
+lexers['php'] = PhpLexer(startinline=True, linenos=1)
+lexers['php-annotations'] = PhpLexer(startinline=True, linenos=1)
+primary_domain = 'php'
 
 source_parsers = {
     '.md': CommonMarkParser,
@@ -177,5 +183,9 @@ texinfo_documents = [
 # At the bottom of conf.py
 def setup(app):
     app.add_config_value('recommonmark_config', {
+        'url_resolver': lambda url: github_doc_root + url,
+        'auto_toc_tree_section': 'Contents',
+        'enable_eval_rst': True,
+        'enable_auto_doc_ref': True,
     }, True)
     app.add_transform(AutoStructify)
