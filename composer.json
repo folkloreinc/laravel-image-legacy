@@ -51,5 +51,15 @@
             "src/Folklore/Image/helpers.php"
         ]
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Folklore\\Image\\ImageServiceProvider"
+            ],
+            "aliases": {
+                "Image": "Folklore\\Image\\Facades\\Image"
+            }
+        }
+    }
 }
