@@ -54,7 +54,7 @@ class RouteRegistrar
 
         // Here we check if the route contains any url config. If it does, we
         // create a route pattern to catch it
-        $patternOptions = array_get($config, 'pattern', []);
+        $patternOptions = array_get($config, 'url', []);
         if (sizeof($patternOptions)) {
             $generatedPatternName = 'image_pattern_'.preg_replace(
                 '/[^a-z0-9]+/i',
@@ -69,7 +69,7 @@ class RouteRegistrar
         }
 
         $routePath = preg_replace('/\{\s*pattern\s*\}/i', '{'.$patternName.'}', $path);
-        
+
         return $this->router->get($routePath, array(
             'as' => $as,
             'domain' => $domain === null ? '':$domain,
