@@ -176,4 +176,6 @@ texinfo_documents = [
 
 # At the bottom of conf.py
 def setup(app):
+    app.add_config_value('recommonmark_config', {
+    }, True)
     app.add_transform(AutoStructify)
