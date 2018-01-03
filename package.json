@@ -27,7 +27,24 @@
         "type": "git",
         "url": "git+https://github.com/Folkloreatelier/laravel-image.git"
     },
-    "author": "Folklore <info@atelierfolklore.ca>",
+    "author": {
+        "name": "Folklore",
+        "email": "info@atelierfolklore.ca"
+    },
+    "contributors": [
+        {
+            "name": "David Mongeau-Petitpas",
+            "email": "dmp@atelierfolklore.ca"
+        },
+        {
+            "name": "Nicolas Roy-Bourdages",
+            "email": "nrb@atelierfolklore.ca"
+        },
+        {
+            "name": "Hugo St-Onge",
+            "email": "hso@atelierfolklore.ca"
+        }
+    ],
     "license": "ISC",
     "bugs": {
         "url": "https://github.com/Folkloreatelier/laravel-image/issues"
