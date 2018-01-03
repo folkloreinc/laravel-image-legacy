@@ -20,7 +20,7 @@ The package provides many built-in filters such as: Thumbnail, Rotation, Coloriz
 
 This will translate to: (assuming you haven't changed the default url format in `config/image.php`)
 ```html
-<img src="/path/to/your/image-image(100x100-crop).jpg" />
+<img src="/path/to/your/image-filters(100x100-crop).jpg" />
 ```
 
 If you call this url, the router will catch the request and respond with a cropped 100x100 version of your image.
@@ -28,6 +28,13 @@ If you call this url, the router will catch the request and respond with a cropp
 ### Creating a new thumbnail
 
 ```php
+// Using the facade
+$thumbnail = Image::make('path/to/your/image.jpg', [
+    'width' => 100,
+    'height' => 100,
+    'crop' => true
+]);
+
 // Using the helper
 $thumbnail = image()->make('path/to/your/image.jpg', [
     'width' => 100,
@@ -37,13 +44,6 @@ $thumbnail = image()->make('path/to/your/image.jpg', [
 
 // or with the shortcut
 $thumbnail = image('path/to/your/image.jpg', [
-    'width' => 100,
-    'height' => 100,
-    'crop' => true
-]);
-
-// Or using the facade
-$thumbnail = Image::make('path/to/your/image.jpg', [
     'width' => 100,
     'height' => 100,
     'crop' => true
