@@ -77,7 +77,8 @@ $router->image('{pattern}', [
 
 ---
 
-## <a name="make" id="make"></a>`make($path, $width = null, $height = null, $filters = [])`
+<a name="make" id="make"></a>
+## `make($path, $width = null, $height = null, $filters = [])`
 Generates an url containing the filters, according to the url format in the config
 
 ##### Arguments
@@ -119,5 +120,24 @@ echo $urlGenerator->make('path/to/image.jpg', [
 // '/path/to/image-filters-300x300-rotate(180).jpg'
 ```
 
+---
+
+<a name="pattern" id="pattern"></a>
+## `pattern($config = [])`
+Generates a pattern, according to the url format in the config
+
+##### Arguments
+- `(array)` `$config` An array of config
+
+##### Return
+`(string)` The pattern to match urls
+
+##### Examples
+
+```php
+$urlGenerator = app('image.url');
+$pattern = $urlGenerator->pattern();
+preg_match($pattern, '/path/to/image-filters(300x300).jpg'); // true
+```
 
 ---
