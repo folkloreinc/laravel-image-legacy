@@ -15,7 +15,7 @@
     },
     "scripts": {
         "test": "jest",
-        "clean": "rm -rf js/dist && rm -rf js/lib && rm -rf js/es",
+        "clean": "rm -rf js/lib && rm -rf js/es",
         "webpack:dist": "node -r babel-register ./node_modules/.bin/webpack --config ./webpack.config.js --progress --colors",
         "webpack": "npm run webpack:dist",
         "babel:es": "BABEL_ENV=ejs ./node_modules/.bin/babel js/src --out-dir js/es --ignore __tests__",
