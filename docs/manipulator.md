@@ -2,7 +2,7 @@ Image Manipulator
 ================================================
 The Image Manipulator is used to interact with image files on a specific source. When you call `image()->source('local')`, it returns an ImageManipulator.
 
-You can access it with from the Image facade:
+You can access it from the Image facade:
 ```php
 $manipulator = Image::source(); // default source
 
