@@ -21,7 +21,8 @@
         "babel:es": "BABEL_ENV=ejs ./node_modules/.bin/babel js/src --out-dir js/es --ignore story.js,test.js",
         "babel:cjs": "BABEL_ENV=cjs ./node_modules/.bin/babel js/src --out-dir js/lib --ignore story.js,test.js",
         "babel": "npm run babel:es && npm run babel:cjs",
-        "build": "npm run webpack && npm run babel"
+        "build": "npm run webpack && npm run babel",
+        "prepare": "npm run clean && npm run build"
     },
     "repository": {
         "type": "git",
