@@ -6,33 +6,13 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | Default Image Driver
-    |--------------------------------------------------------------------------
-    |
-    | This option controls the default image "driver" used by Imagine library
-    | to manipulate images.
-    |
-    | Supported: "gd", "imagick", "gmagick"
-    |
-    */
-    'driver' => 'gd',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Memory limit
-    |--------------------------------------------------------------------------
-    |
-    | When manipulating an image, the memory limit is increased to this value
-    |
-    */
-    'memory_limit' => '128M',
-
-    /*
-    |--------------------------------------------------------------------------
     | Image Filters
     |--------------------------------------------------------------------------
     |
-    |
+    | The list of filters you can use when making an image or generating an url.
+    | There is some built-in filters, and you can add or replace any. It is also
+    | possible to declare a filter with an array or a closure instead of a Filter
+    | Class.
     |
     */
     'filters' => [
@@ -51,7 +31,8 @@ return array(
     | Default Source
     |--------------------------------------------------------------------------
     |
-    | This option define the default source to be used by the Image facade.
+    | This option define the default source to be used by the Image facade. The
+    | source determine where the image files are read and saved.
     |
     */
     'source' => 'public',
@@ -63,7 +44,7 @@ return array(
     |
     | The list of sources where you store images.
     |
-    | Supported driver: "local", "filesystem", "url"
+    | Supported driver: "local", "filesystem"
     |
     */
     'sources' => [
@@ -98,11 +79,13 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | URL
+    | URL Generator
     |--------------------------------------------------------------------------
     |
-    | The URL Generator configuration. These are the defaults values
-    | you can overide these values in each routes using the `pattern` parameter.
+    | The URL Generator configuration is used when generating an image url
+    | and by the router to generate a pattern for catching image requests.
+    | These are the defaults values and you can overide it in each routes or
+    | when generating an url using the `pattern` parameter.
     |
     */
     'url' => [
@@ -114,7 +97,7 @@ return array(
         // url `format` above. The `{filter}` placeholder will be replaced by
         // each filter according to the `filter_format` and joined
         // by the `filter_separator`.
-        'filters_format' => '-image({filter})',
+        'filters_format' => '-filters({filter})',
 
         // The format of a filter.
         'filter_format' => '{key}({value})',
@@ -145,11 +128,34 @@ return array(
         // The controller serving the images
         'controller' => '\Folklore\Image\Http\ImageController@serve',
 
-        // The name of the route pattern that will be created.
+        // The name of the pattern that will be added to the Laravel Router.
         'pattern_name' => 'image_pattern',
 
-        // The middleware used when a route as cached enabled
+        // The middleware used when a route as cache enabled
         'cache_middleware' => 'image.middleware.cache'
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Image Driver
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the default image "driver" used by Imagine library
+    | to manipulate images.
+    |
+    | Supported: "gd", "imagick", "gmagick"
+    |
+    */
+    'driver' => 'gd',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Memory limit
+    |--------------------------------------------------------------------------
+    |
+    | When manipulating an image, the memory limit is increased to this value
+    |
+    */
+    'memory_limit' => '128M',
 
 );

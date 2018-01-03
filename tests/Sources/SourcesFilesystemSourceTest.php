@@ -24,16 +24,16 @@ class SourcesFilesystemSourceTest extends TestCase
             unlink(public_path('image-test.jpg'));
         }
 
-        if (file_exists(public_path('image-image(300x300).jpg'))) {
-            unlink(public_path('image-image(300x300).jpg'));
+        if (file_exists(public_path('image-filters(300x300).jpg'))) {
+            unlink(public_path('image-filters(300x300).jpg'));
         }
 
         if (file_exists(public_path('filesystem/image-test.jpg'))) {
             unlink(public_path('filesystem/image-test.jpg'));
         }
 
-        if (file_exists(public_path('filesystem/image-image(300x300).jpg'))) {
-            unlink(public_path('filesystem/image-image(300x300).jpg'));
+        if (file_exists(public_path('filesystem/image-filters(300x300).jpg'))) {
+            unlink(public_path('filesystem/image-filters(300x300).jpg'));
         }
 
         parent::tearDown();
@@ -80,12 +80,12 @@ class SourcesFilesystemSourceTest extends TestCase
      */
     public function testGetFilesFromPath()
     {
-        if (!file_exists(public_path('filesystem/image-image(300x300).jpg'))) {
-            copy(public_path('filesystem/image.jpg'), public_path('filesystem/image-image(300x300).jpg'));
+        if (!file_exists(public_path('filesystem/image-filters(300x300).jpg'))) {
+            copy(public_path('filesystem/image.jpg'), public_path('filesystem/image-filters(300x300).jpg'));
         }
 
         $originalFiles = [
-            '/image-image(300x300).jpg',
+            '/image-filters(300x300).jpg',
             '/image.jpg',
             '/image.png',
             '/wrong.jpg'
@@ -96,7 +96,7 @@ class SourcesFilesystemSourceTest extends TestCase
         $this->assertEquals($originalFiles, $files);
 
         $originalFiles = [
-            '/image-image(300x300).jpg',
+            '/image-filters(300x300).jpg',
             '/image.jpg'
         ];
         $files = $this->source->getFilesFromPath('image.jpg');

@@ -15,7 +15,7 @@ class Image {
     constructor(opts) {
         this.options = {
             format: '{dirname}/{basename}{filters}.{extension}',
-            filters_format: '-image({filter})',
+            filters_format: 'filters({filter})',
             filter_format: '{key}({value})',
             filter_separator: '-',
             ...opts,

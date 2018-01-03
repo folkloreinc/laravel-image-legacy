@@ -24,8 +24,8 @@ class SourcesLocalSourceTest extends TestCase
             unlink(public_path('image-test.jpg'));
         }
 
-        if (file_exists(public_path('image-image(300x300).jpg'))) {
-            unlink(public_path('image-image(300x300).jpg'));
+        if (file_exists(public_path('image-filters(300x300).jpg'))) {
+            unlink(public_path('image-filters(300x300).jpg'));
         }
 
         parent::tearDown();
@@ -86,12 +86,12 @@ class SourcesLocalSourceTest extends TestCase
      */
     public function testGetFilesFromPath()
     {
-        if (!file_exists(public_path('image-image(300x300).jpg'))) {
-            copy(public_path('image.jpg'), public_path('image-image(300x300).jpg'));
+        if (!file_exists(public_path('image-filters(300x300).jpg'))) {
+            copy(public_path('image.jpg'), public_path('image-filters(300x300).jpg'));
         }
 
         $originalFiles = [
-            public_path('image-image(300x300).jpg'),
+            public_path('image-filters(300x300).jpg'),
             public_path('image.jpg'),
             public_path('image.png'),
             public_path('image_small.jpg'),
@@ -103,7 +103,7 @@ class SourcesLocalSourceTest extends TestCase
         $this->assertEquals($originalFiles, $files);
 
         $originalFiles = [
-            public_path('image-image(300x300).jpg'),
+            public_path('image-filters(300x300).jpg'),
             public_path('image.jpg')
         ];
         $files = $this->source->getFilesFromPath('image.jpg');

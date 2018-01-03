@@ -3,19 +3,19 @@ import Image from '../Image';
 test('generating url with size', () => {
     const image = new Image();
     const url = image.url('path/to/image.jpg', 300, 300);
-    expect(url).toEqual('/path/to/image-image(300x300).jpg');
+    expect(url).toEqual('/path/to/image-filters(300x300).jpg');
 });
 
 test('generating url with string filter', () => {
     const image = new Image();
     const url = image.url('path/to/image.jpg', 'small');
-    expect(url).toEqual('/path/to/image-image(small).jpg');
+    expect(url).toEqual('/path/to/image-filters(small).jpg');
 });
 
 test('generating url with array filter', () => {
     const image = new Image();
     const url = image.url('path/to/image.jpg', ['small', 'bw']);
-    expect(url).toEqual('/path/to/image-image(small-bw).jpg');
+    expect(url).toEqual('/path/to/image-filters(small-bw).jpg');
 });
 
 test('generating url with filters object', () => {
@@ -24,7 +24,7 @@ test('generating url with filters object', () => {
         small: true,
         rotate: 90,
     });
-    expect(url).toEqual('/path/to/image-image(small-rotate(90)).jpg');
+    expect(url).toEqual('/path/to/image-filters(small-rotate(90)).jpg');
 });
 
 test('generating url with filters object and size', () => {
@@ -33,7 +33,7 @@ test('generating url with filters object and size', () => {
         small: true,
         rotate: 90,
     });
-    expect(url).toEqual('/path/to/image-image(300x300-small-rotate(90)).jpg');
+    expect(url).toEqual('/path/to/image-filters(300x300-small-rotate(90)).jpg');
 });
 
 test('generating url with config', () => {

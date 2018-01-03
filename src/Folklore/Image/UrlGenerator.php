@@ -13,7 +13,7 @@ class UrlGenerator implements UrlGeneratorContract
 
     protected $format = '{dirname}/{basename}{filters}.{extension}';
 
-    protected $filtersFormat = '-image({filter})';
+    protected $filtersFormat = '-filters({filter})';
 
     protected $filterFormat = '{key}({value})';
 
@@ -42,7 +42,9 @@ class UrlGenerator implements UrlGeneratorContract
         }
 
         // Extract the path from a URL if a URL was provided instead of a path
-        $src = parse_url($src, PHP_URL_PATH);
+        $srcParts = parse_url($src);
+        $host = array_get($srcParts, 'host');
+        $path = array_get($srcParts, 'path');
 
         // If width is an array, use it as filters
         if (is_array($width)) {
@@ -58,7 +60,7 @@ class UrlGenerator implements UrlGeneratorContract
         }
 
         // Separate config from filters
-        $configKeys = ['route', 'format', 'filters_format', 'filter_format', 'filter_separator'];
+        $configKeys = ['route', 'pattern', 'host'];
         $config = array_only($filters, $configKeys);
 
         // Get config from route, if specified
@@ -67,33 +69,41 @@ class UrlGenerator implements UrlGeneratorContract
                 ->getRoutes()
                 ->getByName($config['route']);
             $routeActions = isset($route) && is_object($route) ? $route->getAction() : $route;
-            $routeConfig = is_array($routeActions) ? array_get($routeActions, 'image.pattern', []) : [];
+            $routeConfig = is_array($routeActions) ? array_get($routeActions, 'image', []) : [];
+            $routeDomain = is_array($routeActions) ? array_get($routeActions, 'domain', null) : null;
+            if (!is_null($routeDomain)) {
+                $routeConfig['host'] = $routeDomain;
+            }
             $config = array_merge($routeConfig, $config);
         }
 
         // Create the url parameters from filters
         $filters = array_except($filters, $configKeys);
-        $filterFormat = array_get($config, 'filter_format');
+        $filterFormat = array_get($config, 'pattern.filter_format');
         $urlParameters = $this->getParametersFromFilters($filters, $filterFormat);
 
         // Create the parameter with filters
-        $filtersFormat = array_get($config, 'filters_format');
-        $filterSeparator = array_get($config, 'filter_separator');
+        $filtersFormat = array_get($config, 'pattern.filters_format');
+        $filterSeparator = array_get($config, 'pattern.filter_separator');
         $filtersParameter = $this->getFiltersParameter($urlParameters, $filtersFormat, $filterSeparator);
 
         // Build the url by replacing the placeholders
-        $srcParts = pathinfo($src);
+        $srcParts = pathinfo($path);
         $placeholders = [
-            'host' => rtrim(array_get($config, 'host', ''), '/'),
+            'host' => array_get($config, 'host', $host),
             'dirname' => $srcParts['dirname'] !== '.' ? trim($srcParts['dirname'], '/'):'',
             'basename' => $srcParts['filename'],
             'filename' => $srcParts['filename'].'.'.$srcParts['extension'],
             'extension' => $srcParts['extension'],
             'filters' => $filtersParameter
         ];
-        $url = array_get($config, 'format', $this->getFormat());
+        $url = array_get($config, 'pattern.format', $this->getFormat());
         foreach ($placeholders as $key => $replace) {
-            $url = preg_replace('/\{\s*'.$key.'\s*\}/i', $replace, $url);
+            $url = preg_replace(
+                '/\{\s*'.$key.'\s*\}/i',
+                !is_null($replace) ? $replace : '',
+                $url
+            );
         }
 
         // If a route is specified, use it to generate the url.
@@ -102,7 +112,16 @@ class UrlGenerator implements UrlGeneratorContract
             return str_replace('__URL__', ltrim($url, '/'), $routeUrl);
         }
 
-        return '/'.ltrim($url, '/');
+        // If there was an host
+        $host = '/';
+        if (!is_null($placeholders['host'])) {
+            $host = $placeholders['host'];
+            $scheme = array_get($srcParts, 'scheme', 'http');
+            $host = !preg_match('/^https?\:\/\//i', $url) ?
+                $scheme.'://'.$host.'/' : '';
+        }
+
+        return $host.ltrim($url, '/');
     }
 
     /**

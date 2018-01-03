@@ -20,10 +20,12 @@ class UrlGeneratorTest extends TestCase
         $this->generator = new UrlGenerator(app('image'), app('router'));
 
         $this->config = [
-            'format' => '{dirname}/{basename}{filters}.{extension}',
-            'filters_format' => '-filters({filter})',
-            'filter_format' => '{key}({value})',
-            'filter_separator' => '-'
+            'pattern' => [
+                'format' => '{dirname}/{basename}{filters}.{extension}',
+                'filters_format' => '-filters({filter})',
+                'filter_format' => '{key}({value})',
+                'filter_separator' => '-'
+            ]
         ];
 
         $this->filters = [
@@ -56,7 +58,7 @@ class UrlGeneratorTest extends TestCase
      */
     public function testGetFiltersFormat()
     {
-        $this->assertEquals('-image({filter})', $this->generator->getFiltersFormat());
+        $this->assertEquals('-filters({filter})', $this->generator->getFiltersFormat());
         $value = 'image/{filter}';
         $this->generator->setFiltersFormat($value);
         $this->assertEquals($value, $this->generator->getFiltersFormat());
@@ -176,6 +178,34 @@ class UrlGeneratorTest extends TestCase
 
         $url = '/uploads/image/300x300/rotate-90/negative/image.jpg';
         $return = $this->generator->make('uploads/image.jpg', $this->filters);
+        $this->assertEquals($url, $return);
+    }
+
+    /**
+     * Test making url with an domain
+     * @test
+     * @covers ::make
+     * @covers ::getParametersFromFilters
+     * @covers ::getFiltersParameter
+     */
+    public function testMakeWithDomain()
+    {
+        $this->generator->setFormat('{dirname}/{filters}/{basename}.{extension}');
+        $this->generator->setFiltersFormat('image/{filter}');
+        $this->generator->setFilterFormat('{key}-{value}');
+        $this->generator->setFilterSeparator('/');
+
+        $url = 'http://cdn.example.com/uploads/image/300x300/rotate-90/negative/image.jpg';
+        $return = $this->generator->make('http://cdn.example.com/uploads/image.jpg', $this->filters);
+        $this->assertEquals($url, $return);
+
+        $this->generator->setFormat('https://{host}/{dirname}/{filters}/{basename}.{extension}');
+        $url = 'https://cdn.example.com/uploads/image/300x300/image.jpg';
+        $return = $this->generator->make('uploads/image.jpg', [
+            'width' => 300,
+            'height' => 300,
+            'host' => 'cdn.example.com'
+        ]);
         $this->assertEquals($url, $return);
     }
 
