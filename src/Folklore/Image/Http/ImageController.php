@@ -51,8 +51,6 @@ class ImageController extends BaseController
             return abort(404);
         } catch (FileMissingException $e) {
             return abort(404);
-        } catch (Exception $e) {
-            return abort(500);
         }
     }
 }

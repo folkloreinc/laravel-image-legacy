@@ -2,7 +2,7 @@
 
 use Folklore\Image\ImageManipulator;
 use Folklore\Image\Filters\Rotate as RotateFilter;
-use Folklore\Image\Filters\Thumbnail as ThumbnailFilter;
+use Folklore\Image\Filters\Resize as ResizeFilter;
 use Imagine\Image\ImageInterface;
 
 /**
@@ -85,7 +85,7 @@ class ImageManipulatorTest extends TestCase
         $this->manipulator->setSource(app('image.source')->driver('local'));
 
         $returnImage = $this->manipulator->open('image.jpg');
-        $returnImage = with(new ThumbnailFilter())->apply($returnImage, [
+        $returnImage = with(new ResizeFilter())->apply($returnImage, [
             'width' => 100,
             'height' => 90,
             'crop' => false
@@ -100,16 +100,16 @@ class ImageManipulatorTest extends TestCase
             ->method('apply')
             ->willReturn($returnImage);
 
-        $thumbnailFilterMock = $this->getMockBuilder(ThumbnailFilter::class)
+        $resizeFilterMock = $this->getMockBuilder(ResizeFilter::class)
             ->setMethods(['apply'])
             ->getMock();
 
-        $thumbnailFilterMock->expects($this->once())
+        $resizeFilterMock->expects($this->once())
             ->method('apply')
             ->willReturn($returnImage);
 
         app('image')->filter('rotate', $rotateFilterMock);
-        app('image')->filter('thumbnail', $thumbnailFilterMock);
+        app('image')->filter('resize', $resizeFilterMock);
 
         $this->manipulator->setSource(app('image.source')->driver('local'));
 

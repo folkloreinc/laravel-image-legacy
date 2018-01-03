@@ -4,13 +4,14 @@ if (! function_exists('image')) {
     /**
      * Throw an HttpException with the given data.
      *
-     * @param  string    $path The path of the image
+     * @param  string   $path The path of the image
      * @param  array    $options The manipulations to apply on the image
      * @return \Imagine\Image\ImageInterface $image
      */
-    function image($path, $options = [])
+    function image($path = null, $options = [])
     {
-        return app('image')->make($path, $options);
+        $image = app('image');
+        return is_null($path) ? $image : $image->make($path, $options);
     }
 }
 

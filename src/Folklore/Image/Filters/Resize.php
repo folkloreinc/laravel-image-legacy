@@ -7,7 +7,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
-class Thumbnail implements FilterWithValueContract
+class Resize implements FilterWithValueContract
 {
     public function apply(ImageInterface $image, $value = [])
     {

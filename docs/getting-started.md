@@ -18,22 +18,56 @@ The package provides many built-in filters such as: Thumbnail, Rotation, Coloriz
 <img src="{{ Image::url('path/to/your/image.jpg', 100, 100, ['crop' => true]) }}" />
 ```
 
-This will translate to: (assuming you haven't changed the default url format)
+This will translate to: (assuming you haven't changed the default url format in `config/image.php`)
 ```html
 <img src="/path/to/your/image-image(100x100-crop).jpg" />
 ```
 
 If you call this url, the router will catch the request and respond with a cropped 100x100 version of your image.
 
+### Creating a new thumbnail
+
+```php
+// Using the helper
+$thumbnail = image()->make('path/to/your/image.jpg', [
+    'width' => 100,
+    'height' => 100,
+    'crop' => true
+]);
+
+// or with the shortcut
+$thumbnail = image('path/to/your/image.jpg', [
+    'width' => 100,
+    'height' => 100,
+    'crop' => true
+]);
+
+// Or using the facade
+$thumbnail = Image::make('path/to/your/image.jpg', [
+    'width' => 100,
+    'height' => 100,
+    'crop' => true
+]);
+
+// Save the image on the default source (look for `'source'` in `config/image.php`)
+image()->save($thumbnail, 'path/to/your/new-image.jpg');
+
+// Or save it on the cloud source
+image()->source('cloud')
+    ->save($thumbnail, 'path/to/your/new-image.jpg');
+```
+
 ### Definining a custom filter
 While writing all the filters you want in the `url()` method works, you will probably want to declare a custom filter that "group" some values together. This way you can reuse it, and instead of remembering all the values, you can simply apply your filter, by it's name.
 
-To do this, the simplest way is adding a custom filter as an array. In your AppServiceProvider, add the following lines in the `boot()` method.
+To do this, the simplest way is adding a custom filter as an array. In your `AppServiceProvider`, add the following lines in the `boot()` method.
 
 ```php
 public function boot()
 {
     parent::boot();
+
+    // ...
 
     $this->app['image']->filter('thumbnail', [
         'width' => 100,
@@ -50,6 +84,11 @@ Now you can simply use the filter by it's name
 
 // Or using the facade
 <img src="{{ Image::url('path/to/your/image.jpg', 'thumbnail') }}" />
+```
+
+Or combine with others
+```php
+<img src="{{ image_url('path/to/your/image.jpg', ['thumbnail', 'greyscale']) }}" />
 ```
 
 ## Advanced Usage

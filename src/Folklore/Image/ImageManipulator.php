@@ -7,7 +7,7 @@ use Folklore\Image\Contracts\FilterWithValue as FilterWithValueContract;
 use Folklore\Image\Exception\FileMissingException;
 use Folklore\Image\Exception\FilterMissingException;
 use Folklore\Image\Exception\FormatException;
-use Folklore\Image\Filters\Thumbnail;
+use Folklore\Image\Filters\Resize;
 use Folklore\Image\Image;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
@@ -133,7 +133,7 @@ class ImageManipulator implements ImageManipulatorContract
         }
 
         //Create the thumbnail
-        return with(new Thumbnail())->apply($image, [
+        return with(new Resize())->apply($image, [
             'width' => $width,
             'height' => $height,
             'crop' => $crop
@@ -160,20 +160,17 @@ class ImageManipulator implements ImageManipulatorContract
         }
         $filters = $newFilters;
 
-        // Convert width, height, crop options to thumbnail filter
+        // Convert width, height, crop options to resize filter
         $sizeKeys = ['width', 'height', 'crop'];
         $width = array_get($filters, 'width', null);
         $height = array_get($filters, 'height', null);
         if ($width !== null || $height !== null) {
             $crop = array_get($filters, 'crop', false);
-            $thumbnail = [
+            $filters['resize'] = [
                 'width' => $width,
                 'height' => $height,
                 'crop' => $crop
             ];
-            $filters = array_merge([
-                'thumbnail' => $thumbnail
-            ], $filters);
         }
         $filters = array_except($filters, array_merge($sizeKeys));
 

@@ -1,11 +1,11 @@
 <?php
 
-use Folklore\Image\Filters\Thumbnail as ThumbnailFilter;
+use Folklore\Image\Filters\Resize as ResizeFilter;
 
 /**
- * @coversDefaultClass Folklore\Image\Filters\Thumbnail
+ * @coversDefaultClass Folklore\Image\Filters\Resize
  */
-class FiltersThumbnailTest extends TestCase
+class FiltersResizeTest extends TestCase
 {
     protected $filter;
 
@@ -13,7 +13,7 @@ class FiltersThumbnailTest extends TestCase
     {
         parent::setUp();
 
-        $this->filter = new ThumbnailFilter();
+        $this->filter = new ResizeFilter();
     }
 
     /**
