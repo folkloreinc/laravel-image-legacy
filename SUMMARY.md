@@ -6,7 +6,7 @@
 * [Configuration](docs/config.md)
 
 ### Services
-* [Image](docs/manager.md)
+* [Image](docs/image.md)
 * [URLGenerator](docs/url.md)
 * [Router](docs/router.md)
 * [ImageManipulator](docs/manipulator.md)
