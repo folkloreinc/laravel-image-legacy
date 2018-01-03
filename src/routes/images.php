@@ -8,7 +8,7 @@ $router->image('{pattern}', [
     'middleware' => [],
 
     // The name of the source to get the image. If it is set to null,
-    // it will get use the default source.
+    // it will use the default source.
     'source' => null,
 
     // Allow to specify a size as filter
