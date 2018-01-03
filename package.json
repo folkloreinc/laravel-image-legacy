@@ -1,0 +1,92 @@
+{
+    "name": "laravel-image",
+    "version": "1.0.0",
+    "description": "Javascript helpers for the Laravel image manipulation package",
+    "main": "js/lib/index.js",
+    "module": "js/es/index.js",
+    "files": [
+        "js/lib",
+        "js/es",
+        "js/dist"
+    ],
+    "directories": {
+        "doc": "docs",
+        "test": "tests"
+    },
+    "scripts": {
+        "test": "jest",
+        "clean": "rm -rf js/dist && rm -rf js/lib && rm -rf js/es",
+        "webpack:dist": "node -r babel-register ./node_modules/.bin/webpack --config ./webpack.config.js --progress --colors",
+        "webpack": "npm run webpack:dist",
+        "babel:es": "BABEL_ENV=ejs ./node_modules/.bin/babel js/src --out-dir js/es --ignore story.js,test.js",
+        "babel:cjs": "BABEL_ENV=cjs ./node_modules/.bin/babel js/src --out-dir js/lib --ignore story.js,test.js",
+        "babel": "npm run babel:es && npm run babel:cjs",
+        "build": "npm run webpack && npm run babel"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Folkloreatelier/laravel-image.git"
+    },
+    "author": "Folklore <info@atelierfolklore.ca>",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Folkloreatelier/laravel-image/issues"
+    },
+    "homepage": "https://github.com/Folkloreatelier/laravel-image#readme",
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-core": "^6.25.0",
+        "babel-eslint": "^8.0.3",
+        "babel-jest": "^21.2.0",
+        "babel-loader": "^7.1.1",
+        "babel-plugin-dynamic-import-node": "^1.2.0",
+        "babel-plugin-syntax-dynamic-import": "^6.18.0",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "babel-plugin-transform-es2015-spread": "^6.22.0",
+        "babel-plugin-transform-object-rest-spread": "^6.23.0",
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-register": "^6.24.1",
+        "babel-runtime": "^6.26.0",
+        "eslint": "^4.13.1",
+        "eslint-config-airbnb": "^16.1.0",
+        "eslint-plugin-import": "^2.8.0",
+        "eslint-plugin-jest": "^21.4.3",
+        "eslint-plugin-jsx-a11y": "^6.0.3",
+        "eslint-plugin-react": "^7.5.1",
+        "jest": "^21.2.1",
+        "jsdom": "^11.5.1",
+        "uglifyjs-webpack-plugin": "^1.1.5",
+        "webpack": "^3.10.0",
+        "webpack-node-externals": "^1.6.0"
+    },
+    "dependencies": {
+        "lodash": "^4.17.4",
+        "parse-filepath": "^1.0.2",
+        "url-parse": "^1.2.0"
+    },
+    "jest": {
+        "setupFiles": [
+            "<rootDir>/js/src/__tests__/setup.js"
+        ],
+        "testPathIgnorePatterns": [
+            "<rootDir>/js/lib/",
+            "<rootDir>/js/es/",
+            "<rootDir>/js/dist/",
+            "<rootDir>/js/src/__tests__/setup.js"
+        ],
+        "modulePathIgnorePatterns": [
+            "<rootDir>/js/lib/",
+            "<rootDir>/js/es/",
+            "<rootDir>/js/dist/"
+        ],
+        "collectCoverage": true,
+        "collectCoverageFrom": [
+            "js/src/**/*.{js,jsx}",
+            "!**/node_modules/**",
+            "!**/vendor/**",
+            "!**/__tests__/**",
+            "!**/__stories__/**"
+        ]
+    }
+}

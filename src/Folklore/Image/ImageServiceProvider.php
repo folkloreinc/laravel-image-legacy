@@ -39,7 +39,7 @@ class ImageServiceProvider extends ServiceProvider
     {
         // Config file path
         $configFile = __DIR__ . '/../../config/image.php';
-        $publicFile = __DIR__ . '/../../resources/assets/';
+        $publicFile = __DIR__ . '/../../../js/dist/';
         $routesFile = __DIR__ . '/../../routes/images.php';
 
         // Merge files
@@ -245,9 +245,9 @@ class ImageServiceProvider extends ServiceProvider
     {
         return [
             'image',
-            'image.router',
+            'image.url',
+            'image.routes',
             'image.imagine',
-            'image.manipulator',
             'image.source',
             'image.middleware.cache'
         ];

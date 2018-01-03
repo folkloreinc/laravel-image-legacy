@@ -1,8 +1,8 @@
 Image Manager
 ================================================
-The Image Manager is the main interface with whom you interact. You can access it:
+The Image Manager is the main entry point to interact with image.
 
-With the facade:
+You can acces it with the facade:
 ```php
 Image::method();
 ```
