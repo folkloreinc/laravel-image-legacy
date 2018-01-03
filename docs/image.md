@@ -2,27 +2,35 @@ Image Manager
 ================================================
 The Image Manager is the main entry point to interact with image.
 
-You can acces it with the facade:
+You can access it with the facade:
 ```php
 Image::method();
 ```
 
-Or with the app method:
+With the app helper:
 ```php
 app('image')->method();
+```
+
+Or with the image helper:
+```php
+image()->method();
+
+// Passing arguments is an alias to image()->make()
+$image = image('path/to/image.jpg', 300, 300);
 ```
 
 For this documentation, we will be using the facade, but any call can be changed to `app('image')`
 
 #### Methods
 
-- [`url($path, $width, $height, $filters)`](#url-path-width-null-height-null-filters)
-- [`make($path, $filters)`](#make-path-filters)
-- [`open($path)`](#open-path)
-- [`save($image, $path)`](#save-image-path)
-- [`source($source)`](#source-source)
-- [`pattern($config)`](#pattern-config)
-- [`parse($url, $config)`](#parse-url-config)
+- [`url($path, $width, $height, $filters)`](#url)
+- [`make($path, $filters)`](#make)
+- [`open($path)`](#open)
+- [`save($image, $path)`](#save)
+- [`source($source)`](#source)
+- [`pattern($config)`](#pattern)
+- [`parse($url, $config)`](#parse)
 
 ---
 
