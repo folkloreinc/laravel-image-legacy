@@ -21,7 +21,7 @@
         "php": ">=5.5.9",
         "illuminate/support": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*",
         "guzzlehttp/guzzle": "5.3|~6.0",
-        "imagine/imagine": "0.6.*"
+        "imagine/imagine": "0.6.*|0.7.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

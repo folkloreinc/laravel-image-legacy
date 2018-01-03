@@ -4,7 +4,7 @@ Installation
 #### Dependencies
 
 * [Laravel 5.x](https://github.com/laravel/laravel)
-* [Imagine 0.6.x](https://github.com/avalanche123/Imagine)
+* [Imagine 0.6.x|0.7.x](https://github.com/avalanche123/Imagine)
 
 #### Server Requirements
 
