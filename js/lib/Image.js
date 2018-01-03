@@ -88,7 +88,7 @@ var Image = function () {
 
             // Extract the path from a URL if a URL was provided instead of a path
             var src = new _urlParse2.default(path).pathname;
-            var options = (0, _extends3.default)({}, this.options, (0, _isObject2.default)(width) ? width : null, (0, _isObject2.default)(opts) ? opts : null);
+            var options = (0, _extends3.default)({}, this.options, (0, _isObject2.default)(width) && !(0, _isArray2.default)(width) ? width : null, (0, _isObject2.default)(opts) && !(0, _isArray2.default)(opts) ? opts : null);
             if ((0, _isArray2.default)(width) || (0, _isString2.default)(width)) {
                 ((0, _isString2.default)(width) ? [width] : width).forEach(function (key) {
                     options[key] = true;
@@ -108,7 +108,7 @@ var Image = function () {
             var filtersFormat = (0, _get2.default)(config, 'filters_format');
             var filterSeparator = (0, _get2.default)(config, 'filter_separator');
 
-            if (width !== null && !(0, _isObject2.default)(width) && !(0, _isArray2.default)(width)) {
+            if (width !== null && !(0, _isObject2.default)(width) && !(0, _isArray2.default)(width) && !(0, _isString2.default)(width)) {
                 filters.width = width;
             }
             if (height !== null) {
@@ -123,9 +123,9 @@ var Image = function () {
             var placeholders = {
                 host: (0, _trimEnd2.default)((0, _get2.default)(config, 'host', ''), '/'),
                 dirname: srcParts.dirname !== '.' ? (0, _trim2.default)(srcParts.dirname, '/') : '',
-                basename: srcParts.basename,
-                filename: srcParts.basename + '.' + srcParts.extname,
-                extension: srcParts.extname,
+                basename: srcParts.name,
+                filename: '' + srcParts.name + srcParts.extname,
+                extension: srcParts.extname.replace(/^\./, ''),
                 filters: filtersParameter
             };
 

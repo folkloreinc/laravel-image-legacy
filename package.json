@@ -18,8 +18,8 @@
         "clean": "rm -rf js/dist && rm -rf js/lib && rm -rf js/es",
         "webpack:dist": "node -r babel-register ./node_modules/.bin/webpack --config ./webpack.config.js --progress --colors",
         "webpack": "npm run webpack:dist",
-        "babel:es": "BABEL_ENV=ejs ./node_modules/.bin/babel js/src --out-dir js/es --ignore story.js,test.js",
-        "babel:cjs": "BABEL_ENV=cjs ./node_modules/.bin/babel js/src --out-dir js/lib --ignore story.js,test.js",
+        "babel:es": "BABEL_ENV=ejs ./node_modules/.bin/babel js/src --out-dir js/es --ignore __tests__",
+        "babel:cjs": "BABEL_ENV=cjs ./node_modules/.bin/babel js/src --out-dir js/lib --ignore __tests__",
         "babel": "npm run babel:es && npm run babel:cjs",
         "build": "npm run webpack && npm run babel",
         "prepare": "npm run clean && npm run build"

@@ -35,7 +35,7 @@ var Image = function () {
 
             // Extract the path from a URL if a URL was provided instead of a path
             var src = new URL(path).pathname;
-            var options = Object.assign({}, this.options, isObject(width) ? width : null, isObject(opts) ? opts : null);
+            var options = Object.assign({}, this.options, isObject(width) && !isArray(width) ? width : null, isObject(opts) && !isArray(opts) ? opts : null);
             if (isArray(width) || isString(width)) {
                 (isString(width) ? [width] : width).forEach(function (key) {
                     options[key] = true;
@@ -55,7 +55,7 @@ var Image = function () {
             var filtersFormat = get(config, 'filters_format');
             var filterSeparator = get(config, 'filter_separator');
 
-            if (width !== null && !isObject(width) && !isArray(width)) {
+            if (width !== null && !isObject(width) && !isArray(width) && !isString(width)) {
                 filters.width = width;
             }
             if (height !== null) {
@@ -70,9 +70,9 @@ var Image = function () {
             var placeholders = {
                 host: trimEnd(get(config, 'host', ''), '/'),
                 dirname: srcParts.dirname !== '.' ? trim(srcParts.dirname, '/') : '',
-                basename: srcParts.basename,
-                filename: srcParts.basename + '.' + srcParts.extname,
-                extension: srcParts.extname,
+                basename: srcParts.name,
+                filename: '' + srcParts.name + srcParts.extname,
+                extension: srcParts.extname.replace(/^\./, ''),
                 filters: filtersParameter
             };
 
