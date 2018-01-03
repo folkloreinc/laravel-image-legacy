@@ -1,6 +1,6 @@
 {
     "name": "laravel-image",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Javascript helpers for the Laravel image manipulation package",
     "main": "js/lib/index.js",
     "module": "js/es/index.js",
