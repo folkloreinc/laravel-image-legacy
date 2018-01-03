@@ -18,7 +18,7 @@ Or with the `image_url()` helper
 $url = image_url('path/to/image.png', 300, 300, ['crop']); // Alias to $urlGenerator->make();
 ```
 
-#### Configuration
+## Configuration
 In the `config/image.php` file, you will find an `'url'` section containing these options:
 
 ```php
@@ -69,7 +69,7 @@ $router->image('{pattern}', [
 ])
 ```
 
-#### Methods
+## Methods
 
 - [`make($path, $width, $height, $filters)`](#make)
 - [`pattern($config)`](#pattern)
@@ -77,7 +77,8 @@ $router->image('{pattern}', [
 
 ---
 
-## <a name="make" id="make"></a>`make($path, $width = null, $height = null, $filters = [])`
+<a name="make" id="make"></a>
+#### `make($path, $width = null, $height = null, $filters = [])`
 Generates an url containing the filters, according to the url format in the config
 
 ##### Arguments
@@ -119,5 +120,47 @@ echo $urlGenerator->make('path/to/image.jpg', [
 // '/path/to/image-filters-300x300-rotate(180).jpg'
 ```
 
+---
+
+<a name="pattern" id="pattern"></a>
+#### `pattern($config = [])`
+Generates a pattern, according to the url format in the config
+
+##### Arguments
+- `(array)` `$config` An array of config
+
+##### Return
+`(string)` The pattern to match urls
+
+##### Examples
+
+```php
+$urlGenerator = app('image.url');
+$pattern = $urlGenerator->pattern();
+preg_match('^'.$pattern.'$', '/path/to/image-filters(300x300).jpg'); // true
+```
+
+---
+
+<a name="parse" id="parse"></a>
+#### `parse($url, $config = [])`
+Generates a pattern, according to the url format in the config
+
+##### Arguments
+- `(string)` `$url` The url to parse
+- `(array)` `$config` An array of config
+
+##### Return
+`(array)` An array containing the `path` and `filters`
+
+##### Examples
+
+```php
+$urlGenerator = app('image.url');
+$url = '/path/to/image-filters(300x300).jpg';
+$path = $urlGenerator->parse($url);
+// $path['path'] = '/path/to/image.jpg';
+// $path['filters'] = ['width' => 300, 'height' => 300];
+```
 
 ---
