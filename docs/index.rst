@@ -7,7 +7,7 @@ Laravel Image documentation!
 ================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Documentation:
 
    installation
@@ -18,6 +18,7 @@ Laravel Image documentation!
    router
    sources
    filters
+   javascript
 
 
 Indices and tables
