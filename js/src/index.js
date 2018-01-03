@@ -1,12 +1,16 @@
 /* globals LARAVEL_IMAGE_CONFIG */
-import Image from './Image';
+import UrlGenerator from './UrlGenerator';
 
-const image = new Image({
+const urlGenerator = new UrlGenerator({
     ...(LARAVEL_IMAGE_CONFIG || null),
 });
 
+const image = {
+    url: (...args) => urlGenerator.make(...args),
+};
+
 export {
-    Image,
+    UrlGenerator,
 };
 
 export default image;

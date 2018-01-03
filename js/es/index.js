@@ -1,8 +1,14 @@
 /* globals LARAVEL_IMAGE_CONFIG */
-import Image from './Image';
+import UrlGenerator from './UrlGenerator';
 
-var image = new Image(Object.assign({}, LARAVEL_IMAGE_CONFIG || null));
+var urlGenerator = new UrlGenerator(Object.assign({}, LARAVEL_IMAGE_CONFIG || null));
 
-export { Image };
+var image = {
+    url: function url() {
+        return urlGenerator.make.apply(urlGenerator, arguments);
+    }
+};
+
+export { UrlGenerator };
 
 export default image;

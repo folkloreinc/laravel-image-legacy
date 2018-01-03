@@ -11,18 +11,18 @@ import trimStart from 'lodash/trimStart';
 import trimEnd from 'lodash/trimEnd';
 import trim from 'lodash/trim';
 
-class Image {
+class UrlGenerator {
     constructor(opts) {
         this.options = {
             format: '{dirname}/{basename}{filters}.{extension}',
-            filters_format: 'filters({filter})',
+            filters_format: '-filters({filter})',
             filter_format: '{key}({value})',
             filter_separator: '-',
             ...opts,
         };
     }
 
-    url(path, width, height, opts) {
+    make(path, width, height, opts) {
         // Don't allow empty path
         if (isEmpty(path)) {
             return '';
@@ -127,4 +127,4 @@ class Image {
     }
 }
 
-export default Image;
+export default UrlGenerator;

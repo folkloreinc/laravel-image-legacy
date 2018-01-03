@@ -5,13 +5,13 @@
 * [Getting Started](docs/getting-started.md)
 * [Configuration](docs/config.md)
 
-### Components
-* [Image Manager](docs/manager.md)
-* [Image Manipulator](docs/manipulator.md)
-* [URL Generator](docs/url.md)
-* [Image Router](docs/router.md)
-* [Javascript Helper](docs/javascript.md)
+### Services
+* [Image](docs/manager.md)
+* [URLGenerator](docs/url.md)
+* [Router](docs/router.md)
+* [ImageManipulator](docs/manipulator.md)
 
 ### Features
 * [Sources](docs/sources.md)
 * [Filters](docs/filters.md)
+* [Javascript Helper](docs/javascript.md)
