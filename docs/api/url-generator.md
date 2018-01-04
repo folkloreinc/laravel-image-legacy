@@ -86,132 +86,123 @@ $router->image('{pattern}', [
 - [`setPlaceholdersPatterns($value)`](#setPlaceholdersPatterns)
 - [`getPlaceholdersPatterns()`](#getPlaceholdersPatterns)
 
+
 ---
 
-### <a name="make" id="make"></a> `make($src, $width, $height, $filters)`
+### <a name="make" id="make"></a> `make($src, $width = null, $height = null, $filters = array())`
 
 Make an URL from the filters passed as argument
 
 #### Arguments
-- `(string)` `$src` 
-- `(integer|array)` `$width` 
-- `(integer)` `$height` 
-- `(array)` `$filters` 
+- `$src` `(string)` The source path
+- `$width` `(integer|array)` The width of the image, or and array of filters
+- `$height` `(integer)` The height of the image
+- `$filters` `(array)` An array of filters and config filters
 
 #### Return
+`(string)` The url containing the filters
+
 ---
 
-### <a name="pattern" id="pattern"></a> `pattern($config)`
+### <a name="pattern" id="pattern"></a> `pattern($config = array())`
 
 Get the URL pattern
 
 #### Arguments
-- `(array)` `$config` 
+- `$config` `(array)` Config options to change the format and filters_format
 
 #### Return
+`(string)`
+
 ---
 
-### <a name="parse" id="parse"></a> `parse($path, $config)`
+### <a name="parse" id="parse"></a> `parse($path, $config = array())`
 
 Parse an url
 
 #### Arguments
-- `(string)` `$path` 
-- `(array)` `$config` 
+- `$path` `(string)` The path to be parsed
+- `$config` `(array)` Config options to change the pattern and filters_format
 
 #### Return
+`(array)`
+
 ---
 
 ### <a name="setFormat" id="setFormat"></a> `setFormat($value)`
 
-
-
 #### Arguments
-- `()` `$value` 
+- `$value` 
 
-#### Return
+
+
 ---
 
 ### <a name="getFormat" id="getFormat"></a> `getFormat()`
 
 
 
-#### Arguments
 
-#### Return
 ---
 
 ### <a name="setFilterFormat" id="setFilterFormat"></a> `setFilterFormat($value)`
 
-
-
 #### Arguments
-- `()` `$value` 
+- `$value` 
 
-#### Return
+
+
 ---
 
 ### <a name="getFilterFormat" id="getFilterFormat"></a> `getFilterFormat()`
 
 
 
-#### Arguments
 
-#### Return
 ---
 
 ### <a name="setFilterSeparator" id="setFilterSeparator"></a> `setFilterSeparator($value)`
 
-
-
 #### Arguments
-- `()` `$value` 
+- `$value` 
 
-#### Return
+
+
 ---
 
 ### <a name="getFilterSeparator" id="getFilterSeparator"></a> `getFilterSeparator()`
 
 
 
-#### Arguments
 
-#### Return
 ---
 
 ### <a name="setFiltersFormat" id="setFiltersFormat"></a> `setFiltersFormat($value)`
 
-
-
 #### Arguments
-- `()` `$value` 
+- `$value` 
 
-#### Return
+
+
 ---
 
 ### <a name="getFiltersFormat" id="getFiltersFormat"></a> `getFiltersFormat()`
 
 
 
-#### Arguments
 
-#### Return
 ---
 
 ### <a name="setPlaceholdersPatterns" id="setPlaceholdersPatterns"></a> `setPlaceholdersPatterns($value)`
 
-
-
 #### Arguments
-- `()` `$value` 
+- `$value` 
 
-#### Return
+
+
 ---
 
 ### <a name="getPlaceholdersPatterns" id="getPlaceholdersPatterns"></a> `getPlaceholdersPatterns()`
 
 
 
-#### Arguments
-
-#### Return

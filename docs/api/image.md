@@ -27,7 +27,7 @@ For this documentation, we will be using the facade, but any call can be changed
 
 - [`source($name)`](#source)
 - [`extend($driver, $callback)`](#extend)
-- [`url($src, $width, $height, $options)`](#url)
+- [`url($src, $width, $height, $filters)`](#url)
 - [`pattern($config)`](#pattern)
 - [`parse($path, $config)`](#parse)
 - [`routes($config)`](#routes)
@@ -41,16 +41,19 @@ For this documentation, we will be using the facade, but any call can be changed
 - [`getSourceManager()`](#getSourceManager)
 - [`getUrlGenerator()`](#getUrlGenerator)
 
+
 ---
 
-### <a name="source" id="source"></a> `source($name)`
+### <a name="source" id="source"></a> `source($name = null)`
 
 Get an ImageManipulator for a specific source
 
 #### Arguments
-- `(string|null)` `$name` 
+- `$name` `(string|null)` 
 
 #### Return
+`(\Folklore\Image\Folklore\Image\ImageManipulator)`
+
 ---
 
 ### <a name="extend" id="extend"></a> `extend($driver, $callback)`
@@ -58,54 +61,90 @@ Get an ImageManipulator for a specific source
 Register a custom source creator Closure.
 
 #### Arguments
-- `(string)` `$driver` 
-- `(\Closure)` `$callback` 
+- `$driver` `(string)` 
+- `$callback` `(\Closure)` 
 
 #### Return
+`(\Folklore\Image\Image)`
+
 ---
 
-### <a name="url" id="url"></a> `url($src, $width, $height, $options)`
+### <a name="url" id="url"></a> `url($src, $width = null, $height = null, $filters = array())`
 
 Return an URL to process the image
 
 #### Arguments
-- `(string)` `$src` 
-- `(integer)` `$width` 
-- `(integer)` `$height` 
-- `(array)` `$options` 
+- `$src` `(string)` 
+- `$width` `(integer|array|string)` The maximum width of the image. If anarray or a string is passed, it is considered as the filters argument.
+- `$height` `(integer)` The maximum height of the image
+- `$filters` `(array|string)` An array of filters
 
 #### Return
+`(string)` The generated url containing the filters.
+
+#### Examples
+```php
+echo Image::url('path/to/image.jpg', 300, 300);
+// '/path/to/image-filters(300x300).jpg'
+```
+
+You can also omit the size parameters and pass a filters array as the second argument
+```php
+echo Image::url('path/to/image.jpg', [
+    'width' => 300,
+    'height' => 300,
+    'rotate' => 180
+]);
+// '/path/to/image-filters(300x300-rotate(180)).jpg'
+```
+
+There is also an `image_url()` helper available
+```php
+echo image_url('path/to/image.jpg', 300, 300);
+```
+
+You can change the format of the url by changing the configuration in the
+`config/image.php` file or by passing the same options in the filters
+array. (see [Url Generator](url-generator.md) for available options)
+
+
 ---
 
-### <a name="pattern" id="pattern"></a> `pattern($config)`
+### <a name="pattern" id="pattern"></a> `pattern($config = array())`
+
+Return a pattern to match url
+
+#### Arguments
+- `$config` `(array)` Pattern configuration
+
+#### Return
+`(string)` $pattern   A regex matching the images url
+
+---
+
+### <a name="parse" id="parse"></a> `parse($path, $config = array())`
 
 Return an URL to process the image
 
 #### Arguments
-- `()` `$config` 
+- `$path` `(string)` 
+- `$config` 
 
 #### Return
+`(array)`
+
 ---
 
-### <a name="parse" id="parse"></a> `parse($path, $config)`
-
-Return an URL to process the image
-
-#### Arguments
-- `(string)` `$path` 
-- `()` `$config` 
-
-#### Return
----
-
-### <a name="routes" id="routes"></a> `routes($config)`
+### <a name="routes" id="routes"></a> `routes($config = array())`
 
 Map image routes on the Laravel Router
 
 #### Arguments
-- `(array|string)` `$config` 
+- `$config` `(array|string)` Config for the routes group, you can also passa string to require a specific file in the route group
 
 #### Return
+`(array)`
+
 ---
 
 ### <a name="filter" id="filter"></a> `filter($name, $filter)`
@@ -113,10 +152,12 @@ Map image routes on the Laravel Router
 Register a filter
 
 #### Arguments
-- `(string)` `$name` 
-- `(\Closure|array|string|object)` `$filter` 
+- `$name` `(string)` 
+- `$filter` `(\Closure|array|string|object)` 
 
 #### Return
+`(\Folklore\Image\Image)`
+
 ---
 
 ### <a name="setFilters" id="setFilters"></a> `setFilters($filters)`
@@ -124,18 +165,21 @@ Register a filter
 Set all filters
 
 #### Arguments
-- `(array)` `$filters` 
+- `$filters` `(array)` 
 
 #### Return
+`(\Folklore\Image\Image)`
+
 ---
 
 ### <a name="getFilters" id="getFilters"></a> `getFilters()`
 
 Get all filters
 
-#### Arguments
 
 #### Return
+`(array)`
+
 ---
 
 ### <a name="getFilter" id="getFilter"></a> `getFilter($name)`
@@ -143,9 +187,11 @@ Get all filters
 Get a filter
 
 #### Arguments
-- `(string)` `$name` 
+- `$name` `(string)` 
 
 #### Return
+`(array)`
+
 ---
 
 ### <a name="hasFilter" id="hasFilter"></a> `hasFilter($name)`
@@ -153,42 +199,47 @@ Get a filter
 Check if a filter exists
 
 #### Arguments
-- `(string)` `$name` 
+- `$name` `(string)` 
 
 #### Return
+`(boolean)`
+
 ---
 
 ### <a name="getImagineManager" id="getImagineManager"></a> `getImagineManager()`
 
 Get the imagine manager
 
-#### Arguments
 
 #### Return
+`(\Folklore\Image\ImageManager)`
+
 ---
 
 ### <a name="getImagine" id="getImagine"></a> `getImagine()`
 
 Get the imagine instance from the manager
 
-#### Arguments
 
 #### Return
+`(\Imagine\Image\ImagineInterface)`
+
 ---
 
 ### <a name="getSourceManager" id="getSourceManager"></a> `getSourceManager()`
 
 Get the source manager
 
-#### Arguments
 
 #### Return
+`(\Folklore\Image\SourceManager)`
+
 ---
 
 ### <a name="getUrlGenerator" id="getUrlGenerator"></a> `getUrlGenerator()`
 
 Get the url generator
 
-#### Arguments
 
 #### Return
+`(\Folklore\Image\UrlGenerator)`

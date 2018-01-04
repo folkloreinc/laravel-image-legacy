@@ -1,7 +1,5 @@
 {%
-
-from 'macros.twig' import method as method_string
-
+import 'macros.twig' as macros
 %}{{ class.name }}
 =====================
 
@@ -11,23 +9,48 @@ from 'macros.twig' import method as method_string
 
 {% for method in class.method %}
 {% if method.attributes().visibility == 'public' and method.name|trim|slice(0, 2) != '__' %}
-- [`{{ method_string(method) }}`](#{{ method.name }})
+- [`{{ macros.method(method, false) }}`](#{{ method.name }})
 {% endif %}
 {% endfor %}
 
 {% for method in class.method %}
 {% if method.attributes().visibility == 'public' and method.name|trim|slice(0, 2) != '__' %}
+
 ---
 
-### <a name="{{ method.name }}" id="{{ method.name }}"></a> `{{ method_string(method) }}`
+### <a name="{{ method.name }}" id="{{ method.name }}"></a> `{{ macros.method(method) }}`
+{% if method.docblock.description|trim != '' %}
 
 {{ method.docblock.description }}
+{% endif %}
 
+{% if method.argument.count() > 0 %}
 #### Arguments
 {% for argument in method.argument %}
-- `({{ argument.type }})` `{{ argument.name }}` {{ argument.description }}
+- {{ macros.method_argument_description(argument, method.docblock.tag) }}
 {% endfor %}
+{% endif %}
 
+{% for tag in method.docblock.tag %}
+{% set attributes = tag.attributes() %}
+{% if attributes.name == 'return' and tag.type != 'void' %}
 #### Return
+`({{ tag.type }})`{%
+    set description = macros.tag_description(tag)
+%}{%
+    if description != ''
+        %} {{ description }}{%
+    endif
+%}
+{% endif %}
+{% endfor %}
+{% set examples = attribute(method.docblock, 'long-description')|trim %}
+{% if examples != '' %}
+
+
+#### Examples
+{{ examples|raw }}
+{% endif %}
+
 {% endif %}
 {% endfor %}

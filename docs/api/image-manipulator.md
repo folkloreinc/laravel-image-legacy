@@ -33,17 +33,20 @@ $manipulator->setSource($source);
 - [`getImagineManager()`](#getImagineManager)
 - [`getImagine()`](#getImagine)
 
+
 ---
 
-### <a name="make" id="make"></a> `make($path, $options)`
+### <a name="make" id="make"></a> `make($path, $options = array())`
 
 Make an image and apply options
 
 #### Arguments
-- `(string)` `$path` 
-- `(array)` `$options` 
+- `$path` `(string)` The path of the image
+- `$options` `(array)` The manipulations to apply on the image
 
 #### Return
+`(\Imagine\Image\ImageInterface)`
+
 ---
 
 ### <a name="open" id="open"></a> `open($path)`
@@ -51,9 +54,11 @@ Make an image and apply options
 Open an image from the source
 
 #### Arguments
-- `(string)` `$path` 
+- `$path` `(string)` The path of the image
 
 #### Return
+`(\Imagine\Image\ImageInterface)`
+
 ---
 
 ### <a name="save" id="save"></a> `save($image, $path)`
@@ -61,10 +66,12 @@ Open an image from the source
 Save an image to the source
 
 #### Arguments
-- `(\Imagine\Image\ImageInterface)` `$image` 
-- `()` `$path` 
+- `$image` `(\Imagine\Image\ImageInterface)` 
+- `$path` 
 
 #### Return
+`(string)`
+
 ---
 
 ### <a name="format" id="format"></a> `format($path)`
@@ -72,31 +79,36 @@ Save an image to the source
 Return an URL to process the image
 
 #### Arguments
-- `(string)` `$path` 
+- `$path` `(string)` 
 
 #### Return
+`(array)`
+
 ---
 
-### <a name="thumbnail" id="thumbnail"></a> `thumbnail($image, $width, $height, $crop)`
+### <a name="thumbnail" id="thumbnail"></a> `thumbnail($image, $width = null, $height = null, $crop = true)`
 
 Create a thumbnail from an image
 
 #### Arguments
-- `(\Imagine\Image\ImageInterface|string)` `$image` 
-- `(integer)` `$width` 
-- `()` `$height` 
-- `()` `$crop` 
+- `$image` `(\Imagine\Image\ImageInterface|string)` An image instance or the path to an image
+- `$width` `(integer)` 
+- `$height` 
+- `$crop` 
 
 #### Return
+`(\Imagine\Image\ImageInterface)`
+
 ---
 
 ### <a name="getSource" id="getSource"></a> `getSource()`
 
 Get the image source
 
-#### Arguments
 
 #### Return
+`(\Folklore\Image\Contracts\Source)`
+
 ---
 
 ### <a name="setSource" id="setSource"></a> `setSource($source)`
@@ -104,18 +116,21 @@ Get the image source
 Set the image source
 
 #### Arguments
-- `(\Folklore\Image\Contracts\Source)` `$source` 
+- `$source` `(\Folklore\Image\Contracts\Source)` The source of the factory
 
 #### Return
+`(\Folklore\Image\ImageManipulator)`
+
 ---
 
 ### <a name="getMemoryLimit" id="getMemoryLimit"></a> `getMemoryLimit()`
 
 Get the memory limit
 
-#### Arguments
 
 #### Return
+`(string)`
+
 ---
 
 ### <a name="setMemoryLimit" id="setMemoryLimit"></a> `setMemoryLimit($limit)`
@@ -123,24 +138,27 @@ Get the memory limit
 Set the memory limit
 
 #### Arguments
-- `(string)` `$limit` 
+- `$limit` `(string)` The memory limit
 
 #### Return
+`(\Folklore\Image\ImageManipulator)`
+
 ---
 
 ### <a name="getImagineManager" id="getImagineManager"></a> `getImagineManager()`
 
 Get the imagine manager
 
-#### Arguments
 
 #### Return
+`(\Folklore\Image\ImagineManager)`
+
 ---
 
 ### <a name="getImagine" id="getImagine"></a> `getImagine()`
 
 Get the imagine driver
 
-#### Arguments
 
 #### Return
+`(\Imagine\Image\ImagineInterface)`

@@ -103,71 +103,61 @@ $router->image('{pattern}', [
 - [`setController($value)`](#setController)
 - [`getController()`](#getController)
 
+
 ---
 
 ### <a name="image" id="image"></a> `image($path, $config)`
 
-
-
 #### Arguments
-- `()` `$path` 
-- `()` `$config` 
+- `$path` 
+- `$config` 
 
-#### Return
+
+
 ---
 
 ### <a name="setPatternName" id="setPatternName"></a> `setPatternName($value)`
 
-
-
 #### Arguments
-- `()` `$value` 
+- `$value` 
 
-#### Return
+
+
 ---
 
 ### <a name="getPatternName" id="getPatternName"></a> `getPatternName()`
 
 
 
-#### Arguments
 
-#### Return
 ---
 
 ### <a name="setCacheMiddleware" id="setCacheMiddleware"></a> `setCacheMiddleware($value)`
 
-
-
 #### Arguments
-- `()` `$value` 
+- `$value` 
 
-#### Return
+
+
 ---
 
 ### <a name="getCacheMiddleware" id="getCacheMiddleware"></a> `getCacheMiddleware()`
 
 
 
-#### Arguments
 
-#### Return
 ---
 
 ### <a name="setController" id="setController"></a> `setController($value)`
 
-
-
 #### Arguments
-- `()` `$value` 
+- `$value` 
 
-#### Return
+
+
 ---
 
 ### <a name="getController" id="getController"></a> `getController()`
 
 
 
-#### Arguments
-
-#### Return

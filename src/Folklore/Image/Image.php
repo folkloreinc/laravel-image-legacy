@@ -69,23 +69,49 @@ class Image
     /**
      * Return an URL to process the image
      *
-     * @param  string  $src
-     * @param  int     $width
-     * @param  int     $height
-     * @param  array   $options
-     * @return string
+     * ```php
+     * echo Image::url('path/to/image.jpg', 300, 300);
+     * // '/path/to/image-filters(300x300).jpg'
+     * ```
+
+     * You can also omit the size parameters and pass a filters array as the second argument
+     * ```php
+     * echo Image::url('path/to/image.jpg', [
+     *     'width' => 300,
+     *     'height' => 300,
+     *     'rotate' => 180
+     * ]);
+     * // '/path/to/image-filters(300x300-rotate(180)).jpg'
+     * ```
+
+     * There is also an `image_url()` helper available
+     * ```php
+     * echo image_url('path/to/image.jpg', 300, 300);
+     * ```
+     *
+     * You can change the format of the url by changing the configuration in the
+     * `config/image.php` file or by passing the same options in the filters
+     * array. (see [Url Generator](url-generator.md) for available options)
+     *
+     * @param string $src
+     * @param int|array|string $width The maximum width of the image. If an
+     * array or a string is passed, it is considered as the filters argument.
+     * @param int $height The maximum height of the image
+     * @param array|string $filters An array of filters
+     *
+     * @return string The generated url containing the filters.
      */
-    public function url($src, $width = null, $height = null, $options = [])
+    public function url($src, $width = null, $height = null, $filters = [])
     {
         $urlGenerator = $this->getUrlGenerator();
         return $urlGenerator->make($src, $width, $height, $options);
     }
 
     /**
-     * Return an URL to process the image
+     * Return a pattern to match url
      *
-     * @param  string  $path
-     * @return array
+     * @param  array    $config    Pattern configuration
+     * @return string   $pattern   A regex matching the images url
      */
     public function pattern($config = [])
     {
