@@ -72,5 +72,5 @@ $image = image()->source('cloud')->make('path/to/an/image.jpg', [
 
 Be carefull the `$image` object returned by the `make()` and `open()` methods implements a `save()` method. This method will save on your local disk only. To save an image on a specific source, use:
 ```php
-image()->cloud()->save($image, 'path/on/the/source/image.jpg');
+image()->source('cloud')->save($image, 'path/on/the/source/image.jpg');
 ```
