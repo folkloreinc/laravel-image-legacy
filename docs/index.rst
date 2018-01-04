@@ -12,13 +12,14 @@ Laravel Image documentation!
 
    installation
    getting-started
-   manager
-   manipulator
-   url
-   router
    sources
    filters
    javascript
+
+   services/image
+   services/image-manipulator
+   services/url-generator
+   services/route-registrar
 
 
 Indices and tables

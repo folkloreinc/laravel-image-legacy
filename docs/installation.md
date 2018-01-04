@@ -34,8 +34,4 @@ Folklore\Image\ImageServiceProvider::class,
 $ php artisan vendor:publish --provider="Folklore\Image\ImageServiceProvider"
 ```
 
-**5-** Review the configuration file
-
-```
-app/config/image.php
-```
+**5-** Review the configuration file at `config/image.php`

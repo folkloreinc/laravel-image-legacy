@@ -1,7 +1,43 @@
-Image Router
+RouteRegistrar
 ================================================
+The route registrar is an helper to create routes that serve images with the Laravel Image package. It makes it easy to configure specific filters, restrict or allow filters and set a specific source for the route.
 
-Here is the default content of the `routes/images.php`
+The registrar is bound to an `image` macro on the Laravel Router. You can then simply use it like this, directly fro the router:
+```php
+// From the facade
+Router::image('some/path/{pattern}', [
+    'allow_filters' => false,
+    'filters' => [
+        'width' => 100,
+        'height' => 100,
+        'crop' => true,
+    ],
+]);
+
+// From the app helper
+app('router')->image('some/path/{pattern}', [
+    'allow_filters' => false,
+    'filters' => [
+        'width' => 100,
+        'height' => 100,
+        'crop' => true,
+    ],
+]);
+
+// Or the $router variable in a routes file
+$router->image('some/path/{pattern}', [
+    'allow_filters' => false,
+    'filters' => [
+        'width' => 100,
+        'height' => 100,
+        'crop' => true,
+    ],
+]);
+```
+
+This package publish a routes file dedicated to your images routes (be sure to run `php artisan vendor:publish`). On Laravel 5.3 and up it put the routes file in `routes/images.php` and on Laravel 5.1 and 5.2, the file is at `app/Http/routesImages.php`. The location of this file can be changed in the config `config/image.php` under `routes.map`. If you wish to disable the autoloading of the routes file, you can set `routes.map` to `null`. You could still use `$router->image()` where you want prefer.
+
+Here is the default content of the `routes/images.php` file. You can review all possible configuration options.
 ```php
 $router->image('{pattern}', [
     // A domain that will be used by the route

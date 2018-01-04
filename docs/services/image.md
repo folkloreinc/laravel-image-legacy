@@ -35,7 +35,7 @@ For this documentation, we will be using the facade, but any call can be changed
 ---
 
 ## <a name="url" id="url"></a>`url($path, $width = null, $height = null, $filters = [])`
-Generates an url containing the filters, according to the url format in the config (more info can be found in the [Url Generator](url.md) documentation)
+Generates an url containing the filters, according to the url format in the config (more info can be found in the [Url Generator](url-generator.md) documentation)
 
 ##### Arguments
 - `(string)` `$path` The path of the image.
@@ -68,7 +68,7 @@ There is also an `image_url()` helper available
 echo image_url('path/to/image.jpg', 300, 300);
 ```
 
-You can change the format of the url by changing the configuration in the `config/image.php` file or by passing the same options in the filters array. (see [Url Generator](url.md) for available options)
+You can change the format of the url by changing the configuration in the `config/image.php` file or by passing the same options in the filters array. (see [Url Generator](url-generator.md) for available options)
 
 ---
 
@@ -158,7 +158,7 @@ Image::source('cloud')->save($image, 'path/to/image-resized.jpg');
 ---
 
 ## <a name="source" id="source"></a>`source($source)`
-Get an Image manipulator for a specific source. (more info can be found in the [Sources](sources.md) documentation)
+Get an Image manipulator for a specific source. (more info can be found in the [Sources](../sources.md) documentation)
 
 ##### Arguments
 - `(string)` `$source` The source name
@@ -173,7 +173,7 @@ Add a filter to the manager that can be used by the `Image::url()` and `Image::m
 
 ##### Arguments
 - `(string)` `$name` The name of the filter
-- `(array|closure|string)` `$filter` The filter can be an array of filters, a closure that will get the Image object or a class path to a Filter class. (more info can be found in the [Filters](filters.md) documentation)
+- `(array|closure|string)` `$filter` The filter can be an array of filters, a closure that will get the Image object or a class path to a Filter class. (more info can be found in the [Filters](../filters.md) documentation)
 
 ##### Examples
 
