@@ -2,9 +2,8 @@ language: php
 
 cache:
   directories:
-    - "$COMPOSER_CACHE_DIR"
-    - "$HOME/.composer/cache"
-    - vendor
+    - $HOME/.cache/pip
+    - $HOME/.composer/cache/files
 
 php:
     - 5.5
