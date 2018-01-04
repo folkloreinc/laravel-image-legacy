@@ -21,7 +21,7 @@
         "babel:es": "BABEL_ENV=ejs ./node_modules/.bin/babel js/src --out-dir js/es --ignore __tests__",
         "babel:cjs": "BABEL_ENV=cjs ./node_modules/.bin/babel js/src --out-dir js/lib --ignore __tests__",
         "babel": "npm run babel:es && npm run babel:cjs",
-        "doc:api": "phpdoc && ./docs/api/make",
+        "doc:api": "phpdoc && ./scripts/generate_api_doc",
         "build:doc": "npm run doc:api",
         "build": "npm run webpack && npm run babel",
         "prepare": "npm run clean && npm run build"

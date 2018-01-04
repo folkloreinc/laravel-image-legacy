@@ -1,17 +1,16 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
-$xml = simplexml_load_file(__DIR__.'/structure.xml');
+$apiPath = __DIR__.'/../docs/api';
+$templatesPath = $apiPath.'/_templates';
+$destinationPath = $apiPath;
 
-$templatesPath = __DIR__.'/_templates';
-$destinationPath = __DIR__;
+$xml = simplexml_load_file($apiPath.'/structure.xml');
 
 $loader = new Twig_Loader_Filesystem($templatesPath);
-$twig = new Twig_Environment($loader, array(
-    // 'cache' => __DIR__.'/_build/compilation_cache',
-));
+$twig = new Twig_Environment($loader);
 
 foreach ($xml->file as $file) {
     if (sizeof($file->class) !== 1 || (string)$file->class['namespace'] !== 'Folklore\Image') {
