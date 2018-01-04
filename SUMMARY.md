@@ -9,10 +9,10 @@
 * [Filters](docs/filters.md)
 * [Javascript](docs/javascript.md)
 
-### Services
-* [Image](docs/services/image.md)
-* [URLGenerator](docs/services/url-generator.md)
-* [RouteRegistrar](docs/services/route-registrar.md)
-* [ImageManipulator](docs/services/image-manipulator.md)
-* [SourceManager](docs/services/source-manager.md)
-* [ImagineManager](docs/services/imagine-manager.md)
+### API
+* [Image](docs/api/image.md)
+* [URLGenerator](docs/api/url-generator.md)
+* [RouteRegistrar](docs/api/route-registrar.md)
+* [ImageManipulator](docs/api/image-manipulator.md)
+* [SourceManager](docs/api/source-manager.md)
+* [ImagineManager](docs/api/imagine-manager.md)

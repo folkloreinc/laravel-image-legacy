@@ -1,0 +1,27 @@
+{%
+
+    macro method_arguments(arguments)
+
+        %}{%
+            for argument in arguments
+                %}{{ argument.name }}{%
+                    if loop.index < arguments.count()
+                        %}, {%
+                    endif
+                %}{%
+            endfor
+        %}{%
+
+    endmacro
+
+%}
+
+{%
+
+    macro method(method)
+        %}{%
+            from _self import method_arguments
+        %}{{ method.name }}({{ method_arguments(method.argument) }}){%
+    endmacro
+
+%}

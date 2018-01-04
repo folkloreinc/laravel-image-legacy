@@ -1,0 +1,27 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/../vendor/autoload.php';
+
+$xml = simplexml_load_file(__DIR__.'/structure.xml');
+
+$templatesPath = __DIR__.'/_templates';
+$loader = new Twig_Loader_Filesystem($templatesPath);
+$twig = new Twig_Environment($loader, array(
+    // 'cache' => __DIR__.'/_build/compilation_cache',
+));
+
+foreach ($xml->file as $file) {
+    if (sizeof($file->class) !== 1 || (string)$file->class['namespace'] !== 'Folklore\Image') {
+        continue;
+    }
+    $filename = snake_case((string)$file->class->name, '-').'.md';
+    $templateFilename = $filename.'.twig';
+    $templatePath = file_exists($templatesPath.'/'.$templateFilename) ? $templateFilename : 'class.md.twig';
+    $template = $twig->render($templatePath, [
+        'file' => $file,
+        'class' => $file->class,
+    ]);
+    $filename = __DIR__.'/api/'.$filename;
+    file_put_contents($filename, $template);
+}

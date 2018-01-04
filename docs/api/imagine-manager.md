@@ -1,0 +1,28 @@
+ImagineManager
+=====================
+
+
+#### Methods
+
+- [`getDefaultDriver()`](#getDefaultDriver)
+- [`setDefaultDriver($name)`](#setDefaultDriver)
+
+---
+
+### <a name="getDefaultDriver" id="getDefaultDriver"></a> `getDefaultDriver()`
+
+Get the default image driver name.
+
+#### Arguments
+
+#### Return
+---
+
+### <a name="setDefaultDriver" id="setDefaultDriver"></a> `setDefaultDriver($name)`
+
+Set the default image driver name.
+
+#### Arguments
+- `(string)` `$name` 
+
+#### Return

@@ -1,0 +1,33 @@
+{%
+
+from 'macros.twig' import method as method_string
+
+%}{{ class.name }}
+=====================
+
+{% block description %}{{ class.description }}{% endblock %}
+
+#### Methods
+
+{% for method in class.method %}
+{% if method.attributes().visibility == 'public' and method.name|trim|slice(0, 2) != '__' %}
+- [`{{ method_string(method) }}`](#{{ method.name }})
+{% endif %}
+{% endfor %}
+
+{% for method in class.method %}
+{% if method.attributes().visibility == 'public' and method.name|trim|slice(0, 2) != '__' %}
+---
+
+### <a name="{{ method.name }}" id="{{ method.name }}"></a> `{{ method_string(method) }}`
+
+{{ method.docblock.description }}
+
+#### Arguments
+{% for argument in method.argument %}
+- `({{ argument.type }})` `{{ argument.name }}` {{ argument.description }}
+{% endfor %}
+
+#### Return
+{% endif %}
+{% endfor %}

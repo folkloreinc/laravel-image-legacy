@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <title>Laravel Image API</title>
+    <parser>
+        <target>docs/_build/phpdoc</target>
+    </parser>
+    <transformer>
+        <target>docs/api</target>
+    </transformer>
+    <transformations>
+        <template name="xml" />
+    </transformations>
+    <files>
+        <directory>src</directory>
+    </files>
+</phpdoc>
