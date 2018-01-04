@@ -6,3 +6,4 @@ composer.lock
 /node_modules
 /js/es
 /js/lib
+/_book
