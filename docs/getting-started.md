@@ -1,5 +1,4 @@
-Getting started
-================================================
+# Getting started
 This package aims to simplify images manipulation by using the url of an image to determine what filters should be applied. This way, you don't need to implements the creation of various image formats, you simply call the url with the parameters and it automatically generates a new image for you. It also supports static caching so the next request will serve a static image instead of being handled by Laravel.
 
 This works with two components, the Url Generator and the Image Router. First, you generate an url containing the filters you want with the Url Generator. The url is generated according to the format declared in `config/image.php` (look for `url`). When you request that url, a route is declared with a pattern corresponding to the url format and catch the request, applying the filters and responding the new image.

@@ -1,7 +1,7 @@
-Sources
-================================================
+# Sources
 In Laravel Image, the place where your images files are stored is called a source. You can have multiple source and each source can implements a different driver. Currently there is two drivers supported: `local` and `filesystem`. The last one is based on [Laravel Filesystems](https://laravel.com/docs/5.5/filesystem) and it supports all the same drivers (Amazon S3, Ftp, ...). Just specify a disk that is defined in `config/filesystems.php` and you are good to go.
 
+## Configuration
 Here is the default sources configuration from `config/image.php`:
 
 ```php
@@ -59,6 +59,7 @@ Here is the default sources configuration from `config/image.php`:
 
 ```
 
+## Usage
 When you interact with the `Image` facade or the `image()` helper, by default the images are taken from the default source defined in the config. If you want to use another source, you can do:
 ```php
 $image = image()->source('cloud')->open('path/to/an/image.jpg');

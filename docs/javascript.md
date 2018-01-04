@@ -1,5 +1,4 @@
-Javascript Helper
-================================================
+# Javascript Helper
 
 We provide a javascript helper to generate images url in the frontend. The file is published in `public/vendor/folklore/image/image.js`. You can simply add the javascript tag in your layout:
 

@@ -1,17 +1,16 @@
-Installation
-================================================
+# Installation
 
-#### Dependencies
+## Dependencies
 
 * [Laravel 5.x](https://github.com/laravel/laravel)
 * [Imagine 0.6.x|0.7.x](https://github.com/avalanche123/Imagine)
 
-#### Server Requirements
+## Server Requirements
 
 * [gd](http://php.net/manual/en/book.image.php) or [Imagick](http://php.net/manual/fr/book.imagick.php) or [Gmagick](http://www.php.net/manual/fr/book.gmagick.php)
 * [exif](http://php.net/manual/en/book.exif.php) - Required to get image format.
 
-#### Installation
+## Steps
 
 **1-** Require the package via Composer in your `composer.json`.
 ```json
