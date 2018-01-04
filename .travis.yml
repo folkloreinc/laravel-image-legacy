@@ -41,8 +41,6 @@ before_install: ./scripts/before_install.sh
 
 install: ./scripts/install.sh
 
-before_script: ./scripts/before_script.sh
-
 script: vendor/bin/phpunit
 
 after_success: ./scripts/after_success.sh

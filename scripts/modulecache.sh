@@ -18,7 +18,7 @@ do
   if [ ! -f ${PHP_TARGET_DIR}/${FILENAME} ]
   then
     echo "$FILENAME not found in extension dir, compiling"
-    printf "yes\n" | pecl install ${PACKAGE}
+    printf "yes\n" | pecl install ${PACKAGE} || true
   else
     echo "Adding $FILENAME to php config"
     echo "extension = $FILENAME" > ${INI_DIR}/${FILENAME}.ini
