@@ -101,6 +101,7 @@ Make an URL from the filters passed as argument
 
 #### Return
 `(string)` The url containing the filters
+        
 
 ---
 
@@ -135,12 +136,9 @@ Parse an url
 - `$value` 
 
 
-
 ---
 
 ### <a name="getFormat" id="getFormat"></a> `getFormat()`
-
-
 
 
 ---
@@ -151,12 +149,9 @@ Parse an url
 - `$value` 
 
 
-
 ---
 
 ### <a name="getFilterFormat" id="getFilterFormat"></a> `getFilterFormat()`
-
-
 
 
 ---
@@ -167,12 +162,9 @@ Parse an url
 - `$value` 
 
 
-
 ---
 
 ### <a name="getFilterSeparator" id="getFilterSeparator"></a> `getFilterSeparator()`
-
-
 
 
 ---
@@ -183,12 +175,9 @@ Parse an url
 - `$value` 
 
 
-
 ---
 
 ### <a name="getFiltersFormat" id="getFiltersFormat"></a> `getFiltersFormat()`
-
-
 
 
 ---
@@ -199,10 +188,7 @@ Parse an url
 - `$value` 
 
 
-
 ---
 
 ### <a name="getPlaceholdersPatterns" id="getPlaceholdersPatterns"></a> `getPlaceholdersPatterns()`
-
-
 

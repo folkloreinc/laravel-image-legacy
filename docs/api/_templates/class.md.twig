@@ -12,6 +12,12 @@ import 'macros.twig' as macros
 - [`{{ macros.method(method, false) }}`](#{{ method.name }})
 {% endif %}
 {% endfor %}
+{% if class.extends|trim != '' %}
+
+##### Extends
+
+`{{ class.extends }}`
+{% endif %}
 
 {% for method in class.method %}
 {% if method.attributes().visibility == 'public' and method.name|trim|slice(0, 2) != '__' %}
@@ -23,30 +29,30 @@ import 'macros.twig' as macros
 
 {{ method.docblock.description }}
 {% endif %}
-
 {% if method.argument.count() > 0 %}
+
 #### Arguments
 {% for argument in method.argument %}
 - {{ macros.method_argument_description(argument, method.docblock.tag) }}
 {% endfor %}
 {% endif %}
-
 {% for tag in method.docblock.tag %}
 {% set attributes = tag.attributes() %}
 {% if attributes.name == 'return' and tag.type != 'void' %}
+
 #### Return
 `({{ tag.type }})`{%
     set description = macros.tag_description(tag)
 %}{%
     if description != ''
-        %} {{ description }}{%
+        %} {{ description }}
+        {%
     endif
 %}
 {% endif %}
 {% endfor %}
 {% set examples = attribute(method.docblock, 'long-description')|trim %}
 {% if examples != '' %}
-
 
 #### Examples
 {{ examples|raw }}

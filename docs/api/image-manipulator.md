@@ -105,7 +105,6 @@ Create a thumbnail from an image
 
 Get the image source
 
-
 #### Return
 `(\Folklore\Image\Contracts\Source)`
 
@@ -126,7 +125,6 @@ Set the image source
 ### <a name="getMemoryLimit" id="getMemoryLimit"></a> `getMemoryLimit()`
 
 Get the memory limit
-
 
 #### Return
 `(string)`
@@ -149,7 +147,6 @@ Set the memory limit
 
 Get the imagine manager
 
-
 #### Return
 `(\Folklore\Image\ImagineManager)`
 
@@ -158,7 +155,6 @@ Get the imagine manager
 ### <a name="getImagine" id="getImagine"></a> `getImagine()`
 
 Get the imagine driver
-
 
 #### Return
 `(\Imagine\Image\ImagineInterface)`

@@ -7,13 +7,16 @@ SourceManager
 - [`getDefaultDriver()`](#getDefaultDriver)
 - [`setDefaultDriver($name)`](#setDefaultDriver)
 
+##### Extends
+
+`\Illuminate\Support\Manager`
+
 
 ---
 
 ### <a name="getDefaultDriver" id="getDefaultDriver"></a> `getDefaultDriver()`
 
 Get the default image driver name.
-
 
 #### Return
 `(string)`
@@ -26,5 +29,4 @@ Set the default image driver name.
 
 #### Arguments
 - `$name` `(string)` 
-
 

@@ -113,7 +113,6 @@ $router->image('{pattern}', [
 - `$config` 
 
 
-
 ---
 
 ### <a name="setPatternName" id="setPatternName"></a> `setPatternName($value)`
@@ -122,12 +121,9 @@ $router->image('{pattern}', [
 - `$value` 
 
 
-
 ---
 
 ### <a name="getPatternName" id="getPatternName"></a> `getPatternName()`
-
-
 
 
 ---
@@ -138,12 +134,9 @@ $router->image('{pattern}', [
 - `$value` 
 
 
-
 ---
 
 ### <a name="getCacheMiddleware" id="getCacheMiddleware"></a> `getCacheMiddleware()`
-
-
 
 
 ---
@@ -154,10 +147,7 @@ $router->image('{pattern}', [
 - `$value` 
 
 
-
 ---
 
 ### <a name="getController" id="getController"></a> `getController()`
-
-
 

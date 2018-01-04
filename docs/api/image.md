@@ -81,7 +81,7 @@ Return an URL to process the image
 
 #### Return
 `(string)` The generated url containing the filters.
-
+        
 #### Examples
 ```php
 echo Image::url('path/to/image.jpg', 300, 300);
@@ -119,6 +119,7 @@ Return a pattern to match url
 
 #### Return
 `(string)` $pattern   A regex matching the images url
+        
 
 ---
 
@@ -176,7 +177,6 @@ Set all filters
 
 Get all filters
 
-
 #### Return
 `(array)`
 
@@ -210,7 +210,6 @@ Check if a filter exists
 
 Get the imagine manager
 
-
 #### Return
 `(\Folklore\Image\ImageManager)`
 
@@ -219,7 +218,6 @@ Get the imagine manager
 ### <a name="getImagine" id="getImagine"></a> `getImagine()`
 
 Get the imagine instance from the manager
-
 
 #### Return
 `(\Imagine\Image\ImagineInterface)`
@@ -230,7 +228,6 @@ Get the imagine instance from the manager
 
 Get the source manager
 
-
 #### Return
 `(\Folklore\Image\SourceManager)`
 
@@ -239,7 +236,6 @@ Get the source manager
 ### <a name="getUrlGenerator" id="getUrlGenerator"></a> `getUrlGenerator()`
 
 Get the url generator
-
 
 #### Return
 `(\Folklore\Image\UrlGenerator)`

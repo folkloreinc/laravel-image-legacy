@@ -18,6 +18,10 @@ ImageServiceProvider
 - [`registerMiddlewares()`](#registerMiddlewares)
 - [`provides()`](#provides)
 
+##### Extends
+
+`\Illuminate\Support\ServiceProvider`
+
 
 ---
 
@@ -26,20 +30,14 @@ ImageServiceProvider
 Bootstrap the application events.
 
 
-
-
 ---
 
 ### <a name="bootPublishes" id="bootPublishes"></a> `bootPublishes()`
 
 
-
-
 ---
 
 ### <a name="bootRouter" id="bootRouter"></a> `bootRouter()`
-
-
 
 
 ---
@@ -49,15 +47,11 @@ Bootstrap the application events.
 Add the macro for image response
 
 
-
-
 ---
 
 ### <a name="register" id="register"></a> `register()`
 
 Register the service provider.
-
-
 
 
 ---
@@ -67,15 +61,11 @@ Register the service provider.
 Register the service provider.
 
 
-
-
 ---
 
 ### <a name="registerImagineManager" id="registerImagineManager"></a> `registerImagineManager()`
 
 Register the service provider.
-
-
 
 
 ---
@@ -85,15 +75,11 @@ Register the service provider.
 Register the service provider.
 
 
-
-
 ---
 
 ### <a name="registerRouteRegistrar" id="registerRouteRegistrar"></a> `registerRouteRegistrar()`
 
 Register the route registrar
-
-
 
 
 ---
@@ -103,15 +89,11 @@ Register the route registrar
 Register the url generator
 
 
-
-
 ---
 
 ### <a name="registerImageManipulator" id="registerImageManipulator"></a> `registerImageManipulator()`
 
 Register the image manipulator
-
-
 
 
 ---
@@ -121,14 +103,11 @@ Register the image manipulator
 Register the image factory
 
 
-
-
 ---
 
 ### <a name="provides" id="provides"></a> `provides()`
 
 Get the services provided by the provider.
-
 
 #### Return
 `(array)`
