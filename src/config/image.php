@@ -60,7 +60,7 @@ return [
             'driver' => 'filesystem',
 
             // The filesystem disk where the images are stored.
-            'disk' => 'local',
+            'disk' => 'public',
 
             // The path on the disk where the images are stored. If set to null,
             // it will start from the root.
