@@ -31,6 +31,7 @@ For this documentation, we will be using the facade, but any call can be changed
 - [`source($source)`](#source)
 - [`pattern($config)`](#pattern)
 - [`parse($url, $config)`](#parse)
+- [`routes($config)`](#routes)
 
 ---
 
@@ -232,3 +233,34 @@ $image = Image::make('path/to/image.jpg', [
 ---
 
 ## <a name="pattern" id="pattern"></a>`pattern($config)`
+
+
+---
+
+## <a name="routes" id="routes"></a>`routes($config)`
+
+Add the routes from the file specified in the `config/image.php` file at `routes.map`. You can pass a config array to override values from the config or you can also pass a path to a routes file. This method is automatically called if you have a path in your `config/image.php`. To disable this you can set `routes.map` to null.
+
+##### Arguments
+- `(array|string)` `$config` A config array that will override values from the `config/image.php`. If you pass a string, it is considered as a path to a filtes containing routes.
+
+
+##### Examples
+
+Map the routes on the Laravel Router
+```php
+Image::routes();
+
+// or with the helper
+image()->routes();
+```
+
+Map a custom routes file
+```php
+Image::routes(base_path('routes/my-custom-file.php'));
+
+// or an equivalent
+Image::routes([
+    'map' => base_path('routes/my-custom-file.php')
+]);
+```

@@ -74,20 +74,10 @@ class ImageServiceProvider extends ServiceProvider
         $pattern = $this->app['image']->pattern();
         $router->pattern('image_pattern', $pattern);
 
-        // Map routes defined in the routes files
-        $router->group([
-            'namespace' => $app['config']->get('image.routes.namespace', null),
-            'domain' => $app['config']->get('image.routes.domain', null),
-            'middleware' => $app['config']->get('image.routes.middleware', [])
-        ], function ($router) use ($app) {
-            $appPath = is_dir(base_path('routes')) ?
-                base_path('routes/images.php'):app_path('Http/routesImages.php');
-            if (is_file($appPath)) {
-                require $appPath;
-            } else {
-                require __DIR__ . '/../../routes/images.php';
-            }
-        });
+        $map = $this->app['config']->get('image.routes.map');
+        if (!is_null($map)) {
+            $this->app['image']->routes();
+        }
     }
 
     /**
@@ -207,6 +197,9 @@ class ImageServiceProvider extends ServiceProvider
             );
             $generator->setFilterSeparator(
                 $config->get('image.url.filter_separator', '')
+            );
+            $generator->setPlaceholdersPatterns(
+                $config->get('image.url.placeholders_patterns', '')
             );
             return $generator;
         });

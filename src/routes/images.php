@@ -1,6 +1,9 @@
 <?php
 
 $router->image('{pattern}', [
+    // The name of the route
+    'as' => 'image',
+
     // A domain that will be used by the route
     'domain' => null,
 
@@ -27,7 +30,7 @@ $router->image('{pattern}', [
     // Any pattern options you want to override.
     'pattern' => [],
 
-    // You can specify base filters that will be applied to any image
+    // You can specify filters that will be applied to any image
     // on this route.
     'filters' => [
         // 'width' => 100
@@ -43,7 +46,8 @@ $router->image('{pattern}', [
     'cache' => true,
 
     // The path where the images are cached. It is defined to public
-    // path, so the files would be statically served on next request.
+    // path, so the cached files would be accessible at the path they were
+    // requested and they can be served statically on next requests.
     'cache_path' => public_path()
 
 ]);

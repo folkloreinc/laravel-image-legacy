@@ -207,6 +207,27 @@ class ImageTest extends TestCase
     }
 
     /**
+     * Test the routes method
+     *
+     * @test
+     * @covers ::routes
+     */
+    public function testRoutes()
+    {
+        $this->image->routes(public_path('routes.php'));
+        $this->assertTrue($this->app['router']->getRoutes()->hasNamedRoute('image.test'));
+
+        $this->image->routes([
+            'map' => public_path('routes.php'),
+            'middleware' => ['test'],
+        ]);
+        $route = $this->app['router']->getRoutes()->getByName('image.test');
+        $actions = $route->getAction();
+        $this->assertArrayHasKey('middleware', $actions);
+        $this->assertEquals(['test'], $actions['middleware']);
+    }
+
+    /**
      * Test the filter method
      *
      * @test

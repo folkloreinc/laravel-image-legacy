@@ -106,6 +106,32 @@ class Image
     }
 
     /**
+     * Map image routes on the Laravel Router
+     *
+     * @param  array|string  $config Config for the routes group, you can also pass
+     * a string to require a specific file in the route group
+     * @return array
+     */
+    public function routes($config = [])
+    {
+        $routeConfig = $this->app['config']->get('image.routes', []);
+        $config = array_merge([], $routeConfig, is_string($config) ? [
+            'map' => $config
+        ] : $config);
+        $groupConfig = array_only($config, ['domain', 'prefix', 'as', 'namespace', 'middleware']);
+        $map = array_get($config, 'map', null);
+
+        // Map routes defined in the routes files
+        $this->app['router']->group($groupConfig, function ($router) use ($map) {
+            if (!is_null($map) && is_file($map)) {
+                require $map;
+            } else {
+                require __DIR__ . '/../../routes/images.php';
+            }
+        });
+    }
+
+    /**
      * Register a filter
      *
      * @param  string    $name

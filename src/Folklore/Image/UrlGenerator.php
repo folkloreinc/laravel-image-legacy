@@ -19,6 +19,14 @@ class UrlGenerator implements UrlGeneratorContract
 
     protected $filterSeparator = '-';
 
+    protected $placeholdersPatterns = [
+        'host' => '(.*?)?',
+        'dirname' => '(.*?)?',
+        'basename' => '([^\/\.]+?)',
+        'filename' => '([^\/]+)',
+        'extension' => '([^\.]+)',
+    ];
+
     public function __construct(Image $image, BaseRouter $router)
     {
         $this->image = $image;
@@ -141,14 +149,10 @@ class UrlGenerator implements UrlGeneratorContract
         $filtersFormat = array_get($config, 'filters_format', $this->getFiltersFormat());
         $filtersPattern = preg_replace('#\\\{\s*filter\s*\\\}#', '(.*?)', preg_quote($filtersFormat, '#'));
 
-        $placeholders = [
-            'host' => '(.*?)?',
-            'dirname' => '(.*?)?',
-            'basename' => '([^\/\.]+?)',
-            'filename' => '([^\/]+)',
-            'extension' => '([^\.]+)',
+        $placeholdersPatterns = array_get($config, 'placeholders_patterns', $this->getPlaceholdersPatterns());
+        $placeholders = array_merge([
             'filters' => '('.$filtersPattern.')?'
-        ];
+        ], $placeholdersPatterns);
         $format = array_get($config, 'format', $this->getFormat());
         $pattern = preg_quote($format, '#');
         $pattern = preg_replace('#(\\\{\s*dirname\s*\\\})\/#i', '$1\/?', $pattern);
@@ -377,5 +381,15 @@ class UrlGenerator implements UrlGeneratorContract
     public function getFiltersFormat()
     {
         return $this->filtersFormat;
+    }
+
+    public function setPlaceholdersPatterns($value)
+    {
+        $this->placeholdersPatterns = $value;
+    }
+
+    public function getPlaceholdersPatterns()
+    {
+        return $this->placeholdersPatterns;
     }
 }

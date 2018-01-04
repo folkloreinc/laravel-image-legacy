@@ -44,7 +44,7 @@ class RouteRegistrar
         $domain = array_get($config, 'domain', null);
         $cache = array_get($config, 'cache', false);
         $middleware = array_get($config, 'middleware', []);
-        $patternName = array_get($config, 'pattern_name', $this->cacheMiddleware);
+        $patternName = array_get($config, 'pattern_name', $this->patternName);
         $cacheMiddleware = array_get($config, 'cache_middleware', $this->cacheMiddleware);
         $controller = array_get($config, 'uses', $this->controller);
 
@@ -56,7 +56,7 @@ class RouteRegistrar
         // create a route pattern to catch it
         $patternOptions = array_get($config, 'pattern', []);
         if (sizeof($patternOptions)) {
-            $generatedPatternName = 'image_pattern_'.preg_replace(
+            $generatedPatternName = $patternName.'_'.preg_replace(
                 '/[^a-z0-9]+/i',
                 '_',
                 preg_replace('/^image\./', '', $as)

@@ -1,8 +1,6 @@
 <?php
 
-
-
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -103,7 +101,18 @@ return array(
         'filter_format' => '{key}({value})',
 
         // The separator for each filter
-        'filter_separator' => '-'
+        'filter_separator' => '-',
+
+        // This is the regex that will replace any placeholders in the option 'format'.
+        // They are used when the route pattern is generated and added to the
+        // Laravel Router to match image request.
+        'placeholders_patterns' => [
+            'host' => '(.*?)?',
+            'dirname' => '(.*?)?',
+            'basename' => '([^\/\.]+?)',
+            'filename' => '([^\/]+)',
+            'extension' => '([^\.]+)',
+        ]
     ],
 
     /*
@@ -115,6 +124,9 @@ return array(
     |
     */
     'routes' => [
+        // Path to the routes file that will be automatically loaded. Set to null
+        // to prevent auto-loading of routes.
+        'map' => base_path('routes/images.php'),
 
         // Default domain for routes
         'domain' => null,
@@ -131,7 +143,7 @@ return array(
         // The name of the pattern that will be added to the Laravel Router.
         'pattern_name' => 'image_pattern',
 
-        // The middleware used when a route as cache enabled
+        // The middleware used when a route as `cache` enabled
         'cache_middleware' => 'image.middleware.cache'
     ],
 
@@ -158,4 +170,4 @@ return array(
     */
     'memory_limit' => '128M',
 
-);
+];
