@@ -111,7 +111,7 @@ return [
             'dirname' => '(.*?)?',
             'basename' => '([^\/\.]+?)',
             'filename' => '([^\/]+)',
-            'extension' => '([^\.]+)',
+            'extension' => '(jpeg|jpg|gif|png)',
         ]
     ],
 

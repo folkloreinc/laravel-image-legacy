@@ -104,7 +104,7 @@ class Image
     public function url($src, $width = null, $height = null, $filters = [])
     {
         $urlGenerator = $this->getUrlGenerator();
-        return $urlGenerator->make($src, $width, $height, $options);
+        return $urlGenerator->make($src, $width, $height, $filters);
     }
 
     /**
