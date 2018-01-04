@@ -4,6 +4,7 @@ cache:
   directories:
     - $HOME/.cache/pip
     - $HOME/.composer/cache/files
+    - ${TRAVIS_BUILD_DIR}/travis/module-cache
 
 php:
     - 5.5
@@ -39,6 +40,8 @@ matrix:
 before_install: ./scripts/before_install.sh
 
 install: ./scripts/install.sh
+
+before_script: ./scripts/before_script.sh
 
 script: vendor/bin/phpunit
 
