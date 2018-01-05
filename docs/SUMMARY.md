@@ -13,5 +13,3 @@
 * [ImageHandler](api/image-handler.md)
 * [URLGenerator](api/url-generator.md)
 * [RouteRegistrar](api/route-registrar.md)
-* [SourceManager](api/source-manager.md)
-* [ImagineManager](api/imagine-manager.md)
