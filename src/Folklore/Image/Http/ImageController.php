@@ -38,9 +38,9 @@ class ImageController extends BaseController
         // Return the response
         try {
             // Make the image
-            $manipulator = $source ? app('image')->source($source):app('image');
-            $image = $manipulator->make($path, $filters);
-            $format = $manipulator->format($path);
+            $handler = $source ? app('image')->source($source):app('image');
+            $image = $handler->make($path, $filters);
+            $format = $handler->format($path);
 
             $response = response()->image($image)
                 ->setQuality($quality)

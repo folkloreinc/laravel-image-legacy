@@ -10,8 +10,8 @@
 
 ### API
 * [Image](api/image.md)
+* [ImageHandler](api/image-handler.md)
 * [URLGenerator](api/url-generator.md)
 * [RouteRegistrar](api/route-registrar.md)
-* [ImageManipulator](api/image-manipulator.md)
 * [SourceManager](api/source-manager.md)
 * [ImagineManager](api/imagine-manager.md)

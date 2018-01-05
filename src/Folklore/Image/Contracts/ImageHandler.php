@@ -4,7 +4,7 @@ namespace Folklore\Image\Contracts;
 
 use Imagine\Image\ImageInterface;
 
-interface ImageManipulator
+interface ImageHandler
 {
     public function make($path, $config = []);
 

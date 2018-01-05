@@ -1,11 +1,11 @@
 <?php
 
-use Folklore\Image\Contracts\ImageManipulator as ImageManipulatorContract;
+use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
 use Folklore\Image\Sources\LocalSource;
 use Folklore\Image\Sources\FilesystemSource;
 use Folklore\Image\SourceManager;
 use Folklore\Image\Image;
-use Folklore\Image\ImageManipulator;
+use Folklore\Image\ImageHandler;
 
 /**
  * @coversDefaultClass Folklore\Image\Image
@@ -42,7 +42,7 @@ class ImageTest extends TestCase
     public function testSourceWithoutName()
     {
         $factory = $this->image->source();
-        $this->assertInstanceOf(ImageManipulatorContract::class, $factory);
+        $this->assertInstanceOf(ImageHandlerContract::class, $factory);
         $this->assertInstanceOf(LocalSource::class, $factory->getSource());
     }
 
@@ -55,7 +55,7 @@ class ImageTest extends TestCase
     public function testSourceWithName()
     {
         $factory = $this->image->source('filesystem');
-        $this->assertInstanceOf(ImageManipulatorContract::class, $factory);
+        $this->assertInstanceOf(ImageHandlerContract::class, $factory);
         $this->assertInstanceOf(FilesystemSource::class, $factory->getSource());
     }
 
@@ -77,7 +77,7 @@ class ImageTest extends TestCase
      * @test
      * @covers ::source
      */
-    public function testSourceKeepManipulatorInstance()
+    public function testSourceKeepHandlerInstance()
     {
         $factory = $this->image->source();
         $factorySecond = $this->image->source();
@@ -123,21 +123,21 @@ class ImageTest extends TestCase
     public function testCallingSource()
     {
 
-        $imageManipulator = $this->getMockBuilder(ImageManipulator::class)
+        $imageHandler = $this->getMockBuilder(ImageHandler::class)
             ->disableOriginalConstructor()
             ->setMethods(['testMethod', 'setSource'])
             ->getMock();
 
-        $imageManipulator->expects($this->once())
+        $imageHandler->expects($this->once())
             ->method('testMethod')
             ->with($this->equalTo('test'));
 
-        $imageManipulator->expects($this->once())
+        $imageHandler->expects($this->once())
             ->method('setSource')
             ->with($this->image->getSourceManager()->driver());
 
-        app()->bind(ImageManipulatorContract::class, function () use ($imageManipulator) {
-            return $imageManipulator;
+        app()->bind(ImageHandlerContract::class, function () use ($imageHandler) {
+            return $imageHandler;
         });
 
         $this->image->testMethod('test');

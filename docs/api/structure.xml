@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project title="Laravel Image API" version="v2.9.0">
   <partials/>
-  <file path="Folklore/Image/ImageServiceProvider.php" generated-path="Folklore.Image.ImageServiceProvider.html" hash="46bbd31ea65d55d7c30a8c92b1363644" package="Default">
+  <file path="Folklore/Image/ImageServiceProvider.php" generated-path="Folklore.Image.ImageServiceProvider.html" hash="5f57a33aa291db8b6f8c3d20934ca1ac" package="Default">
     <docblock line="0">
       <description></description>
       <long-description></long-description>
@@ -10,7 +10,7 @@
     <namespace-alias name="ServiceProvider">\Illuminate\Support\ServiceProvider</namespace-alias>
     <namespace-alias name="ImageResponse">\Folklore\Image\Http\ImageResponse</namespace-alias>
     <namespace-alias name="RouteRegistrar">\Folklore\Image\RouteRegistrar</namespace-alias>
-    <namespace-alias name="ImageManipulatorContract">\Folklore\Image\Contracts\ImageManipulator</namespace-alias>
+    <namespace-alias name="ImageHandlerContract">\Folklore\Image\Contracts\ImageHandler</namespace-alias>
     <namespace-alias name="ResponseFactoryContract">\Illuminate\Contracts\Routing\ResponseFactory</namespace-alias>
     <class final="false" abstract="false" namespace="Folklore\Image" line="9" package="Default">
       <extends>\Illuminate\Support\ServiceProvider</extends>
@@ -146,10 +146,10 @@
         </docblock>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="213" package="Default">
-        <name>registerImageManipulator</name>
-        <full_name>\Folklore\Image\ImageServiceProvider::registerImageManipulator()</full_name>
+        <name>registerImageHandler</name>
+        <full_name>\Folklore\Image\ImageServiceProvider::registerImageHandler()</full_name>
         <docblock line="213">
-          <description>Register the image manipulator</description>
+          <description>Register the image handler</description>
           <long-description></long-description>
           <tag name="return" line="213" description="" type="void">
             <type>void</type>
@@ -186,7 +186,442 @@
       <error line="38" code="PPC:ERR-50008">No summary for method bootPublishes()</error>
       <error line="63" code="PPC:ERR-50008">No summary for method bootRouter()</error>
     </parse_markers>
-    <source>eJzFGNtu2zb03V/BAQYkB45d7LFe3G0d0gVYiiDBnmLDYCTK1iaJAkmlC4r8+w5vEklLdh0Pq2Agkc79fsifPtS7GlW4JLzGCUHXtPi7oIysbkq8JYvRqOEE3RRFU+YVFmT10NQ1ZWL1QNhznpA7Rp/zlLCFwvOJV78LUet/74E7rTjpRbunjQCMbc4Fw/2cPtIKYIng+v0WV3ndFFhQhjBH4TeLvQiV79hImXm1XVnFruErZS+SW/CpYzZKCsyNtMB8RP4RpEo5Cr6Pvo5GCJ75xYX6iy7QTZXmCSjDUZ6hguIU1EA0Q2JHUG3Z5RylJCOMkXRmCC39z8+YoSdKC/Nhrv4CpSCJICkaK0J0hTJcSIcH4KypEpHTCm2JUI5n8UShfNX84GFENKxCY7HL+eUS1/VjxBRmtF4opNc9o36lVMjo1coMICmkjVIMeSaV4HtGGBnPNE99O5onIO20BEPFnoJGMwm7k/h8R3g8MaYGCNbGfqjMUAlzrOrTwJESqDKfI0iQLN+iLC8ggFjsOjmJglxLwBXabH67ud9s0AxF89lM/jR4nst8mkEVRouOVGsxSAq/v/g8hYqZu1QqTHyQSoO1QG4kupbcErYlyhAeOquUIG3pNaNl7Ng2RZHiGE18bsZpIae69eVjC9rz1hLpt410aBx1Lpq0NGuQq5GinuAOSnEduzTBNlIgU1PK5plpPXNjlSdRE5wk0Q3KEip7k+YsfsKcGLEaHk0m6INHKJ89NDd4E/RelpqBy1Q2Eb5xcDztraijCT/QGcYgDjKr6wxh7jEP6vYNNzN+SVOEUYkTRpGgqmUY6gwaesIIlr0ZaVM1aBYKgpSU9CY3ommnfzyWDpnahJogOQRiQzZVNkwcm+RjO57SWSebcdX6cqneQ6ad4a+TfeOgBeOmELIdgMxKGqnFOwVuQL6/tDEg1IDjyZ6HO5jG3phXcIFl6mVnietAiKkakAIzIPbsnQF25MiEERX/AClbNUURS1aT0HW92mtmrvKvA4NDekvGXyeDDL9iAhHRQ/icuaGbe//skPoODPr379WcXx/IMN8DWuMrJJ009UFcYNFwgP347l0A2hEMk17CHtctZCAxK/IFeXtUrIVOrYRpyy/IzH6v62UL6k26nuuVpV0+3jyrmeE65HMLV5b0TWQXIa/kRgeIvbPbYj7QhiXfgujvmIcw/2TFJ1IRJhfJY0q6S+ch3Ns8TQvyBbOuKP7voBinD1bD5ZJDzy2IoFVvT+3pmmPYFIRO4aPtxaACz8e1k6KKTVs/Nsu1tD4s0JKIa80rtvIDTNvMc32AsZ+/VzWEyXxCBGa5pj0aiaBNOOICT34vJwR1eooPuCI9xQW+sLd5QE0woz40jHPtD9vPKQ4wm8jRagwXMOeAF5RSa5YpukA7b1Wy+1DDimivcltGqi7v9PbxGZe6grtW4C9VM7OmbOStwzGmH3GyI13/PMw4kcibssU+ylyOfFoUJk2G+bZ4exxtt2Hd/cWJqQaehcO4mTjnJpo/vU5JMxngoznW6mkyxxM3dpdAmz32BOBOR+WNOXogot2Un3HRwK6fwdnSHP36Docyub04LQbU03OCshILf1lzmHnzCayfZQofnBA5xyb5hEkUiNFT6GRpmmxzltS3CT1P5gOpsQ74qWK5pTxZ8l2BE7KjhdxwTZvh3y6+dqjtcYkf18GWdqvKyaWtN5uyWxL/ky3OWzoPlPhTXqXx0N2oOeUcrXhHeXdFc3Xw6j6Mo0OvInlLSjhr/ZGXuRjouaXC2BQSZbDdOmzfGJVMn/rOjYi32h8LhrWwpdETC1Jx1Xd1Hsw+E7JBIz9BP3W2N27XtxQ9vXjXy0PrHGYMvxy02nDYN9Vw8K++7Dmi56MeN30Au+70wdp9uA9oF8U+2J7HW6T2Svt19C/0tDvl</source>
+    <source>eJzFWFtv2zYUfvev4AADkgPHLvZYL+62DmkDLEOQYE+xYTASZWuTRIGk0gVF/vsObxJJS3YdD6thILHO5Tvn8Nyonz7UuxpVuCS8xglB17T4u6CMrG5KvCWL0ajhBN0URVPmFRZk9dDUNWVi9UDYc56QO0af85SwheLzhVefhaj1v/egnVac9LLd00YAxzbnguF+TR9pBbREcP37M67SgjCEOXJ/W65FaHQnLrHyaruyBl3DU8pepKbgUadslBSYG6TAbUT+EaRKOQqej76ORgg+84sL9RddoJsqzRMwhqM8QwXFKZiBaIbEjqDaqss5SklGGCPpzAha+Z+fMUNPlBbmwVz9BUlBEkFSNFaC6ApluJCBDshZUyUipxXaEqECzuKJYvmq9cGHEdGwCo3FLueXS1zXjxFTnNF6oZhe95z6lVIhT61WboBIIX2UMOSZVILvOWEwnmme+n40TyDaWQmOij0DjWWSdif5+Y7weGJcDRisj/1UmZmS5njVZ4GDEpgynyNIkCzfoiwv4ACx2HU4iaJcS8IV2mx+u7nfbNAMRfPZTH41eZ7LfJpB9UWLTlRbMSgK37/4PIVKmbtS6pj4oJQma0BuEF1PbgnbEuUID4NVSpL29JrRMnZ8m6JIaYwmvjYTtFBT3cbysSXtRWuJ9K+NDGgcdSGatDJrwNVMUc/hDqK4gV2awzYokKkpZfPMtJy58cpD1AInIbqHsoTK3qQ5i58wJwZW06PJBH3wBOVnj809vAl6L0vN0GUqmxO+cXg86y3U0YQf6AxjgIPM6jpDmHvMo7p9w82MX9IUYVTihFEkqGoZRjqjDCWMYNmbkXZVk2YhEKSklDe5EU07++OxDMjUJtQEySEQG7Gp8mHi+CQ/tuMpm3WymVCtL5fqd6i0c/x1su8ctGDcFEK2A8CspJMa3ilwQ/LjpZ0BUEOOJ3sR7miae2N+QgisUi87S1wHIKZqAAVmQOz5OwPuyMGEERX/AClbNUURS1WTMHS91mtlrvGvA4NDRkuev04GefxKCZyIHsLnzA3d3Ptnh7R3YNC/f6/m/PpAhvkR0BZfIRmkqU/iAouGA+3Hd+8C0o5gmPSS9rhuKQOJWZEvyNufYg06tQjTVl+Qmf1R10sW1JsMPdcrS7t8vHlWM6N1KOaWrjzpm8guQ16RW1wBY+/stpwPtGHJtzD6u+Uhzj9Z8YlUhGHIiWNG2oXzEN9tngLLF8y6gvi/D8QEfLASLpcc+m1BBK16+2lPxxzDliB0+h5tLYYVdD6unfRUatrasRmu0fq4wEoirrWu2OIHnLaR5/rSYh9/r0oIE/mEE5jlWvboSQQtwoELIvm9ghDU6Ckx4Er0lBD4YG+LgJpexnxoFuf6H7aeUwJgtpCj1RguX87lLiil1i1TdIF13ppkd6GGFdFe5baKVF3e6c3jD1zqCu5agb9QzcyKspFvGo4p/YiTHen652HFiWTelC33UeVy3NOiMGkyrLfl29Nouw3r3lmcmGoQWbiIm2lzbqL5k+uUNJMHfDTHWjtN5nhwY3cBtNljt393OqpozNEDEe2W/IyLBvb8DO6V5trXdzGUye2d02LAPD0nKCux8Bc1R5k3n8D7Wab4IQiRc2WSnzCJAhg9hU5G02Kbs1DfBnoe5gOpsT7wU2G5lTwZ+a7ACdnRQm63ps3wb4evHWl7VeLHbbCl3ZpycmnrzWanF8T/ZINrl80Dpf2UV2nc9y7U3GqOVrkx2F3JLK5X4+GZGTl1YrekhPvU73mZi4HeWiqOTSFZBtuqUfnGyGf6Vndu5L31/VjgrXetjJ5KkG6rvlfiwXwzRzTo5Cfomc6Gxu2KlqKnF+/18dDKhhnDLwe9Nhr2XTUa/Fdb9q7Q81CPlD6CXWn6aO3O20e0y2AfbS/iLVP7yvp19C+ApynZ</source>
+  </file>
+  <file path="Folklore/Image/ImageHandler.php" generated-path="Folklore.Image.ImageHandler.html" hash="5d262bcade7a1455642f98337dc679c8" package="Default">
+    <docblock line="0">
+      <description></description>
+      <long-description></long-description>
+      <tag name="package" line="0" description="Default"/>
+    </docblock>
+    <namespace-alias name="Application">\Illuminate\Foundation\Application</namespace-alias>
+    <namespace-alias name="ImageHandlerContract">\Folklore\Image\Contracts\ImageHandler</namespace-alias>
+    <namespace-alias name="SourceContract">\Folklore\Image\Contracts\Source</namespace-alias>
+    <namespace-alias name="FilterWithValueContract">\Folklore\Image\Contracts\FilterWithValue</namespace-alias>
+    <namespace-alias name="FileMissingException">\Folklore\Image\Exception\FileMissingException</namespace-alias>
+    <namespace-alias name="FilterMissingException">\Folklore\Image\Exception\FilterMissingException</namespace-alias>
+    <namespace-alias name="FormatException">\Folklore\Image\Exception\FormatException</namespace-alias>
+    <namespace-alias name="Resize">\Folklore\Image\Filters\Resize</namespace-alias>
+    <namespace-alias name="Image">\Folklore\Image\Image</namespace-alias>
+    <namespace-alias name="ImageInterface">\Imagine\Image\ImageInterface</namespace-alias>
+    <namespace-alias name="ImagineInterface">\Imagine\Image\ImagineInterface</namespace-alias>
+    <namespace-alias name="Box">\Imagine\Image\Box</namespace-alias>
+    <namespace-alias name="Point">\Imagine\Image\Point</namespace-alias>
+    <class final="false" abstract="false" namespace="Folklore\Image" line="17" package="Default">
+      <extends/>
+      <implements>\Folklore\Image\Contracts\ImageHandler</implements>
+      <name>ImageHandler</name>
+      <full_name>\Folklore\Image\ImageHandler</full_name>
+      <docblock line="17">
+        <description></description>
+        <long-description></long-description>
+        <tag name="package" line="17" description="Default"/>
+      </docblock>
+      <property static="false" visibility="protected" namespace="Folklore\Image" line="19" package="Default">
+        <name>$manager</name>
+        <full_name>\Folklore\Image\ImageHandler::manager</full_name>
+        <default></default>
+        <docblock line="19">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="Folklore\Image" line="21" package="Default">
+        <name>$source</name>
+        <full_name>\Folklore\Image\ImageHandler::source</full_name>
+        <default></default>
+        <docblock line="21">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="Folklore\Image" line="23" package="Default">
+        <name>$memoryLimit</name>
+        <full_name>\Folklore\Image\ImageHandler::memoryLimit</full_name>
+        <default>null</default>
+        <docblock line="23">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="25" package="Default">
+        <name>__construct</name>
+        <full_name>\Folklore\Image\ImageHandler::__construct()</full_name>
+        <docblock line="25">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$manager</name>
+          <default></default>
+          <type>\Folklore\Image\Image</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="51" package="Default">
+        <name>make</name>
+        <full_name>\Folklore\Image\ImageHandler::make()</full_name>
+        <docblock line="51">
+          <description>Make an image and apply options</description>
+          <long-description>Examples:
+
+Create an Image object with the image resized (and cropped) to 300x300
+and rotated 180 degrees.
+```php
+$handler = Image::source();
+$image = $handler-&gt;make('path/to/image.jpg', [
+    'width' =&gt; 300,
+    'height' =&gt; 300,
+    'crop' =&gt; true,
+    'rotate' =&gt; 180
+]);
+```</long-description>
+          <tag name="param" line="51" description="&lt;p&gt;The path of the image&lt;/p&gt;" type="string" variable="$path">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="51" description="&lt;p&gt;The manipulations to apply on the image&lt;/p&gt;" type="array" variable="$options">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="51" description="" type="\Imagine\Image\ImageInterface">
+            <type>\Imagine\Image\ImageInterface</type>
+          </tag>
+          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageHandler::make()" refers="\Folklore\Image\Contracts\ImageHandler::make()" link="/classes/Folklore.Image.Contracts.ImageHandler.html#method_make"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$path</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$options</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="117" package="Default">
+        <name>open</name>
+        <full_name>\Folklore\Image\ImageHandler::open()</full_name>
+        <docblock line="117">
+          <description>Open an image from the source</description>
+          <long-description>Examples:
+
+Open the image path and return an Image object
+```php
+$handler = Image::source();
+$image = $handler-&gt;open('path/to/image.jpg');
+```</long-description>
+          <tag name="param" line="117" description="&lt;p&gt;The path of the image&lt;/p&gt;" type="string" variable="$path">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="117" description="" type="\Imagine\Image\ImageInterface">
+            <type>\Imagine\Image\ImageInterface</type>
+          </tag>
+          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageHandler::open()" refers="\Folklore\Image\Contracts\ImageHandler::open()" link="/classes/Folklore.Image.Contracts.ImageHandler.html#method_open"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$path</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="153" package="Default">
+        <name>save</name>
+        <full_name>\Folklore\Image\ImageHandler::save()</full_name>
+        <docblock line="153">
+          <description>Save an image to the source</description>
+          <long-description>Examples:
+
+Create a resized image and save it to a new path
+```php
+$handler = Image::source();
+$image = $handler-&gt;make('path/to/image.jpg', [
+    'width' =&gt; 300,
+    'height' =&gt; 300,
+    'crop' =&gt; true
+]);
+$handler-&gt;save($image, 'path/to/image-resized.jpg');
+```
+
+Or save it to a different source:
+```php
+$handler = Image::source();
+$image = $handler-&gt;make('path/to/image.jpg', [
+    'width' =&gt; 300,
+    'height' =&gt; 300,
+    'crop' =&gt; true
+]);
+Image::source('cloud')-&gt;save($image, 'path/to/image-resized.jpg');
+```</long-description>
+          <tag name="param" line="153" description="&lt;p&gt;The image to save&lt;/p&gt;" type="\Imagine\Image\ImageInterface" variable="$image">
+            <type>\Imagine\Image\ImageInterface</type>
+          </tag>
+          <tag name="param" line="153" description="&lt;p&gt;The path where you want to save the image&lt;/p&gt;" type="string" variable="$path">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="153" description="" type="string">
+            <type>string</type>
+          </tag>
+          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageHandler::save()" refers="\Folklore\Image\Contracts\ImageHandler::save()" link="/classes/Folklore.Image.Contracts.ImageHandler.html#method_save"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$image</name>
+          <default></default>
+          <type>\Imagine\Image\ImageInterface</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$path</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="172" package="Default">
+        <name>format</name>
+        <full_name>\Folklore\Image\ImageHandler::format()</full_name>
+        <docblock line="172">
+          <description>Return an URL to process the image</description>
+          <long-description>Examples:
+
+Open the image path and return an Image object
+```php
+$handler = Image::source();
+$format = $handler-&gt;format('path/to/image.jpg');
+// $format = 'jpg';</long-description>
+          <tag name="param" line="172" description="&lt;p&gt;The path of the image&lt;/p&gt;" type="string" variable="$path">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="172" description="The format fo the image" type="string">
+            <type>string</type>
+          </tag>
+          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageHandler::format()" refers="\Folklore\Image\Contracts\ImageHandler::format()" link="/classes/Folklore.Image.Contracts.ImageHandler.html#method_format"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$path</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="187" package="Default">
+        <name>thumbnail</name>
+        <full_name>\Folklore\Image\ImageHandler::thumbnail()</full_name>
+        <docblock line="187">
+          <description>Create a thumbnail from an image</description>
+          <long-description></long-description>
+          <tag name="param" line="187" description="&lt;p&gt;An image instance or the path to an image&lt;/p&gt;" type="\Imagine\Image\ImageInterface|string" variable="$image">
+            <type>\Imagine\Image\ImageInterface</type>
+            <type>string</type>
+          </tag>
+          <tag name="param" line="187" description="&lt;p&gt;The maximum width of the thumbnail&lt;/p&gt;" type="integer" variable="$width">
+            <type>integer</type>
+          </tag>
+          <tag name="param" line="187" description="&lt;p&gt;The maximum height of the thumbnail&lt;/p&gt;" type="integer" variable="$height">
+            <type>integer</type>
+          </tag>
+          <tag name="param" line="187" description="&lt;p&gt;If this is set to &lt;code&gt;true&lt;/code&gt;, it match the exact&#10;size provided. You can also set a position for the cropped image (ex: 'top left')&lt;/p&gt;" type="boolean|string" variable="$crop">
+            <type>boolean</type>
+            <type>string</type>
+          </tag>
+          <tag name="return" line="187" description="" type="\Imagine\Image\ImageInterface">
+            <type>\Imagine\Image\ImageInterface</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$image</name>
+          <default></default>
+          <type>\Imagine\Image\ImageInterface|string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$width</name>
+          <default>null</default>
+          <type>integer</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$height</name>
+          <default>null</default>
+          <type>integer</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$crop</name>
+          <default>true</default>
+          <type>boolean|string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="208" package="Default">
+        <name>getFiltersFromOptions</name>
+        <full_name>\Folklore\Image\ImageHandler::getFiltersFromOptions()</full_name>
+        <docblock line="208">
+          <description>Get filters from options</description>
+          <long-description></long-description>
+          <tag name="param" line="208" description="&lt;p&gt;Options&lt;/p&gt;" type="array" variable="$options">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="208" description="$filters" type="array">
+            <type>array</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$options</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="246" package="Default">
+        <name>applyFilter</name>
+        <full_name>\Folklore\Image\ImageHandler::applyFilter()</full_name>
+        <docblock line="246">
+          <description>Apply a custom filter or an image</description>
+          <long-description></long-description>
+          <tag name="param" line="246" description="&lt;p&gt;An image instance&lt;/p&gt;" type="\Imagine\Image\ImageInterface" variable="$image">
+            <type>\Imagine\Image\ImageInterface</type>
+          </tag>
+          <tag name="param" line="246" description="&lt;p&gt;The filter name&lt;/p&gt;" type="string" variable="$name">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="246" description="" type="\Imagine\Image\ImageInterface|array">
+            <type>\Imagine\Image\ImageInterface</type>
+            <type>array</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$image</name>
+          <default></default>
+          <type>\Imagine\Image\ImageInterface</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$name</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="280" package="Default">
+        <name>getSource</name>
+        <full_name>\Folklore\Image\ImageHandler::getSource()</full_name>
+        <docblock line="280">
+          <description>Get the image source</description>
+          <long-description></long-description>
+          <tag name="return" line="280" description="The source that is used" type="\Folklore\Image\Contracts\Source">
+            <type>\Folklore\Image\Contracts\Source</type>
+          </tag>
+          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageHandler::getSource()" refers="\Folklore\Image\Contracts\ImageHandler::getSource()" link="/classes/Folklore.Image.Contracts.ImageHandler.html#method_getSource"/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="300" package="Default">
+        <name>setSource</name>
+        <full_name>\Folklore\Image\ImageHandler::setSource()</full_name>
+        <docblock line="300">
+          <description>Set the image source</description>
+          <long-description>Open the image path and return an Image object
+```php
+use Folklore\Image\Contracts\ImageHandler;
+$handler = app(ImageHandler::class);
+
+$source = Image::getSourceManager()-&gt;driver('local');
+$handler-&gt;setSource($source);
+```</long-description>
+          <tag name="param" line="300" description="&lt;p&gt;The source of the factory&lt;/p&gt;" type="\Folklore\Image\Contracts\Source" variable="$source">
+            <type>\Folklore\Image\Contracts\Source</type>
+          </tag>
+          <tag name="return" line="300" description="" type="\Folklore\Image\ImageHandler">
+            <type>\Folklore\Image\ImageHandler</type>
+          </tag>
+          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageHandler::setSource()" refers="\Folklore\Image\Contracts\ImageHandler::setSource()" link="/classes/Folklore.Image.Contracts.ImageHandler.html#method_setSource"/>
+          <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$source</name>
+          <default></default>
+          <type>\Folklore\Image\Contracts\Source</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="312" package="Default">
+        <name>getMemoryLimit</name>
+        <full_name>\Folklore\Image\ImageHandler::getMemoryLimit()</full_name>
+        <docblock line="312">
+          <description>Get the memory limit</description>
+          <long-description></long-description>
+          <tag name="return" line="312" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="323" package="Default">
+        <name>setMemoryLimit</name>
+        <full_name>\Folklore\Image\ImageHandler::setMemoryLimit()</full_name>
+        <docblock line="323">
+          <description>Set the memory limit</description>
+          <long-description></long-description>
+          <tag name="param" line="323" description="&lt;p&gt;The memory limit&lt;/p&gt;" type="string" variable="$limit">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="323" description="" type="\Folklore\Image\ImageHandler">
+            <type>\Folklore\Image\ImageHandler</type>
+          </tag>
+          <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$limit</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="335" package="Default">
+        <name>getImagineManager</name>
+        <full_name>\Folklore\Image\ImageHandler::getImagineManager()</full_name>
+        <docblock line="335">
+          <description>Get the imagine manager</description>
+          <long-description></long-description>
+          <tag name="return" line="335" description="" type="\Folklore\Image\ImagineManager">
+            <type>\Folklore\Image\ImagineManager</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="345" package="Default">
+        <name>getImagine</name>
+        <full_name>\Folklore\Image\ImageHandler::getImagine()</full_name>
+        <docblock line="345">
+          <description>Get the imagine driver</description>
+          <long-description></long-description>
+          <tag name="return" line="345" description="" type="\Imagine\Image\ImagineInterface">
+            <type>\Imagine\Image\ImagineInterface</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="358" package="Default">
+        <name>__call</name>
+        <full_name>\Folklore\Image\ImageHandler::__call()</full_name>
+        <docblock line="358">
+          <description>Dynamically call the default driver instance.</description>
+          <long-description></long-description>
+          <tag name="param" line="358" description="" type="string" variable="$method">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="358" description="" type="array" variable="$parameters">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="358" description="" type="mixed">
+            <type>mixed</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$method</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parameters</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+      <error line="17" code="PPC:ERR-50005">No summary for class \Folklore\Image\ImageHandler</error>
+      <error line="25" code="PPC:ERR-50015">Argument $manager is missing from the Docblock of __construct</error>
+      <error line="25" code="PPC:ERR-50008">No summary for method __construct()</error>
+      <error line="19" code="PPC:ERR-50007">No summary for property $manager</error>
+      <error line="21" code="PPC:ERR-50007">No summary for property $source</error>
+      <error line="23" code="PPC:ERR-50007">No summary for property $memoryLimit</error>
+    </parse_markers>
+    <source>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</source>
   </file>
   <file path="Folklore/Image/ImagineManager.php" generated-path="Folklore.Image.ImagineManager.html" hash="21333f1b21ec70c33715a6ceb52c6844" package="Default">
     <docblock line="0">
@@ -274,7 +709,7 @@
     </parse_markers>
     <source>eJylk8tqwzAQRff+ilkUnASafED6goaKLLrKMs5ClcaOiCwJPdJCyb/XlmVKTRPiVpuRrTt37gHp7tHsDShaozOUIbxoeZDaYrGuaYXLLAsOYS1lqIWiHotNMEZbX7xS1ZzbRsAkdQ5auVCYfgN+eFTcQfrOPjNo1mI2ixVm8GyxsQOqQCjnqWpG6xL8HnsnIBy4FUe089TTtz5Z9MEqKJKyILzfJskiVmO1R+aRQxkU80IrYHEq4atoPJlGXZetXclY4ftv5pPpMipP2XiYWNnhWqIkH4eVmkawDcb8B5CMAyR/ASSjAcm1gAR9xOFY0iA9iPb2J5j4Os4ROW+Fqn7mD29SsO/wFfpVZ3s5+Y3fC3f7QI3Z5kyrUlT5bpvHJPMuSb47l38zOr+hltaQ8gPctKIh3FELfhHNDdGizZDvGjC47yL0gKfsC9wZX5E=</source>
   </file>
-  <file path="Folklore/Image/RouteRegistrar.php" generated-path="Folklore.Image.RouteRegistrar.html" hash="8b96b679420c1bb5d33f04ccecd26793" package="Default">
+  <file path="Folklore/Image/RouteRegistrar.php" generated-path="Folklore.Image.RouteRegistrar.html" hash="57525c979225f6de0051713dfd56eff7" package="Default">
     <docblock line="0">
       <description></description>
       <long-description></long-description>
@@ -349,16 +784,19 @@
           <long-description></long-description>
         </docblock>
       </property>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="35" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="36" package="Default">
         <name>__construct</name>
         <full_name>\Folklore\Image\RouteRegistrar::__construct()</full_name>
-        <docblock line="35">
+        <docblock line="36">
           <description>Create a new route registrar instance.</description>
           <long-description></long-description>
-          <tag name="param" line="35" description="" type="\Illuminate\Routing\Router" variable="$router">
+          <tag name="param" line="36" description="&lt;p&gt;The laravel router&lt;/p&gt;" type="\Illuminate\Routing\Router" variable="$router">
             <type>\Illuminate\Routing\Router</type>
           </tag>
-          <tag name="return" line="35" description="" type="void">
+          <tag name="param" line="36" description="&lt;p&gt;The url generator&lt;/p&gt;" type="\Folklore\Image\UrlGenerator" variable="$urlGenerator">
+            <type>\Folklore\Image\UrlGenerator</type>
+          </tag>
+          <tag name="return" line="36" description="" type="void">
             <type>void</type>
           </tag>
         </docblock>
@@ -373,70 +811,107 @@
           <type>\Folklore\Image\UrlGenerator</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="41" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="62" package="Default">
         <name>image</name>
         <full_name>\Folklore\Image\RouteRegistrar::image()</full_name>
-        <docblock line="41">
-          <description></description>
-          <long-description></long-description>
+        <docblock line="62">
+          <description>Creates a new image route.</description>
+          <long-description>Examples:
+
+```php
+$router = app('router');
+$router-&gt;image('/thumbnail/{pattern}', [
+    'filters' =&gt; [
+        'width' =&gt; 100,
+        'height' =&gt; 100,
+        'crop' =&gt; true
+    ]
+]);
+```</long-description>
+          <tag name="param" line="62" description="&lt;p&gt;The path of the route. It must contain &lt;code&gt;{pattern}&lt;/code&gt;.&lt;/p&gt;" type="string" variable="$path">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="62" description="&lt;p&gt;Configuration options for the route.&lt;/p&gt;" type="array" variable="$config">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="62" description="The route created" type="\Illuminate\Routing\Route">
+            <type>\Illuminate\Routing\Route</type>
+          </tag>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$path</name>
           <default></default>
-          <type/>
+          <type>string</type>
         </argument>
         <argument line="0" by_reference="false">
           <name>$config</name>
-          <default></default>
-          <type/>
+          <default>array()</default>
+          <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="82" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="109" package="Default">
         <name>setPatternName</name>
         <full_name>\Folklore\Image\RouteRegistrar::setPatternName()</full_name>
-        <docblock line="82">
-          <description></description>
+        <docblock line="109">
+          <description>Set the name of the router pattern</description>
           <long-description></long-description>
+          <tag name="param" line="109" description="&lt;p&gt;The name of the pattern that will be added to the router&lt;/p&gt;" type="string" variable="$name">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="109" description="" type="\Folklore\Image\RouteRegistrar">
+            <type>\Folklore\Image\RouteRegistrar</type>
+          </tag>
+          <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
         </docblock>
         <argument line="0" by_reference="false">
-          <name>$value</name>
+          <name>$name</name>
           <default></default>
-          <type/>
+          <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="88" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="120" package="Default">
         <name>getPatternName</name>
         <full_name>\Folklore\Image\RouteRegistrar::getPatternName()</full_name>
-        <docblock line="88">
-          <description></description>
+        <docblock line="120">
+          <description>Get the name of the router pattern</description>
           <long-description></long-description>
+          <tag name="return" line="120" description="The name of the pattern" type="string">
+            <type>string</type>
+          </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="93" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="131" package="Default">
         <name>setCacheMiddleware</name>
         <full_name>\Folklore\Image\RouteRegistrar::setCacheMiddleware()</full_name>
-        <docblock line="93">
-          <description></description>
+        <docblock line="131">
+          <description>Set the middleware that will be used for caching images</description>
           <long-description></long-description>
+          <tag name="param" line="131" description="&lt;p&gt;The middleware name or class path&lt;/p&gt;" type="string" variable="$middleware">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="131" description="" type="\Folklore\Image\RouteRegistrar">
+            <type>\Folklore\Image\RouteRegistrar</type>
+          </tag>
+          <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
         </docblock>
         <argument line="0" by_reference="false">
-          <name>$value</name>
+          <name>$middleware</name>
           <default></default>
-          <type/>
+          <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="99" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="137" package="Default">
         <name>getCacheMiddleware</name>
         <full_name>\Folklore\Image\RouteRegistrar::getCacheMiddleware()</full_name>
-        <docblock line="99">
+        <docblock line="137">
           <description></description>
           <long-description></long-description>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="104" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="142" package="Default">
         <name>setController</name>
         <full_name>\Folklore\Image\RouteRegistrar::setController()</full_name>
-        <docblock line="104">
+        <docblock line="142">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -446,10 +921,10 @@
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="110" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="148" package="Default">
         <name>getController</name>
         <full_name>\Folklore\Image\RouteRegistrar::getController()</full_name>
-        <docblock line="110">
+        <docblock line="148">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -458,28 +933,17 @@
     <parse_markers>
       <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
       <error line="8" code="PPC:ERR-50005">No summary for class \Folklore\Image\RouteRegistrar</error>
-      <error line="35" code="PPC:ERR-50015">Argument $urlGenerator is missing from the Docblock of __construct</error>
-      <error line="35" code="PPC:ERR-50014">Name of argument $urlGenerator does not match with the DocBlock's name $router in __construct()</error>
-      <error line="35" code="PPC:ERR-50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $urlGenerator in __construct()</error>
-      <error line="41" code="PPC:ERR-50015">Argument $path is missing from the Docblock of image</error>
-      <error line="41" code="PPC:ERR-50015">Argument $config is missing from the Docblock of image</error>
-      <error line="41" code="PPC:ERR-50008">No summary for method image()</error>
-      <error line="82" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setPatternName</error>
-      <error line="82" code="PPC:ERR-50008">No summary for method setPatternName()</error>
-      <error line="88" code="PPC:ERR-50008">No summary for method getPatternName()</error>
-      <error line="93" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setCacheMiddleware</error>
-      <error line="93" code="PPC:ERR-50008">No summary for method setCacheMiddleware()</error>
-      <error line="99" code="PPC:ERR-50008">No summary for method getCacheMiddleware()</error>
-      <error line="104" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setController</error>
-      <error line="104" code="PPC:ERR-50008">No summary for method setController()</error>
-      <error line="110" code="PPC:ERR-50008">No summary for method getController()</error>
+      <error line="137" code="PPC:ERR-50008">No summary for method getCacheMiddleware()</error>
+      <error line="142" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setController</error>
+      <error line="142" code="PPC:ERR-50008">No summary for method setController()</error>
+      <error line="148" code="PPC:ERR-50008">No summary for method getController()</error>
       <error line="10" code="PPC:ERR-50007">No summary for property $router</error>
       <error line="12" code="PPC:ERR-50007">No summary for property $urlGenerator</error>
       <error line="23" code="PPC:ERR-50007">No summary for property $patternName</error>
       <error line="25" code="PPC:ERR-50007">No summary for property $cacheMiddleware</error>
       <error line="27" code="PPC:ERR-50007">No summary for property $controller</error>
     </parse_markers>
-    <source>eJytVltvmzAUfs+vOA+VCB1N9rp13UWRtvVhF1XbU2mRS06INQeQbdK1Vf77bGOIbUiqaeMFMOd85/J9PubNu3pdT0qyQVGTHOFjxX6ximN6uSEFnk8mjUC4ZKzZ0JJITK+qRtKyMHfk5+HnRVVKQkvk+6fWxsdNf3L2CdVHIitlMMkZEQIM5hUWVEhO+ORpAuqqeSUxl7iEE25jhuuND6a/zk9PzR1O4ccagUjJ6Z3yFiDXREJOSrhDECjVu4It1upOBZg8ZtazA3i/JRwI5+TBrszDBAhj1T0uP+yjXMB1a6yuiIgogWhZbVQ/9NOGLpcM7wlH/aZ7390NB/ql5riiv6PEgNwMS65VRcjLr8pHxYqobmpmF6OheU7yNX7pw/Yus30qM2Mz5quI5BVjyLVbGhD5Wcq6fVz0du8F8m0P5VCx4KhEAgRKvAfDJvCObqClkKTMcdD+mnCyAUgPqhA6afQuHGXDS9hWdOlz1twxmsOqKXNJqxKyTFWnwje5nFosC5WAK1FfY7HBeuoJPtHaOXvbOqom9UINDFwMbebrVhvuJqNpGq6mmvR1YghZ0WKQBNGqMzLNCpRTa5YY+cVOLq0OD9j2Ii0bxlwvo44DTq1yElgRJtB12riKG/P0dsL1jevrK3zM2VpkdgPZJjt+g/y/PJePscq8rCxs4O9BuxtkDFXNP+Eg9eax3SH6oiuYtknGDqlBF69vtGyCVPaZ7PZw8zl8RlXmPYIyzn9pfKkIbDdd3s5mAaR8AKVCaFOdweUKqIRlhSJRri5a3m3dFsF2GWSlZqnM18ptQN23Wov3kCq7YRXwrvsg6CNWq2mAEw8aU7SbB5ffPa240plFWTRTw7TIONZMDdepB6GvaH59S84eX569unkxp3bkegbZyKKHGc1vzRZNZ3M9vDXXRMSej1Oi26O/kPdYtSGqIcd+150Yzp1+gwzaG0C5M23opIMnfjwHYAeoJkFI1//d0Y7Y+zTWCjcgJn1KxalFUE/pTlMM0VM082Wy0/H0gHU3pT1Ggl6YnPuQSVuJrys9c+HirZaBL51uwJqP3SS+uDDjFt4p6by2q4GbM5KM6/49MDQ6NDZtg/F3jrXTY1vL4I8lDnDMzDKh9vOqt4jjo8eV+q1yNDo92RLW4IFD0xdFa3o+SsDRkIUfMgzmE+nEfK6OhT9rj9cyPGP+pZ4w9PGaRg+FI3X1pD5Tknu2/VM1+4DPFNIbdpC7yR9wj86r</source>
+    <source>eJytV0tz2zYQvutX4OAZSq4sucfGlZOOp01ySNNJ3ZOlyDC5EjGhSA4AWk48+u9dLEESAEW5yZQXPrD7YR/f7oK/vi7TcpTzHaiSx8D+KLIvWSFh+X7Ht3A1GlUK2Pssq3Yi5xqWn4pKi3xLd5BX4fJNkWsucpDdUy3j4y7/kdlbwEWuCxQYxRlXihHmJ9gKpSWXo+cRw6uUhYZYQ8LOpN0z/F75YGZ1fn5Od3bOblNgXGspHlBbMZ1yzWKeswdgCjS+I+w2xbtQjOyYWc0G4M0jl4xLyb/aL/PQAJ5lxR6S37pdFuyuFsYr4iqasigpdhgP87QTSZLBnkswbyb2zZ1yYF5KCRvxFE0JZNV3uUSPQOZ/og7uFQkT1LX9GPXFYx6n8KHdtlWZdabMSOaYLiZSFlkG0qgtg0S+07qsH29auTcK5GML5aTiRgKShHGWw55RNpls0s1ErjTPY+iFv+SS79hykIQNMSjTGQo/QlajyxDjBAt9GhEWfmDb5ksLJUFXMmePhUh8PlQPmYjZpspjLYqcrdcYOXStivXYN3TKhjeeENZzS54zw8uLa+vhoiuCQMAzfhHWhBE8DKRD2XwQIeq4hSn4/YnvygzUq+D7/f296R727aw1kpflOKrfoslVsH5xTTuNo7lOq91DzkU2f7bUPSD37xp5qp2NyHBBRWxx7a/Q6l4kOqW1ny8vp73lFMQ21cPrsSxKWsUsgbu6al5Wnfno7HFmYo6RjFSTKfGGHooNtpQmnuy9ZrtKYeOpuyK7bz2+nwVw1Gmo7DZiy27oVmEeDaeK0twU22CSO/SQmoOlQtbVdRdT7k8zuM4T+TVtDcLOtuqRlJuOR4avt6DHVnZKrW/icLXugQOybYPMqyxztagzDSjVXWvKNjxT4Crt3G53TNPrwncrV9fvrseUrcTaNm9bhI5ez/4PL9lDUmvPKgsb6HvQbnM+hoqzVzlIrfjEdmdziQ0b10ZOnKQGUbxbmbYSmNJZcujg5nP2DtDNPbIshfiLwdcd8eoKwK6Tf6UOW5uKJbJhQrOkADVFVRctbsZGjWCjzHSBc1zHKar1UvfRFsrJ7IV5N3FQ4hsUm3GAM+kFxs4FSP7yuOJSZxatoxkO8u1aQpnhYB97EOaK5nef+cW3y4tfVj/NhR33nsD6yEcPM5p/pjpdzubm4GByzdXE03FcdGP0HfQ+5m2ISsmx6yYS/bnUFkgvvAGUO/P6Smbzqb+fA3BggJ0gTNf/W9EO2VszUsQNErN8Xqpzi4BPy4NJMYueo5lPEzP1qMu6RWl7eRALsrndclp74vPK9Fwz05AGPnWaBkuLTSdeLKjdstdInVf2a6DmtCRS7d4DQeIhydQBhqcYSifG1pfeaXkS4FDPoq26ftVKTCZDx5m/6TQPzGTQG7+yaRmn5zfp3QYAbbMxvw17gZHC/waeJHgyxv7TbRHOYPL15HTFnw+nmsa0/cDpz2cvSV4dJcpQaN5+d2gsqo3NQFRO+rf1/Qtd8/ntePhSep3B7iUFWZPQwcjMKGM00VGdzrkDdutj1+7K+peQjnQ/lOIbf2COnR0Hkt0/LTg6/yHtR/IQGnE6F0dn/AC48bCt0fHZI8+qQb/co0ot+YPedBu+4Egr2EAeRv8Ci2cMTw==</source>
   </file>
   <file path="Folklore/Image/Sources/AbstractSource.php" generated-path="Folklore.Image.Sources.AbstractSource.html" hash="ecfd42987672a6eef36373149cf36526" package="Default">
     <docblock line="0">
@@ -606,7 +1070,7 @@
     </parse_markers>
     <source>eJydVO9v2jAQ/Z6/4qpVTVJR+F5GW7YFxiQoGkza1FbIpE7wmjiR7Wittv7vO9tJCQl0P/whEPvdu3f3znl7mW9yx+EkpTInIYVRljwkmaC3k5TE9HaRFSKksu84hWwd6ifjdEo4von+PsgXkYwpp4KobD/gfcaVIKGSZSrMRNbSbEGYEClhWL7ac2BpntCUciXB7jg/HcCVi0zRUNF7OGZWV7+5X+yIaRyGGY9YjOnNfrFOWAhRwUPFMg6rFR6jjCJU3m7VL9k6gLXGFf1usk5F7xt2K1ivY7Vh8uyipIBBQ3sNUqfTuHYtNbBNpmFVVfrw2WnU/FJeTJVxQ45Elo5YQqV3HOkfFJ4TtUEmXiRJSz19VJRLzTAAjWM8yjwT0YH5cPlxMhtdr4Kvy2C2mFzP/JpOJnUaDDuiaa6evC1VHbUmkurRNI2xEZeHE70bLoLZcBr451psjeaeCSw4E09/x/Nh8tnSmIO6aNMjJLm52+5GOMsk3EDZMSASzD+/1ii9WATeUS5ovEqJCjee+8bt7vH27AKTKiq453cR0inJmmx6obeK8aI2K9bl+huWICS9n1sTD+RDhFXv91uSq36dnNTsOBrs+l2luHH1rnu3z5T/rsB2/eYO9QslWOol5rl1tQNu1/Xx2XOxZz23m9Rhui6N6FWQbbLyQuglqCoEr5Lt3Jfe6amFncKYKlAbqj1HEyGLgHAwISWiAl5hT0gKgJ8MxuPSCLRgicHmj8qaoXBVarAxv/QMl0e9vd8kvLQjo0NfWt19O8itS1qKHcAVfWTRyuRUTzkt4dt2yB9M2UE2EU3DQnQfJtPhOFh+mwer8WR03jK0LMGNWeTumrrGW/LQf43w0zwYH2b8ntP4nynns1cYc/4HwvZ4bL8rz86z8xsp4hBy</source>
   </file>
-  <file path="Folklore/Image/UrlGenerator.php" generated-path="Folklore.Image.UrlGenerator.html" hash="f4e938f6060276d2efa30f3435e03d74" package="Default">
+  <file path="Folklore/Image/UrlGenerator.php" generated-path="Folklore.Image.UrlGenerator.html" hash="5391564e859a1dd043d2f33121b784ec" package="Default">
     <docblock line="0">
       <description></description>
       <long-description></long-description>
@@ -707,26 +1171,55 @@
           <type>\Illuminate\Routing\Router</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="45" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="76" package="Default">
         <name>make</name>
         <full_name>\Folklore\Image\UrlGenerator::make()</full_name>
-        <docblock line="45">
-          <description>Make an URL from the filters passed as argument</description>
-          <long-description></long-description>
-          <tag name="param" line="45" description="&lt;p&gt;The source path&lt;/p&gt;" type="string" variable="$src">
+        <docblock line="76">
+          <description>Generates an url containing the filters, according to the url format
+in the config.</description>
+          <long-description>Examples:
+
+```php
+$urlGenerator = app('image.url');
+echo $urlGenerator-&gt;make('path/to/image.jpg', 300, 300);
+// '/path/to/image-filters(300x300).jpg'
+```
+
+You can also omit the size parameters and pass a filters array as the second argument
+```php
+echo $urlGenerator-&gt;make('path/to/image.jpg', [
+    'width' =&gt; 300,
+'height' =&gt; 300,
+'rotate' =&gt; 180
+]);
+// '/path/to/image-filters(300x300-rotate(180)).jpg'
+```
+
+You can also override the pattern config
+```php
+echo $urlGenerator-&gt;make('path/to/image.jpg', [
+    'width' =&gt; 300,
+    'height' =&gt; 300,
+    'pattern' =&gt; [
+        'filters_format' =&gt; '-filters-{filters}'
+    ]
+]);
+// '/path/to/image-filters-300x300-rotate(180).jpg'
+```</long-description>
+          <tag name="param" line="76" description="&lt;p&gt;The source path&lt;/p&gt;" type="string" variable="$src">
             <type>string</type>
           </tag>
-          <tag name="param" line="45" description="&lt;p&gt;The width of the image, or and array of filters&lt;/p&gt;" type="integer|array" variable="$width">
+          <tag name="param" line="76" description="&lt;p&gt;The width of the image, or and array of filters&lt;/p&gt;" type="integer|array" variable="$width">
             <type>integer</type>
             <type>array</type>
           </tag>
-          <tag name="param" line="45" description="&lt;p&gt;The height of the image&lt;/p&gt;" type="integer" variable="$height">
+          <tag name="param" line="76" description="&lt;p&gt;The height of the image&lt;/p&gt;" type="integer" variable="$height">
             <type>integer</type>
           </tag>
-          <tag name="param" line="45" description="&lt;p&gt;An array of filters and config filters&lt;/p&gt;" type="array" variable="$filters">
+          <tag name="param" line="76" description="&lt;p&gt;An array of filters and config filters&lt;/p&gt;" type="array" variable="$filters">
             <type>array</type>
           </tag>
-          <tag name="return" line="45" description="The url containing the filters" type="string">
+          <tag name="return" line="76" description="The url containing the filters" type="string">
             <type>string</type>
           </tag>
           <tag name="inherited_from" description="\Folklore\Image\Contracts\UrlGenerator::make()" refers="\Folklore\Image\Contracts\UrlGenerator::make()" link="/classes/Folklore.Image.Contracts.UrlGenerator.html#method_make"/>
@@ -752,16 +1245,21 @@
           <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="141" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="179" package="Default">
         <name>pattern</name>
         <full_name>\Folklore\Image\UrlGenerator::pattern()</full_name>
-        <docblock line="141">
-          <description>Get the URL pattern</description>
-          <long-description></long-description>
-          <tag name="param" line="141" description="&lt;p&gt;Config options to change the format and filters_format&lt;/p&gt;" type="array" variable="$config">
+        <docblock line="179">
+          <description>Generates a pattern, according to the url format in the config.</description>
+          <long-description>Examples:
+```php
+$urlGenerator = app('image.url');
+$pattern = $urlGenerator-&gt;pattern();
+preg_match('^'.$pattern.'$', '/path/to/image-filters(300x300).jpg'); // true
+```</long-description>
+          <tag name="param" line="179" description="&lt;p&gt;Config options to change the format&lt;/p&gt;" type="array" variable="$config">
             <type>array</type>
           </tag>
-          <tag name="return" line="141" description="" type="string">
+          <tag name="return" line="179" description="The pattern to match urls" type="string">
             <type>string</type>
           </tag>
           <tag name="inherited_from" description="\Folklore\Image\Contracts\UrlGenerator::pattern()" refers="\Folklore\Image\Contracts\UrlGenerator::pattern()" link="/classes/Folklore.Image.Contracts.UrlGenerator.html#method_pattern"/>
@@ -772,32 +1270,28 @@
           <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="147" package="Default">
-        <name>patternAndMatches</name>
-        <full_name>\Folklore\Image\UrlGenerator::patternAndMatches()</full_name>
-        <docblock line="147">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$config</name>
-          <default>array()</default>
-          <type/>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="199" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="203" package="Default">
         <name>parse</name>
         <full_name>\Folklore\Image\UrlGenerator::parse()</full_name>
-        <docblock line="199">
-          <description>Parse an url</description>
-          <long-description></long-description>
-          <tag name="param" line="199" description="&lt;p&gt;The path to be parsed&lt;/p&gt;" type="string" variable="$path">
+        <docblock line="203">
+          <description>Parse an url according to the format in the config and extract
+the path and the filters</description>
+          <long-description>Examples:
+
+```php
+$urlGenerator = app('image.url');
+$url = '/path/to/image-filters(300x300).jpg';
+$path = $urlGenerator-&gt;parse($url);
+// $path['path'] = '/path/to/image.jpg';
+// $path['filters'] = ['width' =&gt; 300, 'height' =&gt; 300];
+```</long-description>
+          <tag name="param" line="203" description="&lt;p&gt;The path to be parsed&lt;/p&gt;" type="string" variable="$path">
             <type>string</type>
           </tag>
-          <tag name="param" line="199" description="&lt;p&gt;Config options to change the pattern and filters_format&lt;/p&gt;" type="array" variable="$config">
+          <tag name="param" line="203" description="&lt;p&gt;Config options to change the format&lt;/p&gt;" type="array" variable="$config">
             <type>array</type>
           </tag>
-          <tag name="return" line="199" description="" type="array">
+          <tag name="return" line="203" description="An array containing the `path` and `filters`" type="array">
             <type>array</type>
           </tag>
           <tag name="inherited_from" description="\Folklore\Image\Contracts\UrlGenerator::parse()" refers="\Folklore\Image\Contracts\UrlGenerator::parse()" link="/classes/Folklore.Image.Contracts.UrlGenerator.html#method_parse"/>
@@ -813,19 +1307,38 @@
           <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="230" package="Default">
-        <name>getParametersFromFilters</name>
-        <full_name>\Folklore\Image\UrlGenerator::getParametersFromFilters()</full_name>
-        <docblock line="230">
-          <description>Get the parameters to be used in an url according to the filter_format</description>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="233" package="Default">
+        <name>patternAndMatches</name>
+        <full_name>\Folklore\Image\UrlGenerator::patternAndMatches()</full_name>
+        <docblock line="233">
+          <description>Get the pattern and all matches with index</description>
           <long-description></long-description>
-          <tag name="param" line="230" description="&lt;p&gt;The array of filters&lt;/p&gt;" type="array" variable="$filters">
+          <tag name="param" line="233" description="&lt;p&gt;Config options to change the format&lt;/p&gt;" type="array" variable="$config">
             <type>array</type>
           </tag>
-          <tag name="param" line="230" description="&lt;p&gt;The format of each filter parameter&lt;/p&gt;" type="string" variable="$format">
+          <tag name="return" line="233" description="An array containing the `pattern` and `matches`" type="array">
+            <type>array</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$config</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="285" package="Default">
+        <name>getParametersFromFilters</name>
+        <full_name>\Folklore\Image\UrlGenerator::getParametersFromFilters()</full_name>
+        <docblock line="285">
+          <description>Get the parameters to be used in an url according to the filter_format</description>
+          <long-description></long-description>
+          <tag name="param" line="285" description="&lt;p&gt;The array of filters&lt;/p&gt;" type="array" variable="$filters">
+            <type>array</type>
+          </tag>
+          <tag name="param" line="285" description="&lt;p&gt;The format of each filter parameter&lt;/p&gt;" type="string" variable="$format">
             <type>string</type>
           </tag>
-          <tag name="return" line="230" description="$parameters" type="array">
+          <tag name="return" line="285" description="$parameters" type="array">
             <type>array</type>
           </tag>
         </docblock>
@@ -840,23 +1353,23 @@
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="273" package="Default">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="328" package="Default">
         <name>getFiltersParameter</name>
         <full_name>\Folklore\Image\UrlGenerator::getFiltersParameter()</full_name>
-        <docblock line="273">
+        <docblock line="328">
           <description>Join the parameters into the filters parameter according to filters_format
 and filter_separator</description>
           <long-description></long-description>
-          <tag name="param" line="273" description="&lt;p&gt;The array of filters parameters&lt;/p&gt;" type="array" variable="$parameters">
+          <tag name="param" line="328" description="&lt;p&gt;The array of filters parameters&lt;/p&gt;" type="array" variable="$parameters">
             <type>array</type>
           </tag>
-          <tag name="param" line="273" description="&lt;p&gt;The format of the filters parameter&lt;/p&gt;" type="string" variable="$filtersFormat">
+          <tag name="param" line="328" description="&lt;p&gt;The format of the filters parameter&lt;/p&gt;" type="string" variable="$filtersFormat">
             <type>string</type>
           </tag>
-          <tag name="param" line="273" description="&lt;p&gt;The separator for each filter parameters&lt;/p&gt;" type="string" variable="$filterSeparator">
+          <tag name="param" line="328" description="&lt;p&gt;The separator for each filter parameters&lt;/p&gt;" type="string" variable="$filterSeparator">
             <type>string</type>
           </tag>
-          <tag name="return" line="273" description="$parameter" type="string">
+          <tag name="return" line="328" description="$parameter" type="string">
             <type>string</type>
           </tag>
         </docblock>
@@ -876,19 +1389,19 @@ and filter_separator</description>
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="298" package="Default">
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="353" package="Default">
         <name>parseFilters</name>
         <full_name>\Folklore\Image\UrlGenerator::parseFilters()</full_name>
-        <docblock line="298">
+        <docblock line="353">
           <description>Parse filters from url string</description>
           <long-description></long-description>
-          <tag name="param" line="298" description="&lt;p&gt;The path contaning all the filters&lt;/p&gt;" type="string" variable="$path">
+          <tag name="param" line="353" description="&lt;p&gt;The path contaning all the filters&lt;/p&gt;" type="string" variable="$path">
             <type>string</type>
           </tag>
-          <tag name="param" line="298" description="&lt;p&gt;Configuration options for the parsing&lt;/p&gt;" type="array" variable="$config">
+          <tag name="param" line="353" description="&lt;p&gt;Configuration options for the parsing&lt;/p&gt;" type="array" variable="$config">
             <type>array</type>
           </tag>
-          <tag name="return" line="298" description="" type="array">
+          <tag name="return" line="353" description="" type="array">
             <type>array</type>
           </tag>
         </docblock>
@@ -903,10 +1416,10 @@ and filter_separator</description>
           <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="346" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="401" package="Default">
         <name>setFormat</name>
         <full_name>\Folklore\Image\UrlGenerator::setFormat()</full_name>
-        <docblock line="346">
+        <docblock line="401">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -916,18 +1429,18 @@ and filter_separator</description>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="351" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="406" package="Default">
         <name>getFormat</name>
         <full_name>\Folklore\Image\UrlGenerator::getFormat()</full_name>
-        <docblock line="351">
+        <docblock line="406">
           <description></description>
           <long-description></long-description>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="356" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="411" package="Default">
         <name>setFilterFormat</name>
         <full_name>\Folklore\Image\UrlGenerator::setFilterFormat()</full_name>
-        <docblock line="356">
+        <docblock line="411">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -937,18 +1450,18 @@ and filter_separator</description>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="361" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="416" package="Default">
         <name>getFilterFormat</name>
         <full_name>\Folklore\Image\UrlGenerator::getFilterFormat()</full_name>
-        <docblock line="361">
+        <docblock line="416">
           <description></description>
           <long-description></long-description>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="366" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="421" package="Default">
         <name>setFilterSeparator</name>
         <full_name>\Folklore\Image\UrlGenerator::setFilterSeparator()</full_name>
-        <docblock line="366">
+        <docblock line="421">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -958,18 +1471,18 @@ and filter_separator</description>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="371" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="426" package="Default">
         <name>getFilterSeparator</name>
         <full_name>\Folklore\Image\UrlGenerator::getFilterSeparator()</full_name>
-        <docblock line="371">
+        <docblock line="426">
           <description></description>
           <long-description></long-description>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="376" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="431" package="Default">
         <name>setFiltersFormat</name>
         <full_name>\Folklore\Image\UrlGenerator::setFiltersFormat()</full_name>
-        <docblock line="376">
+        <docblock line="431">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -979,18 +1492,18 @@ and filter_separator</description>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="381" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="436" package="Default">
         <name>getFiltersFormat</name>
         <full_name>\Folklore\Image\UrlGenerator::getFiltersFormat()</full_name>
-        <docblock line="381">
+        <docblock line="436">
           <description></description>
           <long-description></long-description>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="386" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="441" package="Default">
         <name>setPlaceholdersPatterns</name>
         <full_name>\Folklore\Image\UrlGenerator::setPlaceholdersPatterns()</full_name>
-        <docblock line="386">
+        <docblock line="441">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -1000,10 +1513,10 @@ and filter_separator</description>
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="391" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="446" package="Default">
         <name>getPlaceholdersPatterns</name>
         <full_name>\Folklore\Image\UrlGenerator::getPlaceholdersPatterns()</full_name>
-        <docblock line="391">
+        <docblock line="446">
           <description></description>
           <long-description></long-description>
         </docblock>
@@ -1015,23 +1528,21 @@ and filter_separator</description>
       <error line="30" code="PPC:ERR-50015">Argument $image is missing from the Docblock of __construct</error>
       <error line="30" code="PPC:ERR-50015">Argument $router is missing from the Docblock of __construct</error>
       <error line="30" code="PPC:ERR-50008">No summary for method __construct()</error>
-      <error line="147" code="PPC:ERR-50015">Argument $config is missing from the Docblock of patternAndMatches</error>
-      <error line="147" code="PPC:ERR-50008">No summary for method patternAndMatches()</error>
-      <error line="346" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setFormat</error>
-      <error line="346" code="PPC:ERR-50008">No summary for method setFormat()</error>
-      <error line="351" code="PPC:ERR-50008">No summary for method getFormat()</error>
-      <error line="356" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setFilterFormat</error>
-      <error line="356" code="PPC:ERR-50008">No summary for method setFilterFormat()</error>
-      <error line="361" code="PPC:ERR-50008">No summary for method getFilterFormat()</error>
-      <error line="366" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setFilterSeparator</error>
-      <error line="366" code="PPC:ERR-50008">No summary for method setFilterSeparator()</error>
-      <error line="371" code="PPC:ERR-50008">No summary for method getFilterSeparator()</error>
-      <error line="376" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setFiltersFormat</error>
-      <error line="376" code="PPC:ERR-50008">No summary for method setFiltersFormat()</error>
-      <error line="381" code="PPC:ERR-50008">No summary for method getFiltersFormat()</error>
-      <error line="386" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setPlaceholdersPatterns</error>
-      <error line="386" code="PPC:ERR-50008">No summary for method setPlaceholdersPatterns()</error>
-      <error line="391" code="PPC:ERR-50008">No summary for method getPlaceholdersPatterns()</error>
+      <error line="401" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setFormat</error>
+      <error line="401" code="PPC:ERR-50008">No summary for method setFormat()</error>
+      <error line="406" code="PPC:ERR-50008">No summary for method getFormat()</error>
+      <error line="411" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setFilterFormat</error>
+      <error line="411" code="PPC:ERR-50008">No summary for method setFilterFormat()</error>
+      <error line="416" code="PPC:ERR-50008">No summary for method getFilterFormat()</error>
+      <error line="421" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setFilterSeparator</error>
+      <error line="421" code="PPC:ERR-50008">No summary for method setFilterSeparator()</error>
+      <error line="426" code="PPC:ERR-50008">No summary for method getFilterSeparator()</error>
+      <error line="431" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setFiltersFormat</error>
+      <error line="431" code="PPC:ERR-50008">No summary for method setFiltersFormat()</error>
+      <error line="436" code="PPC:ERR-50008">No summary for method getFiltersFormat()</error>
+      <error line="441" code="PPC:ERR-50015">Argument $value is missing from the Docblock of setPlaceholdersPatterns</error>
+      <error line="441" code="PPC:ERR-50008">No summary for method setPlaceholdersPatterns()</error>
+      <error line="446" code="PPC:ERR-50008">No summary for method getPlaceholdersPatterns()</error>
       <error line="10" code="PPC:ERR-50007">No summary for property $image</error>
       <error line="12" code="PPC:ERR-50007">No summary for property $host</error>
       <error line="14" code="PPC:ERR-50007">No summary for property $format</error>
@@ -1040,7 +1551,7 @@ and filter_separator</description>
       <error line="20" code="PPC:ERR-50007">No summary for property $filterSeparator</error>
       <error line="22" code="PPC:ERR-50007">No summary for property $placeholdersPatterns</error>
     </parse_markers>
-    <source>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</source>
+    <source>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</source>
   </file>
   <file path="Folklore/Image/Contracts/FilterWithValue.php" generated-path="Folklore.Image.Contracts.FilterWithValue.html" hash="5a8cbfaaba11dfc8c8bfeb1013637941" package="Default">
     <docblock line="0">
@@ -1834,7 +2345,7 @@ and filter_separator</description>
     </parse_markers>
     <source>eJylVm1v2jAQ/p5f4WlISaQC32EDsbVsSGtXtf3WVpUbLsSqsSPb6dZN/Pf5JSFxQui6WSIi9t1zz+M7n/Nhnmd5EDC8BZnjBNCS0yfKBdyttngDd9e8EAnIaRAUsrNonoTBOWb6TUytSTnXsIAVUyBSDa5REoqlRN94gqmDRvBTAVtLtHiUSuBEuengd4D0yItHShKUFixRhDO0AbUsKL3EKosGuX7G1swZmzFICQX5IhVs0UeE8zwK7UwY6+CV0Xj8BRQy7rXfmgjtQKQEFQ1URuRwlnCWks1taAzD+xjN0cGFSRh62OhzBskTUhlWSKNCorh40TKJVHJvRlIUvWuQHc6IPK2MI8MmjhuyzBCgCsEQ0/qn+4XdgcgaW2Vg9bXDDqRItEyhBNnaKCcoHIfxSD9G1E0aNzc79dh6ZB1sZOD6eJq1Pp4XnAFKecHWQcurVld6tCvA0Dsrox8sAAHY1oeWWaarWzTTdtjaa+4VTa20MognKaYSjnI0AbnYYrUUfHukVvO30syxAKYmk74Ar7Iyqo6TGo9dEfmno2RaCLqGhK+hQ9DV82uCekrl9v5goRw7y3sbIo0oE9Q/TGa2w3LwiCWYXmfsS8+5lUpYyqvav1zcfF1dLL8/fFpcn10szs/iiX/oBvWx/iuc09WVg7EL07bCNnlMqU1UVMdpahBAsSLPsCx9m7uX6uaMk6w6rQhLB93eeB/k9l7D5AI2DwJyqht1FL4PR3X0kX7VLUH/HFgzW3UiTKuXXvZt97f1Vurxop6gKj0NkA3TCvoasVt1rTjCQuCXuMdi0twUU5uS/AKeRmWATiEOGPxYVQKavv6mlhrNrtq/bZiGhrUGanSKHjwn1+LZv7bDHACtZNgk6XOfZDZFrmPXrlU3N+kqGfahtagqURxgWg29vYqwPotdZ7Y74/pDGa+PU50FW5FOQTemj+6/NcpwD+Y1l+Y1dOXaj7ksqe7ynUuBNNx7mirPgb3S5f/tQnKWxH1NDWcmTuMSOspJ4me44Rbd//4qFVUHr030Pz6BHIUH8xb5vWqv/a3fHF4ShjMj6sAG7II/NuUEXw==</source>
   </file>
-  <file path="Folklore/Image/Image.php" generated-path="Folklore.Image.Image.html" hash="1d2fc0449081c95719c648984184d3c5" package="Default">
+  <file path="Folklore/Image/Image.php" generated-path="Folklore.Image.Image.html" hash="6754e088147b8d4543ea9a6460e73f85" package="Default">
     <docblock line="0">
       <description></description>
       <long-description></long-description>
@@ -1842,7 +2353,7 @@ and filter_separator</description>
     </docblock>
     <namespace-alias name="Closure">\Closure</namespace-alias>
     <namespace-alias name="Application">\Illuminate\Foundation\Application</namespace-alias>
-    <namespace-alias name="ImageManipulatorContract">\Folklore\Image\Contracts\ImageManipulator</namespace-alias>
+    <namespace-alias name="ImageHandlerContract">\Folklore\Image\Contracts\ImageHandler</namespace-alias>
     <class final="false" abstract="false" namespace="Folklore\Image" line="7" package="Default">
       <extends/>
       <name>Image</name>
@@ -1871,11 +2382,11 @@ and filter_separator</description>
         </docblock>
       </property>
       <property static="false" visibility="protected" namespace="Folklore\Image" line="18" package="Default">
-        <name>$manipulators</name>
-        <full_name>\Folklore\Image\Image::manipulators</full_name>
+        <name>$handlers</name>
+        <full_name>\Folklore\Image\Image::handlers</full_name>
         <default>array()</default>
         <docblock line="18">
-          <description>All manipulators</description>
+          <description>All handlers</description>
           <long-description></long-description>
           <tag name="var" line="18" description="" type="array" variable="">
             <type>array</type>
@@ -1907,60 +2418,14 @@ and filter_separator</description>
           <type>\Illuminate\Foundation\Application</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="38" package="Default">
-        <name>source</name>
-        <full_name>\Folklore\Image\Image::source()</full_name>
-        <docblock line="38">
-          <description>Get an ImageManipulator for a specific source</description>
-          <long-description></long-description>
-          <tag name="param" line="38" description="" type="string|null" variable="$name">
-            <type>string</type>
-            <type>null</type>
-          </tag>
-          <tag name="return" line="38" description="" type="\Folklore\Image\Folklore\Image\ImageManipulator">
-            <type>\Folklore\Image\Folklore\Image\ImageManipulator</type>
-          </tag>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$name</name>
-          <default>null</default>
-          <type>string|null</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="61" package="Default">
-        <name>extend</name>
-        <full_name>\Folklore\Image\Image::extend()</full_name>
-        <docblock line="61">
-          <description>Register a custom source creator Closure.</description>
-          <long-description></long-description>
-          <tag name="param" line="61" description="" type="string" variable="$driver">
-            <type>string</type>
-          </tag>
-          <tag name="param" line="61" description="" type="\Closure" variable="$callback">
-            <type>\Closure</type>
-          </tag>
-          <tag name="return" line="61" description="" type="\Folklore\Image\Image">
-            <type>\Folklore\Image\Image</type>
-          </tag>
-          <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$driver</name>
-          <default></default>
-          <type>string</type>
-        </argument>
-        <argument line="0" by_reference="false">
-          <name>$callback</name>
-          <default></default>
-          <type>\Closure</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="104" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="69" package="Default">
         <name>url</name>
         <full_name>\Folklore\Image\Image::url()</full_name>
-        <docblock line="104">
+        <docblock line="69">
           <description>Return an URL to process the image</description>
-          <long-description>```php
+          <long-description>Examples:
+
+```php
 echo Image::url('path/to/image.jpg', 300, 300);
 // '/path/to/image-filters(300x300).jpg'
 ```
@@ -1983,22 +2448,22 @@ echo image_url('path/to/image.jpg', 300, 300);
 You can change the format of the url by changing the configuration in the
 `config/image.php` file or by passing the same options in the filters
 array. (see [Url Generator](url-generator.md) for available options)</long-description>
-          <tag name="param" line="104" description="" type="string" variable="$src">
+          <tag name="param" line="69" description="" type="string" variable="$src">
             <type>string</type>
           </tag>
-          <tag name="param" line="104" description="&lt;p&gt;The maximum width of the image. If an&#10;array or a string is passed, it is considered as the filters argument.&lt;/p&gt;" type="integer|array|string" variable="$width">
+          <tag name="param" line="69" description="&lt;p&gt;The maximum width of the image. If an&#10;array or a string is passed, it is considered as the filters argument.&lt;/p&gt;" type="integer|array|string" variable="$width">
             <type>integer</type>
             <type>array</type>
             <type>string</type>
           </tag>
-          <tag name="param" line="104" description="&lt;p&gt;The maximum height of the image&lt;/p&gt;" type="integer" variable="$height">
+          <tag name="param" line="69" description="&lt;p&gt;The maximum height of the image&lt;/p&gt;" type="integer" variable="$height">
             <type>integer</type>
           </tag>
-          <tag name="param" line="104" description="&lt;p&gt;An array of filters&lt;/p&gt;" type="array|string" variable="$filters">
+          <tag name="param" line="69" description="&lt;p&gt;An array of filters&lt;/p&gt;" type="array|string" variable="$filters">
             <type>array</type>
             <type>string</type>
           </tag>
-          <tag name="return" line="104" description="The generated url containing the filters." type="string">
+          <tag name="return" line="69" description="The generated url containing the filters." type="string">
             <type>string</type>
           </tag>
         </docblock>
@@ -2023,16 +2488,16 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
           <type>array|string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="116" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="81" package="Default">
         <name>pattern</name>
         <full_name>\Folklore\Image\Image::pattern()</full_name>
-        <docblock line="116">
+        <docblock line="81">
           <description>Return a pattern to match url</description>
           <long-description></long-description>
-          <tag name="param" line="116" description="&lt;p&gt;Pattern configuration&lt;/p&gt;" type="array" variable="$config">
+          <tag name="param" line="81" description="&lt;p&gt;Pattern configuration&lt;/p&gt;" type="array" variable="$config">
             <type>array</type>
           </tag>
-          <tag name="return" line="116" description="$pattern   A regex matching the images url" type="string">
+          <tag name="return" line="81" description="$pattern   A regex matching the images url" type="string">
             <type>string</type>
           </tag>
         </docblock>
@@ -2042,16 +2507,16 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
           <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="128" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="93" package="Default">
         <name>parse</name>
         <full_name>\Folklore\Image\Image::parse()</full_name>
-        <docblock line="128">
+        <docblock line="93">
           <description>Return an URL to process the image</description>
           <long-description></long-description>
-          <tag name="param" line="128" description="" type="string" variable="$path">
+          <tag name="param" line="93" description="" type="string" variable="$path">
             <type>string</type>
           </tag>
-          <tag name="return" line="128" description="" type="array">
+          <tag name="return" line="93" description="" type="array">
             <type>array</type>
           </tag>
         </docblock>
@@ -2066,17 +2531,89 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
           <type/>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="141" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="106" package="Default">
+        <name>source</name>
+        <full_name>\Folklore\Image\Image::source()</full_name>
+        <docblock line="106">
+          <description>Get an ImageHandler for a specific source</description>
+          <long-description></long-description>
+          <tag name="param" line="106" description="&lt;p&gt;The name of the source&lt;/p&gt;" type="string|null" variable="$name">
+            <type>string</type>
+            <type>null</type>
+          </tag>
+          <tag name="return" line="106" description="The image manipulator object, bound&#10;the to specified source" type="\Folklore\Image\Folklore\Image\ImageHandler">
+            <type>\Folklore\Image\Folklore\Image\ImageHandler</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$name</name>
+          <default>null</default>
+          <type>string|null</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="129" package="Default">
+        <name>extend</name>
+        <full_name>\Folklore\Image\Image::extend()</full_name>
+        <docblock line="129">
+          <description>Register a custom source creator Closure.</description>
+          <long-description></long-description>
+          <tag name="param" line="129" description="" type="string" variable="$driver">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="129" description="" type="\Closure" variable="$callback">
+            <type>\Closure</type>
+          </tag>
+          <tag name="return" line="129" description="" type="\Folklore\Image\Image">
+            <type>\Folklore\Image\Image</type>
+          </tag>
+          <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$driver</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$callback</name>
+          <default></default>
+          <type>\Closure</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="171" package="Default">
         <name>routes</name>
         <full_name>\Folklore\Image\Image::routes()</full_name>
-        <docblock line="141">
+        <docblock line="171">
           <description>Map image routes on the Laravel Router</description>
-          <long-description></long-description>
-          <tag name="param" line="141" description="&lt;p&gt;Config for the routes group, you can also pass&#10;a string to require a specific file in the route group&lt;/p&gt;" type="array|string" variable="$config">
+          <long-description>Add the routes from the file specified in the `config/image.php`
+file at `routes.map`. You can pass a config array to override values
+from the config or you can also pass a path to a routes file. This method
+is automatically called if you have a path in your `config/image.php`.
+To disable this you can set `routes.map` to null.
+
+Examples:
+
+Map the routes on the Laravel Router
+```php
+Image::routes();
+
+// or with the helper
+image()-&gt;routes();
+```
+
+Map a custom routes file
+```php
+Image::routes(base_path('routes/my-custom-file.php'));
+
+// or an equivalent
+Image::routes([
+    'map' =&gt; base_path('routes/my-custom-file.php')
+]);
+```</long-description>
+          <tag name="param" line="171" description="&lt;p&gt;A config array that will override values&#10;from the &lt;code&gt;config/image.php&lt;/code&gt;. If you pass a string, it is considered as&#10;a path to a filtes containing routes.&lt;/p&gt;" type="array|string" variable="$config">
             <type>array</type>
             <type>string</type>
           </tag>
-          <tag name="return" line="141" description="" type="array">
+          <tag name="return" line="171" description="" type="array">
             <type>array</type>
           </tag>
         </docblock>
@@ -2086,22 +2623,71 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
           <type>array|string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="167" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="251" package="Default">
         <name>filter</name>
         <full_name>\Folklore\Image\Image::filter()</full_name>
-        <docblock line="167">
-          <description>Register a filter</description>
-          <long-description></long-description>
-          <tag name="param" line="167" description="" type="string" variable="$name">
+        <docblock line="251">
+          <description>Register a new filter to the manager that can be used by the `Image::url()` and `Image::make()` method.</description>
+          <long-description>Examples:
+
+From an array
+```php
+// Declare the filter in a Service Provider
+Image::filter('small', [
+    'width' =&gt; 100,
+    'height' =&gt; 100,
+    'crop' =&gt; true,
+]);
+
+// Use it when making an image
+$image = Image::make('path/to/image.jpg', [
+    'small' =&gt; true,
+]);
+
+// or
+
+$image = Image::make('path/to/image.jpg', 'small');
+```
+
+With a closure
+```php
+// Declare the filter in a Service Provider
+Image::filter('circle', function ($image, $color)
+{
+    // See Imagine documentation for the Image object
+    // (https://imagine.readthedocs.io/en/latest/index.html)
+    $color = $image-&gt;palette()-&gt;color($color);
+    $image-&gt;draw()
+         -&gt;ellipse(new Point(0, 0), new Box(300, 225), $color);
+    return $image;
+});
+
+// Use it when making an image
+$image = Image::make('path/to/image.jpg', [
+    'circle' =&gt; '#FFCC00',
+]);
+```
+
+With a class path
+```php
+// Declare the filter in a Service Provider
+Image::filter('custom', \App\Filters\CustomFilter::class);
+
+// Use it when making an image
+$image = Image::make('path/to/image.jpg', [
+    'custom' =&gt; true,
+]);
+```</long-description>
+          <tag name="param" line="251" description="&lt;p&gt;The name of the filter&lt;/p&gt;" type="string" variable="$name">
             <type>string</type>
           </tag>
-          <tag name="param" line="167" description="" type="\Closure|array|string|object" variable="$filter">
+          <tag name="param" line="251" description="&lt;p&gt;The filter can be an array of&#10;filters, a closure that will get the Image object or a class path to a&#10;Filter class. (more info canbe found in the&#10;&lt;a href=&quot;../filters.md&quot;&gt;Filters&lt;/a&gt; documentation)&lt;/p&gt;" type="\Closure|array|string|object" variable="$filter">
             <type>\Closure</type>
             <type>array</type>
             <type>string</type>
             <type>object</type>
           </tag>
-          <tag name="return" line="167" description="" type="\Folklore\Image\Image">
+          <tag name="return" line="251" description="" type="\Folklore\Image\Image">
             <type>\Folklore\Image\Image</type>
           </tag>
           <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
@@ -2117,16 +2703,16 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
           <type>\Closure|array|string|object</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="180" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="264" package="Default">
         <name>setFilters</name>
         <full_name>\Folklore\Image\Image::setFilters()</full_name>
-        <docblock line="180">
+        <docblock line="264">
           <description>Set all filters</description>
           <long-description></long-description>
-          <tag name="param" line="180" description="" type="array" variable="$filters">
+          <tag name="param" line="264" description="" type="array" variable="$filters">
             <type>array</type>
           </tag>
-          <tag name="return" line="180" description="" type="\Folklore\Image\Image">
+          <tag name="return" line="264" description="" type="\Folklore\Image\Image">
             <type>\Folklore\Image\Image</type>
           </tag>
           <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
@@ -2137,27 +2723,27 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
           <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="191" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="275" package="Default">
         <name>getFilters</name>
         <full_name>\Folklore\Image\Image::getFilters()</full_name>
-        <docblock line="191">
+        <docblock line="275">
           <description>Get all filters</description>
           <long-description></long-description>
-          <tag name="return" line="191" description="" type="array">
+          <tag name="return" line="275" description="" type="array">
             <type>array</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="202" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="286" package="Default">
         <name>getFilter</name>
         <full_name>\Folklore\Image\Image::getFilter()</full_name>
-        <docblock line="202">
+        <docblock line="286">
           <description>Get a filter</description>
           <long-description></long-description>
-          <tag name="param" line="202" description="" type="string" variable="$name">
+          <tag name="param" line="286" description="" type="string" variable="$name">
             <type>string</type>
           </tag>
-          <tag name="return" line="202" description="" type="array|\Closure|string|object">
+          <tag name="return" line="286" description="" type="array|\Closure|string|object">
             <type>array</type>
             <type>\Closure</type>
             <type>string</type>
@@ -2170,16 +2756,16 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="213" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="297" package="Default">
         <name>hasFilter</name>
         <full_name>\Folklore\Image\Image::hasFilter()</full_name>
-        <docblock line="213">
+        <docblock line="297">
           <description>Check if a filter exists</description>
           <long-description></long-description>
-          <tag name="param" line="213" description="" type="string" variable="$name">
+          <tag name="param" line="297" description="" type="string" variable="$name">
             <type>string</type>
           </tag>
-          <tag name="return" line="213" description="" type="boolean">
+          <tag name="return" line="297" description="" type="boolean">
             <type>boolean</type>
           </tag>
         </docblock>
@@ -2189,63 +2775,63 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="223" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="307" package="Default">
         <name>getImagineManager</name>
         <full_name>\Folklore\Image\Image::getImagineManager()</full_name>
-        <docblock line="223">
+        <docblock line="307">
           <description>Get the imagine manager</description>
           <long-description></long-description>
-          <tag name="return" line="223" description="" type="\Folklore\Image\ImageManager">
+          <tag name="return" line="307" description="" type="\Folklore\Image\ImageManager">
             <type>\Folklore\Image\ImageManager</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="233" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="317" package="Default">
         <name>getImagine</name>
         <full_name>\Folklore\Image\Image::getImagine()</full_name>
-        <docblock line="233">
+        <docblock line="317">
           <description>Get the imagine instance from the manager</description>
           <long-description></long-description>
-          <tag name="return" line="233" description="" type="\Imagine\Image\ImagineInterface">
+          <tag name="return" line="317" description="" type="\Imagine\Image\ImagineInterface">
             <type>\Imagine\Image\ImagineInterface</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="244" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="328" package="Default">
         <name>getSourceManager</name>
         <full_name>\Folklore\Image\Image::getSourceManager()</full_name>
-        <docblock line="244">
+        <docblock line="328">
           <description>Get the source manager</description>
           <long-description></long-description>
-          <tag name="return" line="244" description="" type="\Folklore\Image\SourceManager">
+          <tag name="return" line="328" description="" type="\Folklore\Image\SourceManager">
             <type>\Folklore\Image\SourceManager</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="254" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="338" package="Default">
         <name>getUrlGenerator</name>
         <full_name>\Folklore\Image\Image::getUrlGenerator()</full_name>
-        <docblock line="254">
+        <docblock line="338">
           <description>Get the url generator</description>
           <long-description></long-description>
-          <tag name="return" line="254" description="" type="\Folklore\Image\UrlGenerator">
+          <tag name="return" line="338" description="" type="\Folklore\Image\UrlGenerator">
             <type>\Folklore\Image\UrlGenerator</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="266" package="Default">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="350" package="Default">
         <name>__call</name>
         <full_name>\Folklore\Image\Image::__call()</full_name>
-        <docblock line="266">
-          <description>Dynamically call the default source manipulator</description>
+        <docblock line="350">
+          <description>Dynamically call the default source handler</description>
           <long-description></long-description>
-          <tag name="param" line="266" description="" type="string" variable="$method">
+          <tag name="param" line="350" description="" type="string" variable="$method">
             <type>string</type>
           </tag>
-          <tag name="param" line="266" description="" type="array" variable="$parameters">
+          <tag name="param" line="350" description="" type="array" variable="$parameters">
             <type>array</type>
           </tag>
-          <tag name="return" line="266" description="" type="mixed">
+          <tag name="return" line="350" description="" type="mixed">
             <type>mixed</type>
           </tag>
         </docblock>
@@ -2266,12 +2852,12 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
       <error line="7" code="PPC:ERR-50005">No summary for class \Folklore\Image\Image</error>
       <error line="27" code="PPC:ERR-50015">Argument $app is missing from the Docblock of __construct</error>
       <error line="27" code="PPC:ERR-50008">No summary for method __construct()</error>
-      <error line="128" code="PPC:ERR-50015">Argument $config is missing from the Docblock of parse</error>
-      <error line="128" code="PPC:ERR-50014">Name of argument $config does not match with the DocBlock's name $path in parse()</error>
+      <error line="93" code="PPC:ERR-50015">Argument $config is missing from the Docblock of parse</error>
+      <error line="93" code="PPC:ERR-50014">Name of argument $config does not match with the DocBlock's name $path in parse()</error>
       <error line="9" code="PPC:ERR-50007">No summary for property $app</error>
       <error line="11" code="PPC:ERR-50007">No summary for property $urlGenerator</error>
     </parse_markers>
-    <source>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</source>
+    <source>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</source>
   </file>
   <file path="Folklore/Image/Contracts/Source.php" generated-path="Folklore.Image.Contracts.Source.html" hash="504e6b547e65d33968c92eb2605862bf" package="Default">
     <docblock line="0">
@@ -2538,7 +3124,7 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
     </parse_markers>
     <source>eJy1VU1v2zAMvedXcEUAJ0Xn/ICs24p2LQJspx52SIJBlelYqCwZopxkG/rfZ+vDSZ02TQ/zxbZMPpKPfPSnL1VRgWIlUsU4wq2Wj1IbXMxKtsLpYFBT/3Bxr2vDkRbfNWfSv0yP2d0KifSbLJZHjL9tOVZWaLWYqTWTIvO23XFIZSZlXQrFbANfV5U2dvGDqQbARIMGTaiIevVA1jBuwykwigaNOZeMCHycAAK4tagygvA++DuA5pqcn7s7nMO1wSY4MAVCkWWq4UznYIsuMtxlkBmxRpMGn+j61aCtjYJFzPEui4/BZOLuldEWucUM8lrxtnjgLqoj/MZhj4Zcq1ysxs7DZ9leIYTCDey1ZzS0haCPn1lVzRPRMpMKHzhZXsDhx9pI9yHEmDr4p8H7uXB3/ngqIcH8fazsxutkavoT+Z/5cTE9BR1TB1xUzLASoJlXoVYAQ2/fp6oUW8z6rrYwekMQlXNlVnWJynbaOY3HyB45SvrshVrh8hkd/jBZRmK8L6VJGmCW0w5B5DD6ECnbQ24vV4Gj6WX1j878AcwjLihtIde1ytKz8S7I0y7hQPhlTH2e+JNkL6dhibbQWWOUeBKStOa5MGRHwX+cJp6YZDro3CYT+ImJlMALbKbbaiDEtkDmudQGAjBuBVlqEjVOF6sGSUU1wCx3VWxwH3gjOtzWq0Gsyeoyzk/Av4BNIXgBTMq29RmuUeoKDbXJ+FL2Qb0zQU3tcDWZCAN6owK2+INZDx+upaba4A4OhE2f9VIQoY3K8UDX3pnmgbzluN/oMMbHvfbk2BeZ6zGgJGxT8CT/8iR7r4vY0zdCB6vRC/C7Pr89ln42oEvdNZT8n6mVWMMk9Sa3m9fDhXGH1o1JhjmrpQUnqtiZ9if92gb1W+O5zusHKfhO5Cu0Nx42CP2V/fi2vKOADvO/f3f+/a3XGvWLW2uRHS2N+qU5mIMNdkJh7bZofWOBT4N/yNLYwQ==</source>
   </file>
-  <file path="Folklore/Image/Http/ImageController.php" generated-path="Folklore.Image.Http.ImageController.html" hash="e1d4216e1db8a57ec2aa99d5a26c61ca" package="Default">
+  <file path="Folklore/Image/Http/ImageController.php" generated-path="Folklore.Image.Http.ImageController.html" hash="237105d208afce0ba684b9f90e418abc" package="Default">
     <docblock line="0">
       <description></description>
       <long-description></long-description>
@@ -2588,7 +3174,7 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
       <error line="21" code="PPC:ERR-50015">Argument $path is missing from the Docblock of serve</error>
       <error line="21" code="PPC:ERR-50008">No summary for method serve()</error>
     </parse_markers>
-    <source>eJyVVMtu2zAQvOsreDBgCrCbFMgpbmzk5TYFArQ+9GIHBaOsbCEUyfBR2Cjy7+FLMqXYQauDQe/OzM7uUvoyExuRZYzUoAQpAM05faZcwuquJmtYfdNaTLLMKEB3lJq6YkSH6GoBLwaUnvSTc27YE9EVZ6sro1Y3lRXWxQbUd/6o3qEX3OiKrVfXnGnJKQWJiEJXRME+8lGJX4RW3SOo6ExF472WbrcFCE9oT5OPcfOKwn2llPX5r5QfRCpIwB59KURsxaFtsKBEqfAv6R+2GthTfwjZ3wzZx9G7Ix2hQ407rDCPtCpQaVjhXCAF8g/gCEIDGQ4jNLBqm9xTQhH3nJygr6BRwVlZrVEpeY2k3RW0gIH/iy5aofHUR3A+2WMi/aJBzxCRkux+r0HjEBpP7fnSG8T5CA0rN43hCC0f8vPlQyKluJGFq5coBHnLCslhWvrF2LHonSXgknKi80O8CLL1Pp+epmzYikqCOlIuZi2NGUpTnpH0uun5ENOOWoNkocFJb5j2otnksaJlyDbUdFP+uiG9AeRWuVcVLn5DNHGSQuAw3U/W5DAfT30W++2PEuepLZdz22uFlq6DzfChh9k7T6GN4xRd9nqsQa6jiSgy6k6j1+oCtJHM92o3IDhT+yup5S65wZFwT57DaHzvneygJqwShhLNpbMer9gsmZWbUwjjmM7P0+ykK+ijTipRHk9ra6Gdc9m21WGWXNZEv6OGcCCnkwiXJg7Aspojtn69CRy85B2Ge2w/oH+Ge4+bt+QIbB6rBxdHQLfhZbhjuHlrer3JsLLW7j77igr3IUO4+720r1/eW2TUII9canx2epYfEDn0nf5PqSz8vmZvx9syBA==</source>
+    <source>eJyVVMtu2zAQvOsreDBgCrCbFMgprm3k5TYFArQ+9BIHBS2vbCEUyfBROCjy7+VLMqXaQauDQO3OzO4sSX2ai53IMkZqUIIUgBacPlMuYXVfky2svmgtJllmFKB7Sk1dMaJDdLWEFwNKT/rJBTdsQ3TF2eraqNVtZYV1sQP1la/VX+glN7pi29UNZ1pySkEiotA1UXCIvFfiB6FVdwkqdqZi4z1Ld/sChCe0q8n7uEVF4aFSyvb5r5RvRCpIwB59JUS04tA2WFCiVPhK/MNeA9v0h5D9zpB9HL070hE6ZtxhhVnTqkClYYXrAimQvwBHEBrIsBihgVXb5Z4Sirjn7Ax9Bo0Kzspqi0rJayTtXkELGPhPNG2FxjMfwfnkgIn0aYOeIyIlef25BY1DaDyz6yvfIM5HaFi5aQxH6PEpv3x8SqQUN7Jw9RKFIG9ZITlMS78YOxb9agm4pJzo/Bgvgmy9j+fnKRv2opKgTpSLWUtjhtKUZyS9aTwfY9pRa5AsGJz0hmkPmk2eKlqGbENNd8ofN6R3gNxWHlSFi98STZykEDhM94NtcpiPZz6L/e6Pks7TtlzO7V4r9Ogc7IZPPcyh8xTadJyiy57HGuQ2NhFFRt1p9KwuQRvJvFe7A4IzdTiSWr4mJzgSHshzGI333skOdoRt3JWbtsdrnszJzSiEcUznl2l20hXzUScVVcez2pZu51u2djqsksua6A4thAIxdR8OSjRtGc0S2z59cRx6yDsM91gfoL+Hs46bm3ECtojVQxcnQHfhAtwz3NyUni8Ztqlt95B9Q4X7eSHc/UfaK5f3Ni9qkDWXGl+cX+RHRI79m/9TKgvvt+wPxBIsmg==</source>
   </file>
   <file path="Folklore/Image/Exception/FilterMissingException.php" generated-path="Folklore.Image.Exception.FilterMissingException.html" hash="b4f0d5b746b969aaaa3e6ff47ee15748" package="Default">
     <docblock line="0">
@@ -2802,381 +3388,6 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
       <error line="3" code="PPC:ERR-50005">No summary for class \Folklore\Image\Exception\FileMissingException</error>
     </parse_markers>
     <source>eJyzsS/IKFDIS8xNLS5ITE5VcMvPyc7JL0qN8cxNTE+Nca1ITi0oyczPs+biSs5JLC5WcMvMSfXNLC7OzEuHSyqkVpSk5qUUK8BFuKq5uGq5AE5KIdE=</source>
-  </file>
-  <file path="Folklore/Image/ImageManipulator.php" generated-path="Folklore.Image.ImageManipulator.html" hash="d77f344f0ecd58b2ce0009314c6dff8a" package="Default">
-    <docblock line="0">
-      <description></description>
-      <long-description></long-description>
-      <tag name="package" line="0" description="Default"/>
-    </docblock>
-    <namespace-alias name="Application">\Illuminate\Foundation\Application</namespace-alias>
-    <namespace-alias name="ImageManipulatorContract">\Folklore\Image\Contracts\ImageManipulator</namespace-alias>
-    <namespace-alias name="SourceContract">\Folklore\Image\Contracts\Source</namespace-alias>
-    <namespace-alias name="FilterWithValueContract">\Folklore\Image\Contracts\FilterWithValue</namespace-alias>
-    <namespace-alias name="FileMissingException">\Folklore\Image\Exception\FileMissingException</namespace-alias>
-    <namespace-alias name="FilterMissingException">\Folklore\Image\Exception\FilterMissingException</namespace-alias>
-    <namespace-alias name="FormatException">\Folklore\Image\Exception\FormatException</namespace-alias>
-    <namespace-alias name="Resize">\Folklore\Image\Filters\Resize</namespace-alias>
-    <namespace-alias name="Image">\Folklore\Image\Image</namespace-alias>
-    <namespace-alias name="ImageInterface">\Imagine\Image\ImageInterface</namespace-alias>
-    <namespace-alias name="ImagineInterface">\Imagine\Image\ImagineInterface</namespace-alias>
-    <namespace-alias name="Box">\Imagine\Image\Box</namespace-alias>
-    <namespace-alias name="Point">\Imagine\Image\Point</namespace-alias>
-    <class final="false" abstract="false" namespace="Folklore\Image" line="17" package="Default">
-      <extends/>
-      <implements>\Folklore\Image\Contracts\ImageManipulator</implements>
-      <name>ImageManipulator</name>
-      <full_name>\Folklore\Image\ImageManipulator</full_name>
-      <docblock line="17">
-        <description></description>
-        <long-description></long-description>
-        <tag name="package" line="17" description="Default"/>
-      </docblock>
-      <property static="false" visibility="protected" namespace="Folklore\Image" line="19" package="Default">
-        <name>$manager</name>
-        <full_name>\Folklore\Image\ImageManipulator::manager</full_name>
-        <default></default>
-        <docblock line="19">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-      </property>
-      <property static="false" visibility="protected" namespace="Folklore\Image" line="21" package="Default">
-        <name>$source</name>
-        <full_name>\Folklore\Image\ImageManipulator::source</full_name>
-        <default></default>
-        <docblock line="21">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-      </property>
-      <property static="false" visibility="protected" namespace="Folklore\Image" line="23" package="Default">
-        <name>$memoryLimit</name>
-        <full_name>\Folklore\Image\ImageManipulator::memoryLimit</full_name>
-        <default>null</default>
-        <docblock line="23">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-      </property>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="25" package="Default">
-        <name>__construct</name>
-        <full_name>\Folklore\Image\ImageManipulator::__construct()</full_name>
-        <docblock line="25">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$manager</name>
-          <default></default>
-          <type>\Folklore\Image\Image</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="37" package="Default">
-        <name>make</name>
-        <full_name>\Folklore\Image\ImageManipulator::make()</full_name>
-        <docblock line="37">
-          <description>Make an image and apply options</description>
-          <long-description></long-description>
-          <tag name="param" line="37" description="&lt;p&gt;The path of the image&lt;/p&gt;" type="string" variable="$path">
-            <type>string</type>
-          </tag>
-          <tag name="param" line="37" description="&lt;p&gt;The manipulations to apply on the image&lt;/p&gt;" type="array" variable="$options">
-            <type>array</type>
-          </tag>
-          <tag name="return" line="37" description="" type="\Imagine\Image\ImageInterface">
-            <type>\Imagine\Image\ImageInterface</type>
-          </tag>
-          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageManipulator::make()" refers="\Folklore\Image\Contracts\ImageManipulator::make()" link="/classes/Folklore.Image.Contracts.ImageManipulator.html#method_make"/>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$path</name>
-          <default></default>
-          <type>string</type>
-        </argument>
-        <argument line="0" by_reference="false">
-          <name>$options</name>
-          <default>array()</default>
-          <type>array</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="95" package="Default">
-        <name>open</name>
-        <full_name>\Folklore\Image\ImageManipulator::open()</full_name>
-        <docblock line="95">
-          <description>Open an image from the source</description>
-          <long-description></long-description>
-          <tag name="param" line="95" description="&lt;p&gt;The path of the image&lt;/p&gt;" type="string" variable="$path">
-            <type>string</type>
-          </tag>
-          <tag name="return" line="95" description="" type="\Imagine\Image\ImageInterface">
-            <type>\Imagine\Image\ImageInterface</type>
-          </tag>
-          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageManipulator::open()" refers="\Folklore\Image\Contracts\ImageManipulator::open()" link="/classes/Folklore.Image.Contracts.ImageManipulator.html#method_open"/>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$path</name>
-          <default></default>
-          <type>string</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="105" package="Default">
-        <name>save</name>
-        <full_name>\Folklore\Image\ImageManipulator::save()</full_name>
-        <docblock line="105">
-          <description>Save an image to the source</description>
-          <long-description></long-description>
-          <tag name="return" line="105" description="" type="string">
-            <type>string</type>
-          </tag>
-          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageManipulator::save()" refers="\Folklore\Image\Contracts\ImageManipulator::save()" link="/classes/Folklore.Image.Contracts.ImageManipulator.html#method_save"/>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$image</name>
-          <default></default>
-          <type>\Imagine\Image\ImageInterface</type>
-        </argument>
-        <argument line="0" by_reference="false">
-          <name>$path</name>
-          <default></default>
-          <type/>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="116" package="Default">
-        <name>format</name>
-        <full_name>\Folklore\Image\ImageManipulator::format()</full_name>
-        <docblock line="116">
-          <description>Return an URL to process the image</description>
-          <long-description></long-description>
-          <tag name="param" line="116" description="" type="string" variable="$path">
-            <type>string</type>
-          </tag>
-          <tag name="return" line="116" description="" type="array">
-            <type>array</type>
-          </tag>
-          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageManipulator::format()" refers="\Folklore\Image\Contracts\ImageManipulator::format()" link="/classes/Folklore.Image.Contracts.ImageManipulator.html#method_format"/>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$path</name>
-          <default></default>
-          <type>string</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="128" package="Default">
-        <name>thumbnail</name>
-        <full_name>\Folklore\Image\ImageManipulator::thumbnail()</full_name>
-        <docblock line="128">
-          <description>Create a thumbnail from an image</description>
-          <long-description></long-description>
-          <tag name="param" line="128" description="&lt;p&gt;An image instance or the path to an image&lt;/p&gt;" type="\Imagine\Image\ImageInterface|string" variable="$image">
-            <type>\Imagine\Image\ImageInterface</type>
-            <type>string</type>
-          </tag>
-          <tag name="param" line="128" description="" type="integer" variable="$width">
-            <type>integer</type>
-          </tag>
-          <tag name="return" line="128" description="" type="\Imagine\Image\ImageInterface">
-            <type>\Imagine\Image\ImageInterface</type>
-          </tag>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$image</name>
-          <default></default>
-          <type>\Imagine\Image\ImageInterface|string</type>
-        </argument>
-        <argument line="0" by_reference="false">
-          <name>$width</name>
-          <default>null</default>
-          <type>integer</type>
-        </argument>
-        <argument line="0" by_reference="false">
-          <name>$height</name>
-          <default>null</default>
-          <type/>
-        </argument>
-        <argument line="0" by_reference="false">
-          <name>$crop</name>
-          <default>true</default>
-          <type/>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="149" package="Default">
-        <name>getFiltersFromOptions</name>
-        <full_name>\Folklore\Image\ImageManipulator::getFiltersFromOptions()</full_name>
-        <docblock line="149">
-          <description>Get filters from options</description>
-          <long-description></long-description>
-          <tag name="param" line="149" description="&lt;p&gt;Options&lt;/p&gt;" type="array" variable="$options">
-            <type>array</type>
-          </tag>
-          <tag name="return" line="149" description="$filters" type="array">
-            <type>array</type>
-          </tag>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$options</name>
-          <default></default>
-          <type>array</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="protected" namespace="Folklore\Image" line="187" package="Default">
-        <name>applyFilter</name>
-        <full_name>\Folklore\Image\ImageManipulator::applyFilter()</full_name>
-        <docblock line="187">
-          <description>Apply a custom filter or an image</description>
-          <long-description></long-description>
-          <tag name="param" line="187" description="&lt;p&gt;An image instance&lt;/p&gt;" type="\Imagine\Image\ImageInterface" variable="$image">
-            <type>\Imagine\Image\ImageInterface</type>
-          </tag>
-          <tag name="param" line="187" description="&lt;p&gt;The filter name&lt;/p&gt;" type="string" variable="$name">
-            <type>string</type>
-          </tag>
-          <tag name="return" line="187" description="" type="\Imagine\Image\ImageInterface|array">
-            <type>\Imagine\Image\ImageInterface</type>
-            <type>array</type>
-          </tag>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$image</name>
-          <default></default>
-          <type>\Imagine\Image\ImageInterface</type>
-        </argument>
-        <argument line="0" by_reference="false">
-          <name>$name</name>
-          <default></default>
-          <type>string</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="221" package="Default">
-        <name>getSource</name>
-        <full_name>\Folklore\Image\ImageManipulator::getSource()</full_name>
-        <docblock line="221">
-          <description>Get the image source</description>
-          <long-description></long-description>
-          <tag name="return" line="221" description="" type="\Folklore\Image\Contracts\Source">
-            <type>\Folklore\Image\Contracts\Source</type>
-          </tag>
-          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageManipulator::getSource()" refers="\Folklore\Image\Contracts\ImageManipulator::getSource()" link="/classes/Folklore.Image.Contracts.ImageManipulator.html#method_getSource"/>
-        </docblock>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="232" package="Default">
-        <name>setSource</name>
-        <full_name>\Folklore\Image\ImageManipulator::setSource()</full_name>
-        <docblock line="232">
-          <description>Set the image source</description>
-          <long-description></long-description>
-          <tag name="param" line="232" description="&lt;p&gt;The source of the factory&lt;/p&gt;" type="\Folklore\Image\Contracts\Source" variable="$source">
-            <type>\Folklore\Image\Contracts\Source</type>
-          </tag>
-          <tag name="return" line="232" description="" type="\Folklore\Image\ImageManipulator">
-            <type>\Folklore\Image\ImageManipulator</type>
-          </tag>
-          <tag name="inherited_from" description="\Folklore\Image\Contracts\ImageManipulator::setSource()" refers="\Folklore\Image\Contracts\ImageManipulator::setSource()" link="/classes/Folklore.Image.Contracts.ImageManipulator.html#method_setSource"/>
-          <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$source</name>
-          <default></default>
-          <type>\Folklore\Image\Contracts\Source</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="244" package="Default">
-        <name>getMemoryLimit</name>
-        <full_name>\Folklore\Image\ImageManipulator::getMemoryLimit()</full_name>
-        <docblock line="244">
-          <description>Get the memory limit</description>
-          <long-description></long-description>
-          <tag name="return" line="244" description="" type="string">
-            <type>string</type>
-          </tag>
-        </docblock>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="255" package="Default">
-        <name>setMemoryLimit</name>
-        <full_name>\Folklore\Image\ImageManipulator::setMemoryLimit()</full_name>
-        <docblock line="255">
-          <description>Set the memory limit</description>
-          <long-description></long-description>
-          <tag name="param" line="255" description="&lt;p&gt;The memory limit&lt;/p&gt;" type="string" variable="$limit">
-            <type>string</type>
-          </tag>
-          <tag name="return" line="255" description="" type="\Folklore\Image\ImageManipulator">
-            <type>\Folklore\Image\ImageManipulator</type>
-          </tag>
-          <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$limit</name>
-          <default></default>
-          <type>string</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="267" package="Default">
-        <name>getImagineManager</name>
-        <full_name>\Folklore\Image\ImageManipulator::getImagineManager()</full_name>
-        <docblock line="267">
-          <description>Get the imagine manager</description>
-          <long-description></long-description>
-          <tag name="return" line="267" description="" type="\Folklore\Image\ImagineManager">
-            <type>\Folklore\Image\ImagineManager</type>
-          </tag>
-        </docblock>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="277" package="Default">
-        <name>getImagine</name>
-        <full_name>\Folklore\Image\ImageManipulator::getImagine()</full_name>
-        <docblock line="277">
-          <description>Get the imagine driver</description>
-          <long-description></long-description>
-          <tag name="return" line="277" description="" type="\Imagine\Image\ImagineInterface">
-            <type>\Imagine\Image\ImagineInterface</type>
-          </tag>
-        </docblock>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image" line="290" package="Default">
-        <name>__call</name>
-        <full_name>\Folklore\Image\ImageManipulator::__call()</full_name>
-        <docblock line="290">
-          <description>Dynamically call the default driver instance.</description>
-          <long-description></long-description>
-          <tag name="param" line="290" description="" type="string" variable="$method">
-            <type>string</type>
-          </tag>
-          <tag name="param" line="290" description="" type="array" variable="$parameters">
-            <type>array</type>
-          </tag>
-          <tag name="return" line="290" description="" type="mixed">
-            <type>mixed</type>
-          </tag>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$method</name>
-          <default></default>
-          <type>string</type>
-        </argument>
-        <argument line="0" by_reference="false">
-          <name>$parameters</name>
-          <default></default>
-          <type>array</type>
-        </argument>
-      </method>
-    </class>
-    <parse_markers>
-      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
-      <error line="17" code="PPC:ERR-50005">No summary for class \Folklore\Image\ImageManipulator</error>
-      <error line="25" code="PPC:ERR-50015">Argument $manager is missing from the Docblock of __construct</error>
-      <error line="25" code="PPC:ERR-50008">No summary for method __construct()</error>
-      <error line="105" code="PPC:ERR-50015">Argument $image is missing from the Docblock of save</error>
-      <error line="105" code="PPC:ERR-50015">Argument $path is missing from the Docblock of save</error>
-      <error line="128" code="PPC:ERR-50015">Argument $height is missing from the Docblock of thumbnail</error>
-      <error line="128" code="PPC:ERR-50014">Name of argument $height does not match with the DocBlock's name $width in thumbnail()</error>
-      <error line="128" code="PPC:ERR-50015">Argument $crop is missing from the Docblock of thumbnail</error>
-      <error line="128" code="PPC:ERR-50014">Name of argument $crop does not match with the DocBlock's name $width in thumbnail()</error>
-      <error line="19" code="PPC:ERR-50007">No summary for property $manager</error>
-      <error line="21" code="PPC:ERR-50007">No summary for property $source</error>
-      <error line="23" code="PPC:ERR-50007">No summary for property $memoryLimit</error>
-    </parse_markers>
-    <source>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</source>
   </file>
   <file path="Folklore/Image/Contracts/Filter.php" generated-path="Folklore.Image.Contracts.Filter.html" hash="ae93993247d3042b1c16122de8769b66" package="Default">
     <docblock line="0">
@@ -3820,6 +4031,124 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
     </parse_markers>
     <source>eJyVVl1P2zAUfc+v8KSKJChVKby1FKYhsfGGNmk8QIVC6hBrbhzZzmg3+O/zV9w4cdo1D9DY99yPk+vje3ldFVUQlOkasirNILgl+BcmFD7drdNX+HSLMIeUzYOgZr3NG1JymmacGbMHxIufKa4hSBnoLDW2c+VI4lHZ+FF/70phnosUfBZfyMa3fE9QKTwGGU4ZA98hQ38gQOsKwzUs+WAOwd8AiKeqXzDKQF6XGUekBGlV4W3kJgNGSL4nYPRbFbYAj8tYobUP+aAcRIg9p5Sm20jbxXFrXz6jN7TihYArq+dXyI1lAkK1FSagrDGO5y6sgOi14H6c3hsAZpRUfpjcEaA8xQx2UXXFshRDP9BserAfAIqFbskKx4QvuKkwWcEoTMKGyE5gjJgIpIhImqJjgTQ+5n4uEWM2P/Z4tozBNdi9zSQtQ3S60KkDnXqhhlAXeO4Az5czTms4yKmLvXCwF8uZYrVFamB/TiZfIQclfAOyw+2y7s0fsukX5mV8JT6ZXIlaDI8E8sFw1pC3WKi2kRlYLwqsDKN4pg1dJ98a+iyRg260qfSjTVuOmE5YliPOdWSzS1oxRPY7AE3F+WRNU0YuvayTOJgMVJQM4JpM+8BmxwKdrHhRr1/KFOEW+RmptpHfanwl9OteNALnMGrsK/Met79WC8I4RZXjUIrNJ9WMPYlRNIlk1qiMDGcHz6jFpBsfxo2rz8DJiTkMn8THD1XThr1cnM5sFWS7U9QmT4UJ2tWhFoIqVY92HttsKOONyf8sAZTU5SqK/A0Axv1ukV/9PO6G3x7yaHtm7Gkk67MvIPeEIXnXME0LYgp4097RLHfRln5rJxROHb+QCznv8m+rOHMr002wx9kL4Zysh/0dw0Mn9MGCpiYHDHPuz2BzREWNN6ouyUF3/98qe8sZVXIUMaqmxpJotBGCtu21Qau1ZcKRRiY63qHzqur0Z3zpkUJ5VAc+2KW3cfskab0xd5jPQD4U8pqWrdrmPbOPPv3920unuUcYugz6xMGJ6iOxH/xogTo6D5+kDrBmLCanp9ryVAy2ylCJbmUVJKdkDXgBzXpKxQwvplYDarCfTRR1dZrFiR5/KeEw43C1m4AHtKgz7zajkPkvDpmcesD7e2sllEuhGAvCDMpZOpypvfbN2NVDOyU+yynRiGBjLdtQUkzyzjmPVbhptzMP6KVNdlAB91iYiryS4iIEwJofKcRKBPckMSxrenKvS1agnHfcJ7vsj2hQx0XTpB/BP0s0/Zk=</source>
   </file>
+  <file path="Folklore/Image/Contracts/ImageHandler.php" generated-path="Folklore.Image.Contracts.ImageHandler.html" hash="d1b1712dc27054c81f484538eb59dfe7" package="Default">
+    <docblock line="0">
+      <description></description>
+      <long-description></long-description>
+      <tag name="package" line="0" description="Default"/>
+    </docblock>
+    <namespace-alias name="ImageInterface">\Imagine\Image\ImageInterface</namespace-alias>
+    <interface namespace="Folklore\Image\Contracts" line="7" package="Default">
+      <name>ImageHandler</name>
+      <full_name>\Folklore\Image\Contracts\ImageHandler</full_name>
+      <docblock line="7">
+        <description></description>
+        <long-description></long-description>
+        <tag name="package" line="7" description="Default"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="9" package="Default">
+        <name>make</name>
+        <full_name>\Folklore\Image\Contracts\ImageHandler::make()</full_name>
+        <docblock line="9">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$path</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$config</name>
+          <default>array()</default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="11" package="Default">
+        <name>open</name>
+        <full_name>\Folklore\Image\Contracts\ImageHandler::open()</full_name>
+        <docblock line="11">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$path</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="13" package="Default">
+        <name>save</name>
+        <full_name>\Folklore\Image\Contracts\ImageHandler::save()</full_name>
+        <docblock line="13">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$image</name>
+          <default></default>
+          <type>\Imagine\Image\ImageInterface</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$path</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="15" package="Default">
+        <name>format</name>
+        <full_name>\Folklore\Image\Contracts\ImageHandler::format()</full_name>
+        <docblock line="15">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$path</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="17" package="Default">
+        <name>setSource</name>
+        <full_name>\Folklore\Image\Contracts\ImageHandler::setSource()</full_name>
+        <docblock line="17">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$source</name>
+          <default></default>
+          <type>\Folklore\Image\Contracts\Source</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="19" package="Default">
+        <name>getSource</name>
+        <full_name>\Folklore\Image\Contracts\ImageHandler::getSource()</full_name>
+        <docblock line="19">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+    </interface>
+    <parse_markers>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+      <error line="7" code="PPC:ERR-50009">No summary for interface \Folklore\Image\Contracts\ImageHandler</error>
+      <error line="9" code="PPC:ERR-50015">Argument $path is missing from the Docblock of make</error>
+      <error line="9" code="PPC:ERR-50015">Argument $config is missing from the Docblock of make</error>
+      <error line="9" code="PPC:ERR-50008">No summary for method make()</error>
+      <error line="11" code="PPC:ERR-50015">Argument $path is missing from the Docblock of open</error>
+      <error line="11" code="PPC:ERR-50008">No summary for method open()</error>
+      <error line="13" code="PPC:ERR-50015">Argument $image is missing from the Docblock of save</error>
+      <error line="13" code="PPC:ERR-50015">Argument $path is missing from the Docblock of save</error>
+      <error line="13" code="PPC:ERR-50008">No summary for method save()</error>
+      <error line="15" code="PPC:ERR-50015">Argument $path is missing from the Docblock of format</error>
+      <error line="15" code="PPC:ERR-50008">No summary for method format()</error>
+      <error line="17" code="PPC:ERR-50015">Argument $source is missing from the Docblock of setSource</error>
+      <error line="17" code="PPC:ERR-50008">No summary for method setSource()</error>
+      <error line="19" code="PPC:ERR-50008">No summary for method getSource()</error>
+    </parse_markers>
+    <source>eJyFjjsOwjAMhvecwkOGInEDQAxICGZGymCC20ZtnCgPFsTdSVsVCYmCBz+/3/Z66xonBKOh4FAR7G3XdtZTeTRYU7mzHD2qGFZCpEDQdzVP08EfOZKvsjYjesoHkA7It468eAjI5tK10wqqxCpqy2CwpUI6jM0SpLJc6Ro2cL4s8qJvvHXEIz9HBLxT8fkUSN3X+cIvYWW9wfhnOcWTTV5RMQaQYYhzfP3mM/EUL+mleME=</source>
+  </file>
   <file path="Folklore/Image/Filters/Colorize.php" generated-path="Folklore.Image.Filters.Colorize.html" hash="f67f60d43c8ea08349fd8e192a203bf2" package="Default">
     <docblock line="0">
       <description></description>
@@ -3907,124 +4236,6 @@ array. (see [Url Generator](url-generator.md) for available options)</long-descr
       <error line="10" code="PPC:ERR-50008">No summary for method apply()</error>
     </parse_markers>
     <source>eJxljjsOwjAMhvecwgNDO/QERWVAqtSFE3QJkVMiEifKAwmh3p20aZEAD5Yf3//bx5O7OcaIGwyOC4Te6ru2HsfB8AnHXumIPrSMpfC3PFuKnosYNgx4gFLtm3aVLbSiXbXmgTIl88HsLDQPAS448ageCMo4jQYp/pqxF4McLl21EiATiagsAXdOP6tvVziopa9XQZEtUaZNh1Jifruqm462s1XdfjCPMXna6DKe2czetHtksg==</source>
-  </file>
-  <file path="Folklore/Image/Contracts/ImageManipulator.php" generated-path="Folklore.Image.Contracts.ImageManipulator.html" hash="966f2cb4e948487c19d9aed8239243c1" package="Default">
-    <docblock line="0">
-      <description></description>
-      <long-description></long-description>
-      <tag name="package" line="0" description="Default"/>
-    </docblock>
-    <namespace-alias name="ImageInterface">\Imagine\Image\ImageInterface</namespace-alias>
-    <interface namespace="Folklore\Image\Contracts" line="7" package="Default">
-      <name>ImageManipulator</name>
-      <full_name>\Folklore\Image\Contracts\ImageManipulator</full_name>
-      <docblock line="7">
-        <description></description>
-        <long-description></long-description>
-        <tag name="package" line="7" description="Default"/>
-      </docblock>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="9" package="Default">
-        <name>make</name>
-        <full_name>\Folklore\Image\Contracts\ImageManipulator::make()</full_name>
-        <docblock line="9">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$path</name>
-          <default></default>
-          <type/>
-        </argument>
-        <argument line="0" by_reference="false">
-          <name>$config</name>
-          <default>array()</default>
-          <type/>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="11" package="Default">
-        <name>open</name>
-        <full_name>\Folklore\Image\Contracts\ImageManipulator::open()</full_name>
-        <docblock line="11">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$path</name>
-          <default></default>
-          <type/>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="13" package="Default">
-        <name>save</name>
-        <full_name>\Folklore\Image\Contracts\ImageManipulator::save()</full_name>
-        <docblock line="13">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$image</name>
-          <default></default>
-          <type>\Imagine\Image\ImageInterface</type>
-        </argument>
-        <argument line="0" by_reference="false">
-          <name>$path</name>
-          <default></default>
-          <type/>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="15" package="Default">
-        <name>format</name>
-        <full_name>\Folklore\Image\Contracts\ImageManipulator::format()</full_name>
-        <docblock line="15">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$path</name>
-          <default></default>
-          <type/>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="17" package="Default">
-        <name>setSource</name>
-        <full_name>\Folklore\Image\Contracts\ImageManipulator::setSource()</full_name>
-        <docblock line="17">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-        <argument line="0" by_reference="false">
-          <name>$source</name>
-          <default></default>
-          <type>\Folklore\Image\Contracts\Source</type>
-        </argument>
-      </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="Folklore\Image\Contracts" line="19" package="Default">
-        <name>getSource</name>
-        <full_name>\Folklore\Image\Contracts\ImageManipulator::getSource()</full_name>
-        <docblock line="19">
-          <description></description>
-          <long-description></long-description>
-        </docblock>
-      </method>
-    </interface>
-    <parse_markers>
-      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
-      <error line="7" code="PPC:ERR-50009">No summary for interface \Folklore\Image\Contracts\ImageManipulator</error>
-      <error line="9" code="PPC:ERR-50015">Argument $path is missing from the Docblock of make</error>
-      <error line="9" code="PPC:ERR-50015">Argument $config is missing from the Docblock of make</error>
-      <error line="9" code="PPC:ERR-50008">No summary for method make()</error>
-      <error line="11" code="PPC:ERR-50015">Argument $path is missing from the Docblock of open</error>
-      <error line="11" code="PPC:ERR-50008">No summary for method open()</error>
-      <error line="13" code="PPC:ERR-50015">Argument $image is missing from the Docblock of save</error>
-      <error line="13" code="PPC:ERR-50015">Argument $path is missing from the Docblock of save</error>
-      <error line="13" code="PPC:ERR-50008">No summary for method save()</error>
-      <error line="15" code="PPC:ERR-50015">Argument $path is missing from the Docblock of format</error>
-      <error line="15" code="PPC:ERR-50008">No summary for method format()</error>
-      <error line="17" code="PPC:ERR-50015">Argument $source is missing from the Docblock of setSource</error>
-      <error line="17" code="PPC:ERR-50008">No summary for method setSource()</error>
-      <error line="19" code="PPC:ERR-50008">No summary for method getSource()</error>
-    </parse_markers>
-    <source>eJyFjr0KwkAMx/d7igwdKvgGKg6C0MHJ0TrEI22PtslxHy7iu3ttqSBYzZDP3z/Jdm8bqxRjT96iJjhK13biqCx6rKk8CAeHOviNUtETDF3D83T0BQdyVdImxMz5CNIJ2djYYRCnHgqS2XjrjIYqsg5GGHpsKc8shmYNmRauTA07uFxXadk3XizxxC8RHu+Ufz4GmRnqdOGXsBLXY/iznMJZotOUTwEyP8Ylvn7ziXiqF1eZeo8=</source>
   </file>
   <file path="Folklore/Image/Filters/Rotate.php" generated-path="Folklore.Image.Filters.Rotate.html" hash="c4e07217fb438caebbc2a7b2981d7df0" package="Default">
     <docblock line="0">

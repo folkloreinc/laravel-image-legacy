@@ -89,48 +89,106 @@ $router->image('{pattern}', [
 
 ---
 
-### <a name="make" id="make"></a> `make($src, $width = null, $height = null, $filters = array())`
+<a name="make" id="make"></a>
+### `make($src, $width = null, $height = null, $filters = array())`
 
-Make an URL from the filters passed as argument
+Generates an url containing the filters, according to the url format
+in the config.
 
 #### Arguments
-- `$src` `(string)` The source path
-- `$width` `(integer|array)` The width of the image, or and array of filters
-- `$height` `(integer)` The height of the image
-- `$filters` `(array)` An array of filters and config filters
+- `$src` `(string)` The source path 
+- `$width` `(integer|array)` The width of the image, or and array of filters 
+- `$height` `(integer)` The height of the image 
+- `$filters` `(array)` An array of filters and config filters 
 
 #### Return
 `(string)` The url containing the filters
         
 
+#### Examples
+
+```php
+$urlGenerator = app('image.url');
+echo $urlGenerator->make('path/to/image.jpg', 300, 300);
+// '/path/to/image-filters(300x300).jpg'
+```
+
+You can also omit the size parameters and pass a filters array as the second argument
+```php
+echo $urlGenerator->make('path/to/image.jpg', [
+    'width' => 300,
+'height' => 300,
+'rotate' => 180
+]);
+// '/path/to/image-filters(300x300-rotate(180)).jpg'
+```
+
+You can also override the pattern config
+```php
+echo $urlGenerator->make('path/to/image.jpg', [
+    'width' => 300,
+    'height' => 300,
+    'pattern' => [
+        'filters_format' => '-filters-{filters}'
+    ]
+]);
+// '/path/to/image-filters-300x300-rotate(180).jpg'
+```
+
+
 ---
 
-### <a name="pattern" id="pattern"></a> `pattern($config = array())`
+<a name="pattern" id="pattern"></a>
+### `pattern($config = array())`
 
-Get the URL pattern
+Generates a pattern, according to the url format in the config.
 
 #### Arguments
-- `$config` `(array)` Config options to change the format and filters_format
+- `$config` `(array)` Config options to change the format 
 
 #### Return
-`(string)`
+`(string)` The pattern to match urls
+        
+
+#### Examples
+```php
+$urlGenerator = app('image.url');
+$pattern = $urlGenerator->pattern();
+preg_match('^'.$pattern.'$', '/path/to/image-filters(300x300).jpg'); // true
+```
+
 
 ---
 
-### <a name="parse" id="parse"></a> `parse($path, $config = array())`
+<a name="parse" id="parse"></a>
+### `parse($path, $config = array())`
 
-Parse an url
+Parse an url according to the format in the config and extract
+the path and the filters
 
 #### Arguments
-- `$path` `(string)` The path to be parsed
-- `$config` `(array)` Config options to change the pattern and filters_format
+- `$path` `(string)` The path to be parsed 
+- `$config` `(array)` Config options to change the format 
 
 #### Return
-`(array)`
+`(array)` An array containing the `path` and `filters`
+        
+
+#### Examples
+
+```php
+$urlGenerator = app('image.url');
+$url = '/path/to/image-filters(300x300).jpg';
+$path = $urlGenerator->parse($url);
+// $path['path'] = '/path/to/image.jpg';
+// $path['filters'] = ['width' => 300, 'height' => 300];
+```
+
 
 ---
 
-### <a name="setFormat" id="setFormat"></a> `setFormat($value)`
+<a name="setFormat" id="setFormat"></a>
+### `setFormat($value)`
 
 #### Arguments
 - `$value` 
@@ -138,12 +196,14 @@ Parse an url
 
 ---
 
-### <a name="getFormat" id="getFormat"></a> `getFormat()`
+<a name="getFormat" id="getFormat"></a>
+### `getFormat()`
 
 
 ---
 
-### <a name="setFilterFormat" id="setFilterFormat"></a> `setFilterFormat($value)`
+<a name="setFilterFormat" id="setFilterFormat"></a>
+### `setFilterFormat($value)`
 
 #### Arguments
 - `$value` 
@@ -151,12 +211,14 @@ Parse an url
 
 ---
 
-### <a name="getFilterFormat" id="getFilterFormat"></a> `getFilterFormat()`
+<a name="getFilterFormat" id="getFilterFormat"></a>
+### `getFilterFormat()`
 
 
 ---
 
-### <a name="setFilterSeparator" id="setFilterSeparator"></a> `setFilterSeparator($value)`
+<a name="setFilterSeparator" id="setFilterSeparator"></a>
+### `setFilterSeparator($value)`
 
 #### Arguments
 - `$value` 
@@ -164,12 +226,14 @@ Parse an url
 
 ---
 
-### <a name="getFilterSeparator" id="getFilterSeparator"></a> `getFilterSeparator()`
+<a name="getFilterSeparator" id="getFilterSeparator"></a>
+### `getFilterSeparator()`
 
 
 ---
 
-### <a name="setFiltersFormat" id="setFiltersFormat"></a> `setFiltersFormat($value)`
+<a name="setFiltersFormat" id="setFiltersFormat"></a>
+### `setFiltersFormat($value)`
 
 #### Arguments
 - `$value` 
@@ -177,12 +241,14 @@ Parse an url
 
 ---
 
-### <a name="getFiltersFormat" id="getFiltersFormat"></a> `getFiltersFormat()`
+<a name="getFiltersFormat" id="getFiltersFormat"></a>
+### `getFiltersFormat()`
 
 
 ---
 
-### <a name="setPlaceholdersPatterns" id="setPlaceholdersPatterns"></a> `setPlaceholdersPatterns($value)`
+<a name="setPlaceholdersPatterns" id="setPlaceholdersPatterns"></a>
+### `setPlaceholdersPatterns($value)`
 
 #### Arguments
 - `$value` 
@@ -190,5 +256,6 @@ Parse an url
 
 ---
 
-### <a name="getPlaceholdersPatterns" id="getPlaceholdersPatterns"></a> `getPlaceholdersPatterns()`
+<a name="getPlaceholdersPatterns" id="getPlaceholdersPatterns"></a>
+### `getPlaceholdersPatterns()`
 

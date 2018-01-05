@@ -1,7 +1,7 @@
 <?php namespace Folklore\Image;
 
 use Illuminate\Foundation\Application;
-use Folklore\Image\Contracts\ImageManipulator as ImageManipulatorContract;
+use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
 use Folklore\Image\Contracts\Source as SourceContract;
 use Folklore\Image\Contracts\FilterWithValue as FilterWithValueContract;
 use Folklore\Image\Exception\FileMissingException;
@@ -14,7 +14,7 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
-class ImageManipulator implements ImageManipulatorContract
+class ImageHandler implements ImageHandlerContract
 {
     protected $manager;
 
@@ -29,6 +29,20 @@ class ImageManipulator implements ImageManipulatorContract
 
     /**
      * Make an image and apply options
+     *
+     * Examples:
+     *
+     * Create an Image object with the image resized (and cropped) to 300x300
+     * and rotated 180 degrees.
+     * ```php
+     * $handler = Image::source();
+     * $image = $handler->make('path/to/image.jpg', [
+     *     'width' => 300,
+     *     'height' => 300,
+     *     'crop' => true,
+     *     'rotate' => 180
+     * ]);
+     * ```
      *
      * @param  string    $path The path of the image
      * @param  array    $options The manipulations to apply on the image
@@ -89,6 +103,14 @@ class ImageManipulator implements ImageManipulatorContract
     /**
      * Open an image from the source
      *
+     * Examples:
+     *
+     * Open the image path and return an Image object
+     * ```php
+     * $handler = Image::source();
+     * $image = $handler->open('path/to/image.jpg');
+     * ```
+     *
      * @param  string    $path The path of the image
      * @return ImageInterface
      */
@@ -100,6 +122,32 @@ class ImageManipulator implements ImageManipulatorContract
     /**
      * Save an image to the source
      *
+     * Examples:
+     *
+     * Create a resized image and save it to a new path
+     * ```php
+     * $handler = Image::source();
+     * $image = $handler->make('path/to/image.jpg', [
+     *     'width' => 300,
+     *     'height' => 300,
+     *     'crop' => true
+     * ]);
+     * $handler->save($image, 'path/to/image-resized.jpg');
+     * ```
+
+     * Or save it to a different source:
+     * ```php
+     * $handler = Image::source();
+     * $image = $handler->make('path/to/image.jpg', [
+     *     'width' => 300,
+     *     'height' => 300,
+     *     'crop' => true
+     * ]);
+     * Image::source('cloud')->save($image, 'path/to/image-resized.jpg');
+     * ```
+     *
+     * @param  ImageInterface $image The image to save
+     * @param  string $path The path where you want to save the image
      * @return string
      */
     public function save(ImageInterface $image, $path)
@@ -110,8 +158,16 @@ class ImageManipulator implements ImageManipulatorContract
     /**
      * Return an URL to process the image
      *
-     * @param  string  $path
-     * @return array
+     * Examples:
+     *
+     * Open the image path and return an Image object
+     * ```php
+     * $handler = Image::source();
+     * $format = $handler->format('path/to/image.jpg');
+     * // $format = 'jpg';
+     *
+     * @param  string $path The path of the image
+     * @return string The format fo the image
      */
     public function format($path)
     {
@@ -121,8 +177,11 @@ class ImageManipulator implements ImageManipulatorContract
     /**
      * Create a thumbnail from an image
      *
-     * @param  ImageInterface|string    $image An image instance or the path to an image
-     * @param  int                        $width
+     * @param  ImageInterface|string $image An image instance or the path to an image
+     * @param  int $width The maximum width of the thumbnail
+     * @param  int $height The maximum height of the thumbnail
+     * @param  boolean|string $crop If this is set to `true`, it match the exact
+     * size provided. You can also set a position for the cropped image (ex: 'top left')
      * @return ImageInterface
      */
     public function thumbnail($image, $width = null, $height = null, $crop = true)
@@ -216,7 +275,7 @@ class ImageManipulator implements ImageManipulatorContract
     /**
      * Get the image source
      *
-     * @return SourceContract
+     * @return SourceContract The source that is used
      */
     public function getSource()
     {
@@ -226,7 +285,16 @@ class ImageManipulator implements ImageManipulatorContract
     /**
      * Set the image source
      *
-     * @param  SourceContract   $source The source of the factory
+     * Open the image path and return an Image object
+     * ```php
+     * use Folklore\Image\Contracts\ImageHandler;
+     * $handler = app(ImageHandler::class);
+
+     * $source = Image::getSourceManager()->driver('local');
+     * $handler->setSource($source);
+     * ```
+     *
+     * @param SourceContract $source The source of the factory
      * @return $this
      */
     public function setSource(SourceContract $source)

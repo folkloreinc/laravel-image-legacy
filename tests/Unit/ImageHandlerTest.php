@@ -1,22 +1,22 @@
 <?php
 
-use Folklore\Image\ImageManipulator;
+use Folklore\Image\ImageHandler;
 use Folklore\Image\Filters\Rotate as RotateFilter;
 use Folklore\Image\Filters\Resize as ResizeFilter;
 use Imagine\Image\ImageInterface;
 
 /**
- * @coversDefaultClass Folklore\Image\ImageManipulator
+ * @coversDefaultClass Folklore\Image\ImageHandler
  */
-class ImageManipulatorTest extends TestCase
+class ImageHandlerTest extends TestCase
 {
-    protected $manipulator;
+    protected $handler;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->manipulator = new ImageManipulator(app('image'));
+        $this->handler = new ImageHandler(app('image'));
     }
 
     public function tearDown()
@@ -37,8 +37,8 @@ class ImageManipulatorTest extends TestCase
     public function testGetSource()
     {
         $source = app('image.source')->driver('local');
-        $this->manipulator->setSource($source);
-        $this->assertEquals($source, $this->manipulator->getSource());
+        $this->handler->setSource($source);
+        $this->assertEquals($source, $this->handler->getSource());
     }
 
     /**
@@ -48,9 +48,9 @@ class ImageManipulatorTest extends TestCase
      */
     public function testOpen()
     {
-        $this->manipulator->setSource(app('image.source')->driver('local'));
+        $this->handler->setSource(app('image.source')->driver('local'));
 
-        $image = $this->manipulator->open('image.jpg');
+        $image = $this->handler->open('image.jpg');
 
         $this->assertInstanceOf(ImageInterface::class, $image);
         $this->assertEquals(public_path('image.jpg'), $image->metadata()->get('filepath'));
@@ -65,12 +65,12 @@ class ImageManipulatorTest extends TestCase
      */
     public function testFormat()
     {
-        $this->manipulator->setSource(app('image.source')->driver('local'));
+        $this->handler->setSource(app('image.source')->driver('local'));
 
-        $format = $this->manipulator->format('image.jpg');
+        $format = $this->handler->format('image.jpg');
         $this->assertEquals('jpeg', $format);
 
-        $format = $this->manipulator->format('image.png');
+        $format = $this->handler->format('image.png');
         $this->assertEquals('png', $format);
     }
 
@@ -82,9 +82,9 @@ class ImageManipulatorTest extends TestCase
      */
     public function testMake()
     {
-        $this->manipulator->setSource(app('image.source')->driver('local'));
+        $this->handler->setSource(app('image.source')->driver('local'));
 
-        $returnImage = $this->manipulator->open('image.jpg');
+        $returnImage = $this->handler->open('image.jpg');
         $returnImage = with(new ResizeFilter())->apply($returnImage, [
             'width' => 100,
             'height' => 90,
@@ -111,9 +111,9 @@ class ImageManipulatorTest extends TestCase
         app('image')->filter('rotate', $rotateFilterMock);
         app('image')->filter('resize', $resizeFilterMock);
 
-        $this->manipulator->setSource(app('image.source')->driver('local'));
+        $this->handler->setSource(app('image.source')->driver('local'));
 
-        $image = $this->manipulator->make('image.jpg', [
+        $image = $this->handler->make('image.jpg', [
             'width' => 100,
             'height' => 90,
             'crop' => true,
@@ -134,9 +134,9 @@ class ImageManipulatorTest extends TestCase
      */
     public function testMakeWithWrongPath()
     {
-        $this->manipulator->setSource(app('image.source')->driver('local'));
+        $this->handler->setSource(app('image.source')->driver('local'));
 
-        $image = $this->manipulator->make('doesnt-exists.jpg');
+        $image = $this->handler->make('doesnt-exists.jpg');
     }
 
     /**
@@ -147,9 +147,9 @@ class ImageManipulatorTest extends TestCase
      */
     public function testMakeWithWrongFormat()
     {
-        $this->manipulator->setSource(app('image.source')->driver('local'));
+        $this->handler->setSource(app('image.source')->driver('local'));
 
-        $image = $this->manipulator->make('wrong.jpg');
+        $image = $this->handler->make('wrong.jpg');
     }
 
     /**
@@ -160,9 +160,9 @@ class ImageManipulatorTest extends TestCase
      */
     public function testMakeWithWrongFilter()
     {
-        $this->manipulator->setSource(app('image.source')->driver('local'));
+        $this->handler->setSource(app('image.source')->driver('local'));
 
-        $image = $this->manipulator->make('image.jpg', [
+        $image = $this->handler->make('image.jpg', [
             'wrong' => true
         ]);
     }
@@ -174,13 +174,13 @@ class ImageManipulatorTest extends TestCase
      */
     public function testSave()
     {
-        $this->manipulator->setSource(app('image.source')->driver('local'));
+        $this->handler->setSource(app('image.source')->driver('local'));
 
-        $image = $this->manipulator->open('image.jpg');
-        $this->manipulator->save($image, 'image-test.jpg');
+        $image = $this->handler->open('image.jpg');
+        $this->handler->save($image, 'image-test.jpg');
 
         $this->assertTrue(file_exists(public_path('image-test.jpg')));
-        $imageTest = $this->manipulator->open('image-test.jpg');
+        $imageTest = $this->handler->open('image-test.jpg');
         $this->assertEquals($imageTest->getSize()->getWidth(), $image->getSize()->getWidth());
         $this->assertEquals($imageTest->getSize()->getHeight(), $image->getSize()->getHeight());
     }

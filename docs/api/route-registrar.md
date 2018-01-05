@@ -96,9 +96,9 @@ $router->image('{pattern}', [
 #### Methods
 
 - [`image($path, $config)`](#image)
-- [`setPatternName($value)`](#setPatternName)
+- [`setPatternName($name)`](#setPatternName)
 - [`getPatternName()`](#getPatternName)
-- [`setCacheMiddleware($value)`](#setCacheMiddleware)
+- [`setCacheMiddleware($middleware)`](#setCacheMiddleware)
 - [`getCacheMiddleware()`](#getCacheMiddleware)
 - [`setController($value)`](#setController)
 - [`getController()`](#getController)
@@ -106,16 +106,83 @@ $router->image('{pattern}', [
 
 ---
 
-### <a name="image" id="image"></a> `image($path, $config)`
+<a name="image" id="image"></a>
+### `image($path, $config = array())`
+
+Creates a new image route.
 
 #### Arguments
-- `$path` 
-- `$config` 
+- `$path` `(string)` The path of the route. It must contain {pattern}. 
+- `$config` `(array)` Configuration options for the route. 
+
+#### Return
+`(\Illuminate\Routing\Route)` The route created
+        
+
+#### Examples
+
+```php
+$router = app('router');
+$router->image('/thumbnail/{pattern}', [
+    'filters' => [
+        'width' => 100,
+        'height' => 100,
+        'crop' => true
+    ]
+]);
+```
 
 
 ---
 
-### <a name="setPatternName" id="setPatternName"></a> `setPatternName($value)`
+<a name="setPatternName" id="setPatternName"></a>
+### `setPatternName($name)`
+
+Set the name of the router pattern
+
+#### Arguments
+- `$name` `(string)` The name of the pattern that will be added to the router 
+
+#### Return
+`(\Folklore\Image\RouteRegistrar)`
+
+
+---
+
+<a name="getPatternName" id="getPatternName"></a>
+### `getPatternName()`
+
+Get the name of the router pattern
+
+#### Return
+`(string)` The name of the pattern
+        
+
+
+---
+
+<a name="setCacheMiddleware" id="setCacheMiddleware"></a>
+### `setCacheMiddleware($middleware)`
+
+Set the middleware that will be used for caching images
+
+#### Arguments
+- `$middleware` `(string)` The middleware name or class path 
+
+#### Return
+`(\Folklore\Image\RouteRegistrar)`
+
+
+---
+
+<a name="getCacheMiddleware" id="getCacheMiddleware"></a>
+### `getCacheMiddleware()`
+
+
+---
+
+<a name="setController" id="setController"></a>
+### `setController($value)`
 
 #### Arguments
 - `$value` 
@@ -123,31 +190,6 @@ $router->image('{pattern}', [
 
 ---
 
-### <a name="getPatternName" id="getPatternName"></a> `getPatternName()`
-
-
----
-
-### <a name="setCacheMiddleware" id="setCacheMiddleware"></a> `setCacheMiddleware($value)`
-
-#### Arguments
-- `$value` 
-
-
----
-
-### <a name="getCacheMiddleware" id="getCacheMiddleware"></a> `getCacheMiddleware()`
-
-
----
-
-### <a name="setController" id="setController"></a> `setController($value)`
-
-#### Arguments
-- `$value` 
-
-
----
-
-### <a name="getController" id="getController"></a> `getController()`
+<a name="getController" id="getController"></a>
+### `getController()`
 

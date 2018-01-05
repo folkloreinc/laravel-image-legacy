@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use Folklore\Image\Http\ImageResponse;
 use Folklore\Image\RouteRegistrar;
-use Folklore\Image\Contracts\ImageManipulator as ImageManipulatorContract;
+use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 
 class ImageServiceProvider extends ServiceProvider
@@ -113,7 +113,7 @@ class ImageServiceProvider extends ServiceProvider
 
         $this->registerUrlGenerator();
 
-        $this->registerImageManipulator();
+        $this->registerImageHandler();
 
         $this->registerMiddlewares();
     }
@@ -206,16 +206,16 @@ class ImageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the image manipulator
+     * Register the image handler
      *
      * @return void
      */
-    public function registerImageManipulator()
+    public function registerImageHandler()
     {
-        $this->app->bind(ImageManipulatorContract::class, function ($app) {
-            $manipulator = new ImageManipulator($app['image']);
-            $manipulator->setMemoryLimit($app['config']['image.memory_limit']);
-            return $manipulator;
+        $this->app->bind(ImageHandlerContract::class, function ($app) {
+            $handler = new ImageHandler($app['image']);
+            $handler->setMemoryLimit($app['config']['image.memory_limit']);
+            return $handler;
         });
     }
 

@@ -34,13 +34,44 @@ class UrlGenerator implements UrlGeneratorContract
     }
 
     /**
-     * Make an URL from the filters passed as argument
+     * Generates an url containing the filters, according to the url format
+     * in the config.
      *
-     * @param   string      $src        The source path
-     * @param   int|array   $width      The width of the image, or and array of filters
-     * @param   int         $height     The height of the image
-     * @param   array       $filters    An array of filters and config filters
-     * @return  string      The url containing the filters
+     * Examples:
+     *
+     * ```php
+     * $urlGenerator = app('image.url');
+     * echo $urlGenerator->make('path/to/image.jpg', 300, 300);
+     * // '/path/to/image-filters(300x300).jpg'
+     * ```
+
+     * You can also omit the size parameters and pass a filters array as the second argument
+     * ```php
+     * echo $urlGenerator->make('path/to/image.jpg', [
+     *     'width' => 300,
+     * 'height' => 300,
+     * 'rotate' => 180
+     * ]);
+     * // '/path/to/image-filters(300x300-rotate(180)).jpg'
+     * ```
+
+     * You can also override the pattern config
+     * ```php
+     * echo $urlGenerator->make('path/to/image.jpg', [
+     *     'width' => 300,
+     *     'height' => 300,
+     *     'pattern' => [
+     *         'filters_format' => '-filters-{filters}'
+     *     ]
+     * ]);
+     * // '/path/to/image-filters-300x300-rotate(180).jpg'
+     * ```
+     *
+     * @param string $src The source path
+     * @param int|array $width The width of the image, or and array of filters
+     * @param int $height The height of the image
+     * @param array $filters An array of filters and config filters
+     * @return string The url containing the filters
      */
     public function make($src, $width = null, $height = null, $filters = [])
     {
@@ -133,10 +164,17 @@ class UrlGenerator implements UrlGeneratorContract
     }
 
     /**
-     * Get the URL pattern
+     * Generates a pattern, according to the url format in the config.
      *
-     * @param array $config Config options to change the format and filters_format
-     * @return string
+     * Examples:
+     * ```php
+     * $urlGenerator = app('image.url');
+     * $pattern = $urlGenerator->pattern();
+     * preg_match('^'.$pattern.'$', '/path/to/image-filters(300x300).jpg'); // true
+     * ```
+     *
+     * @param array $config Config options to change the format
+     * @return string The pattern to match urls
      */
     public function pattern($config = [])
     {
@@ -144,6 +182,54 @@ class UrlGenerator implements UrlGeneratorContract
         return $pattern;
     }
 
+    /**
+     * Parse an url according to the format in the config and extract
+     * the path and the filters
+     *
+     * Examples:
+     *
+     * ```php
+     * $urlGenerator = app('image.url');
+     * $url = '/path/to/image-filters(300x300).jpg';
+     * $path = $urlGenerator->parse($url);
+     * // $path['path'] = '/path/to/image.jpg';
+     * // $path['filters'] = ['width' => 300, 'height' => 300];
+     * ```
+     *
+     * @param string $path The path to be parsed
+     * @param array $config Config options to change the format
+     * @return array An array containing the `path` and `filters`
+     */
+    public function parse($path, $config = [])
+    {
+        // Check if the path matche the pattern,
+        // otherwise return the original path.
+        $filters = array();
+        $patternAndMatches = $this->patternAndMatches($config);
+        $pattern = array_get($patternAndMatches, 'pattern');
+        $patternMatches = array_get($patternAndMatches, 'matches');
+        if (preg_match('#'.$pattern.'#i', $path, $matches)) {
+            //Remove the filters from the path
+            $filtersPath = $matches[$patternMatches['filters']];
+            $filtersFormat = array_get($config, 'filters_format', $this->getFiltersFormat());
+            $filtersFormatPath = preg_replace('#\{\s*filter\s*\}#', $filtersPath, $filtersFormat);
+            $path = preg_replace('#'.preg_quote($filtersFormatPath, '#').'\/?#', '', $path);
+            //Parse the filters
+            $filters = $this->parseFilters($filtersPath, $config);
+        }
+
+        return [
+            'path' => $path,
+            'filters' => $filters
+        ];
+    }
+
+    /**
+     * Get the pattern and all matches with index
+     *
+     * @param array $config Config options to change the format
+     * @return array An array containing the `pattern` and `matches`
+     */
     protected function patternAndMatches($config = [])
     {
         $filtersFormat = array_get($config, 'filters_format', $this->getFiltersFormat());
@@ -186,37 +272,6 @@ class UrlGenerator implements UrlGeneratorContract
         return [
             'pattern' => '^'.$pattern.'$',
             'matches' => $matches
-        ];
-    }
-
-    /**
-     * Parse an url
-     *
-     * @param string $path The path to be parsed
-     * @param array $config Config options to change the pattern and filters_format
-     * @return array
-     */
-    public function parse($path, $config = [])
-    {
-        // Check if the path matche the pattern,
-        // otherwise return the original path.
-        $filters = array();
-        $patternAndMatches = $this->patternAndMatches($config);
-        $pattern = array_get($patternAndMatches, 'pattern');
-        $patternMatches = array_get($patternAndMatches, 'matches');
-        if (preg_match('#'.$pattern.'#i', $path, $matches)) {
-            //Remove the filters from the path
-            $filtersPath = $matches[$patternMatches['filters']];
-            $filtersFormat = array_get($config, 'filters_format', $this->getFiltersFormat());
-            $filtersFormatPath = preg_replace('#\{\s*filter\s*\}#', $filtersPath, $filtersFormat);
-            $path = preg_replace('#'.preg_quote($filtersFormatPath, '#').'\/?#', '', $path);
-            //Parse the filters
-            $filters = $this->parseFilters($filtersPath, $config);
-        }
-
-        return [
-            'path' => $path,
-            'filters' => $filters
         ];
     }
 

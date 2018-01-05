@@ -2,7 +2,7 @@
 
 use Closure;
 use Illuminate\Foundation\Application;
-use Folklore\Image\Contracts\ImageManipulator as ImageManipulatorContract;
+use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
 
 class Image
 {
@@ -11,11 +11,11 @@ class Image
     protected $urlGenerator;
 
     /**
-     * All manipulators
+     * All handlers
      *
      * @var array
      */
-    protected $manipulators = [];
+    protected $handlers = [];
 
     /**
      * All registered filters.
@@ -30,44 +30,9 @@ class Image
     }
 
     /**
-     * Get an ImageManipulator for a specific source
-     *
-     * @param  string|null  $name
-     * @return Folklore\Image\ImageManipulator
-     */
-    public function source($name = null)
-    {
-        $key = $name ? $name:'default';
-
-        if (isset($this->manipulators[$key])) {
-            return $this->manipulators[$key];
-        }
-
-        $sourceManager = $this->getSourceManager();
-        $source = $sourceManager->driver($name);
-        $manipulator =  $this->app->make(ImageManipulatorContract::class);
-        $manipulator->setSource($source);
-
-        return $this->manipulators[$key] = $manipulator;
-    }
-
-    /**
-     * Register a custom source creator Closure.
-     *
-     * @param  string    $driver
-     * @param  \Closure  $callback
-     * @return $this
-     */
-    public function extend($driver, Closure $callback)
-    {
-        $sourceManager = $this->getSourceManager();
-        $sourceManager->extend($driver, $callback);
-
-        return $this;
-    }
-
-    /**
      * Return an URL to process the image
+     *
+     * Examples:
      *
      * ```php
      * echo Image::url('path/to/image.jpg', 300, 300);
@@ -132,10 +97,75 @@ class Image
     }
 
     /**
+     * Get an ImageHandler for a specific source
+     *
+     * @param string|null $name The name of the source
+     * @return Folklore\Image\ImageHandler The image manipulator object, bound
+     * the to specified source
+     */
+    public function source($name = null)
+    {
+        $key = $name ? $name:'default';
+
+        if (isset($this->handlers[$key])) {
+            return $this->handlers[$key];
+        }
+
+        $sourceManager = $this->getSourceManager();
+        $source = $sourceManager->driver($name);
+        $handler =  $this->app->make(ImageHandlerContract::class);
+        $handler->setSource($source);
+
+        return $this->handlers[$key] = $handler;
+    }
+
+    /**
+     * Register a custom source creator Closure.
+     *
+     * @param  string    $driver
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function extend($driver, Closure $callback)
+    {
+        $sourceManager = $this->getSourceManager();
+        $sourceManager->extend($driver, $callback);
+
+        return $this;
+    }
+
+    /**
      * Map image routes on the Laravel Router
      *
-     * @param  array|string  $config Config for the routes group, you can also pass
-     * a string to require a specific file in the route group
+     * Add the routes from the file specified in the `config/image.php`
+     * file at `routes.map`. You can pass a config array to override values
+     * from the config or you can also pass a path to a routes file. This method
+     * is automatically called if you have a path in your `config/image.php`.
+     * To disable this you can set `routes.map` to null.
+     *
+     * Examples:
+     *
+     * Map the routes on the Laravel Router
+     * ```php
+     * Image::routes();
+     *
+     * // or with the helper
+     * image()->routes();
+     * ```
+     *
+     * Map a custom routes file
+     * ```php
+     * Image::routes(base_path('routes/my-custom-file.php'));
+     *
+     * // or an equivalent
+     * Image::routes([
+     *     'map' => base_path('routes/my-custom-file.php')
+     * ]);
+     * ```
+     *
+     * @param  array|string  $config A config array that will override values
+     * from the `config/image.php`. If you pass a string, it is considered as
+     * a path to a filtes containing routes.
      * @return array
      */
     public function routes($config = [])
@@ -158,10 +188,64 @@ class Image
     }
 
     /**
-     * Register a filter
+     * Register a new filter to the manager that can be used by the `Image::url()` and `Image::make()` method.
      *
-     * @param  string    $name
-     * @param  \Closure|array|string|object  $filter
+     * Examples:
+     *
+     * From an array
+     * ```php
+     * // Declare the filter in a Service Provider
+     * Image::filter('small', [
+     *     'width' => 100,
+     *     'height' => 100,
+     *     'crop' => true,
+     * ]);
+     *
+     * // Use it when making an image
+     * $image = Image::make('path/to/image.jpg', [
+     *     'small' => true,
+     * ]);
+     *
+     * // or
+     *
+     * $image = Image::make('path/to/image.jpg', 'small');
+     * ```
+     *
+     * With a closure
+     * ```php
+     * // Declare the filter in a Service Provider
+     * Image::filter('circle', function ($image, $color)
+     * {
+     *     // See Imagine documentation for the Image object
+     *     // (https://imagine.readthedocs.io/en/latest/index.html)
+     *     $color = $image->palette()->color($color);
+     *     $image->draw()
+     *          ->ellipse(new Point(0, 0), new Box(300, 225), $color);
+     *     return $image;
+     * });
+     *
+     * // Use it when making an image
+     * $image = Image::make('path/to/image.jpg', [
+     *     'circle' => '#FFCC00',
+     * ]);
+     * ```
+     *
+     * With a class path
+     * ```php
+     * // Declare the filter in a Service Provider
+     * Image::filter('custom', \App\Filters\CustomFilter::class);
+     *
+     * // Use it when making an image
+     * $image = Image::make('path/to/image.jpg', [
+     *     'custom' => true,
+     * ]);
+     * ```
+     *
+     * @param string $name The name of the filter
+     * @param \Closure|array|string|object $filter The filter can be an array of
+     * filters, a closure that will get the Image object or a class path to a
+     * Filter class. (more info canbe found in the
+     * [Filters](../filters.md) documentation)
      * @return $this
      */
     public function filter($name, $filter)
@@ -257,7 +341,7 @@ class Image
     }
 
     /**
-     * Dynamically call the default source manipulator
+     * Dynamically call the default source handler
      *
      * @param  string  $method
      * @param  array   $parameters

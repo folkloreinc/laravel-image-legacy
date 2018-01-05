@@ -9,7 +9,7 @@
                         %} = {{ argument.default }}{%
                     endif
                 %}{%
-                    if loop.index < arguments.count()
+                    if loop.last == false
                         %}, {%
                     endif
                 %}{%
@@ -25,35 +25,15 @@
     macro method(method, with_defaults = true)
         %}{%
             from _self import method_arguments
-        %}{{ method.name }}({{ method_arguments(method.argument, with_defaults) }}){%
+        %}{{ method.name }}({{ method_arguments(method.arguments, with_defaults) }}){%
     endmacro
 
 %}
 
 {%
 
-    macro tag_description(tag)
+    macro method_argument_description(argument)
 
-        %}{%
-            set attributes = tag.attributes()
-        %}{%
-            set safe_description = attributes.description|striptags|replace({"\n": "", "\r\n": "", "\t": "", "\n\r": ""})|trim
-        %}{%
-            if safe_description != ''
-                %}{{ safe_description }}{%
-            endif
-        %}{%
-
-    endmacro
-
-%}
-
-{%
-
-    macro method_argument_description(argument, tags)
-
-        %}{%
-            from _self import tag_description
         %}{%
             if argument.name|trim != ''
                 %}`{{ argument.name }}` {%
@@ -63,16 +43,9 @@
                 %}`({{ argument.type }})` {%
             endif
         %}{%
-            for tag in tags
-                %}{% set attributes = tag.attributes() %}{%
-                    if (
-                        attributes.name == 'param' and
-                        attributes.variable|trim == argument.name|trim
-                    )
-                        %}{{ tag_description(tag) }}{%
-                    endif
-                %}{%
-            endfor
+            if argument.description|trim != ''
+                %}{{ argument.description }} {%
+            endif
         %}{%
 
     endmacro

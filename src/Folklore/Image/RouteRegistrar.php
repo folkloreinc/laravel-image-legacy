@@ -29,7 +29,8 @@ class RouteRegistrar
     /**
      * Create a new route registrar instance.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param \Illuminate\Routing\Router $router The laravel router
+     * @param \Folklore\Image\UrlGenerator $urlGenerator The url generator
      * @return void
      */
     public function __construct(Router $router, UrlGenerator $urlGenerator)
@@ -38,7 +39,27 @@ class RouteRegistrar
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function image($path, $config)
+    /**
+     * Creates a new image route.
+     *
+     * Examples:
+     *
+     * ```php
+     * $router = app('router');
+     * $router->image('/thumbnail/{pattern}', [
+     *     'filters' => [
+     *         'width' => 100,
+     *         'height' => 100,
+     *         'crop' => true
+     *     ]
+     * ]);
+     * ```
+     *
+     * @param string $path The path of the route. It must contain `{pattern}`.
+     * @param array $config Configuration options for the route.
+     * @return \Illuminate\Routing\Route The route created
+     */
+    public function image($path, $config = [])
     {
         $as = array_get($config, 'as');
         $domain = array_get($config, 'domain', null);
@@ -79,20 +100,37 @@ class RouteRegistrar
         ));
     }
 
-    public function setPatternName($value)
+    /**
+     * Set the name of the router pattern
+     *
+     * @param string $name The name of the pattern that will be added to the router
+     * @return $this
+     */
+    public function setPatternName($name)
     {
-        $this->patternName = $value;
+        $this->patternName = $name;
         return $this;
     }
 
+    /**
+     * Get the name of the router pattern
+     *
+     * @return string The name of the pattern
+     */
     public function getPatternName()
     {
         return $this->patternName;
     }
 
-    public function setCacheMiddleware($value)
+    /**
+     * Set the middleware that will be used for caching images
+     *
+     * @param string $middleware The middleware name or class path
+     * @return $this
+     */
+    public function setCacheMiddleware($middleware)
     {
-        $this->cacheMiddleware = $value;
+        $this->cacheMiddleware = $middleware;
         return $this;
     }
 
