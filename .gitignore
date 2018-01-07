@@ -1,6 +1,7 @@
 /vendor
 composer.phar
 composer.lock
+package-lock.json
 .DS_Store
 /coverage
 /node_modules
