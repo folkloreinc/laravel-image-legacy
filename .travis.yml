@@ -65,7 +65,7 @@ install: travis_retry composer install --no-interaction --prefer-dist
 
 script: vendor/bin/phpunit
 
-after_success: sh -c "if [ ! -z ${COVERAGE+x} ]; then travis_retry php vendor/bin/coveralls; fi"
+after_success: sh -c "if [ ! -z ${COVERAGE+x} ]; then php vendor/bin/coveralls; fi"
 
 notifications:
     email: false
