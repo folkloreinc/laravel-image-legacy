@@ -24,5 +24,9 @@ do
     echo "extension = $FILENAME" > ${INI_DIR}/${FILENAME}.ini
     phpenv config-add ${INI_DIR}/${FILENAME}.ini
   fi
-  cp ${PHP_TARGET_DIR}/${FILENAME} ${MODULE_CACHE_DIR}
+  if [ -f ${PHP_TARGET_DIR}/${FILENAME} ]
+  then
+    echo "Copying $FILENAME to php config"
+    cp ${PHP_TARGET_DIR}/${FILENAME} ${MODULE_CACHE_DIR}
+  fi
 done
