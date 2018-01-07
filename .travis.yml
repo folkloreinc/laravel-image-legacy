@@ -58,8 +58,9 @@ before_install:
     - ./scripts/install_php_extensions.sh "imagick.so:imagick gmagick.so:gmagick"
     - composer global require hirak/prestissimo --update-no-dev
     - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
+    - composer require "orchestra/testbench:${ILLUMINATE_VERSION/5\./3\.}" --no-update --prefer-dist
 
-install: composer update --no-interaction --prefer-dist
+install: travis_retry composer install --no-interaction --prefer-dist
 
 script: vendor/bin/phpunit
 
