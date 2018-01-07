@@ -55,7 +55,7 @@ before_install:
     - sudo apt-get install graphicsmagick
     - pear config-set preferred_state beta
     - pecl channel-update pecl.php.net
-    - ./scripts/install_php-extensions.sh "imagick.so:imagick gmagick.so:gmagick"
+    - ./scripts/install_php_extensions.sh "imagick.so:imagick gmagick.so:gmagick"
     - composer global require hirak/prestissimo --update-no-dev
     - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
 
