@@ -53,10 +53,9 @@ matrix:
 before_install:
     - phpenv config-rm xdebug.ini
     - sudo apt-get install graphicsmagick
-    - sh -c "mkdir -p ${TRAVIS_BUILD_DIR}/travis/module-cache/`php-config --vernum`"
     - pear config-set preferred_state beta
     - pecl channel-update pecl.php.net
-    - MODULES="imagick.so:imagick gmagick.so:gmagick" ./scripts/modulecache.sh
+    - ./scripts/install_php-extensions.sh "imagick.so:imagick gmagick.so:gmagick"
     - composer global require hirak/prestissimo --update-no-dev
     - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
 
@@ -64,7 +63,7 @@ install: composer update --no-interaction --prefer-dist
 
 script: vendor/bin/phpunit
 
-after_success: if [-n $COVERAGE]; then travis_retry php vendor/bin/coveralls; fi
+after_success: sh -c "if [-n ${COVERAGE}]; then travis_retry php vendor/bin/coveralls; fi"
 
 notifications:
     email: false
