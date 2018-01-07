@@ -48,8 +48,8 @@ class CacheMiddleware
 
         // Check if cache directory is writable and create the directory if
         // it doesn't exists.
-        $directoryExists = file_exists($cacheDirectory);
-        if ($directoryExists && !is_writable($cacheDirectory)) {
+        $directoryExists = $this->filesystem->exists($cacheDirectory);
+        if ($directoryExists && !$this->filesystem->isWritable($cacheDirectory)) {
             throw new \Exception('Destination is not writeable');
         }
         if (!$directoryExists) {
@@ -57,14 +57,11 @@ class CacheMiddleware
         }
 
         // If it's an ImageResponse, save the image from the Image object.
-        // Otherwise, get the response content and save it.
+        // Otherwise, ignore it.
         if ($response instanceof ImageResponse) {
             $image = $response->getImage();
             $image->save($cacheFilePath);
             $response->setImagePath($cacheFilePath);
-        } else {
-            $content = $response->getContent();
-            $this->filesystem->put($cacheFilePath, $content);
         }
 
         return $response;

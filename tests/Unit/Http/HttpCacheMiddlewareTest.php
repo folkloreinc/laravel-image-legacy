@@ -50,5 +50,10 @@ class HttpCacheMiddlewareTest extends TestCase
         $response = $this->call('GET', $path);
         $this->assertEquals(200, $response->status());
         $this->assertTrue(file_exists(public_path('cache/'.ltrim($path, '/'))));
+
+        // Do a second request to check if it's the same file
+        $secondResponse = $this->call('GET', $path);
+        $this->assertEquals(200, $secondResponse->status());
+        $this->assertEquals($response->getContent(), $secondResponse->getContent());
     }
 }
