@@ -51,7 +51,7 @@ matrix:
           env: ILLUMINATE_VERSION=5.5.* PHPUNIT_VERSION=~6.0
 
 before_install:
-    - PHPENV_VERSION_NAME="$(rbenv-version-name)" cp ${RBENV_ROOT}/versions/${PHPENV_VERSION_NAME}/etc/conf.d/xdebug.ini ./xdebug.ini
+    - cp ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ~/xdebug.ini
     - phpenv config-rm xdebug.ini
     - sudo apt-get install graphicsmagick
     - pear config-set preferred_state beta
@@ -64,7 +64,7 @@ before_install:
 
 install: travis_retry composer install --no-interaction --prefer-dist
 
-before_script: phpenv config-add ./xdebug.ini
+before_script: phpenv config-add ~/xdebug.ini
 
 script: vendor/bin/phpunit
 
