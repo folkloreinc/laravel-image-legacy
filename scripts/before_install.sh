@@ -8,5 +8,3 @@ MODULES="imagick.so:imagick gmagick.so:gmagick" ./scripts/modulecache.sh
 
 composer global require hirak/prestissimo --update-no-dev
 composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
-composer require "orchestra/testbench:${TESTBENCH_VERSION}" --no-update --prefer-dist
-composer require "phpunit/phpunit:${PHPUNIT_VERSION}" --no-update --prefer-dist
