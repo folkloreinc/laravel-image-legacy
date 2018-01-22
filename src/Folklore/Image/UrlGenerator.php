@@ -82,7 +82,12 @@ class UrlGenerator implements UrlGeneratorContract
 
         // Extract the path from a URL if a URL was provided instead of a path
         $srcParts = parse_url($src);
+        $scheme = array_get($srcParts, 'scheme', 'http');
+        $port = array_get($srcParts, 'port', null);
         $host = array_get($srcParts, 'host');
+        if (!is_null($host) && !is_null($port) && $port !== 80) {
+            $host .= ':'.$port;
+        }
         $path = array_get($srcParts, 'path');
 
         // If width is an array, use it as filters
@@ -155,7 +160,6 @@ class UrlGenerator implements UrlGeneratorContract
         $host = '/';
         if (!is_null($placeholders['host'])) {
             $host = $placeholders['host'];
-            $scheme = array_get($srcParts, 'scheme', 'http');
             $host = !preg_match('/^https?\:\/\//i', $url) ?
                 $scheme.'://'.$host.'/' : '';
         }
