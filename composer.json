@@ -53,7 +53,7 @@
                 "Folklore\\Image\\ImageServiceProvider"
             ],
             "aliases": {
-                "Image": "Folklore\\Image\\Facades\\Image"
+                "Image": "Folklore\\Image\\Support\\Facades\\Image"
             }
         }
     }
