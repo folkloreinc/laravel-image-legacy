@@ -104,7 +104,7 @@ class UrlGenerator {
             const val = filters[key];
             if (val === true || val === null) {
                 parameters.push(key);
-            } else {
+            } else if (val !== false) {
                 const strVal = isArray(val) ? val.join(',') : val;
                 const parameter = format.replace(/\{\s*key\s*\}/i, key)
                     .replace(/\{\s*value\s*\}/i, strVal);
