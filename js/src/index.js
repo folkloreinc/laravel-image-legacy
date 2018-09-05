@@ -2,7 +2,7 @@
 import UrlGenerator from './UrlGenerator';
 
 const urlGenerator = new UrlGenerator({
-    ...(LARAVEL_IMAGE_CONFIG || null),
+    ...(typeof LARAVEL_IMAGE_CONFIG !== 'undefined' ? LARAVEL_IMAGE_CONFIG : null),
 });
 
 const image = {
