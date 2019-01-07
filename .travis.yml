@@ -58,7 +58,7 @@ matrix:
 before_install:
     - cp ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ~/xdebug.ini
     - phpenv config-rm xdebug.ini
-    - sudo apt-get install graphicsmagick
+    - sudo apt-get install graphicsmagick libgraphicsmagick1-dev
     - pear config-set preferred_state beta
     - pecl channel-update pecl.php.net
     - ./scripts/install_php_extensions.sh "imagick.so:imagick gmagick.so:gmagick"
