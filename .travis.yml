@@ -4,6 +4,7 @@ cache:
   directories:
     - $HOME/.cache/pip
     - $HOME/.composer/cache/files
+    - ${TRAVIS_BUILD_DIR}/travis/extension-cache
 
 php:
     - 5.5
@@ -57,6 +58,10 @@ matrix:
 before_install:
     - cp ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ~/xdebug.ini
     - phpenv config-rm xdebug.ini
+    - sudo apt-get install graphicsmagick
+    - pear config-set preferred_state beta
+    - pecl channel-update pecl.php.net
+    - ./scripts/install_php_extensions.sh "imagick.so:imagick gmagick.so:gmagick"
     - export TESTBENCH_VERSION=${ILLUMINATE_VERSION/5\./3\.}
     - export DATABASE_VERSION=${DATABASE_VERSION:-${ILLUMINATE_VERSION/5\./3\.}}
     - composer global require hirak/prestissimo --update-no-dev
