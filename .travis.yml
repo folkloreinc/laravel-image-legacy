@@ -65,7 +65,6 @@ before_install:
     - composer global require hirak/prestissimo --update-no-dev
     - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
     - composer require "orchestra/testbench:${ILLUMINATE_VERSION/5\./3\.}" --no-update --prefer-dist
-    - composer require "orchestra/database:${DATABASE_VERSION}" --no-update --prefer-dist
     - composer require "phpunit/phpunit:${PHPUNIT_VERSION}" --no-update --prefer-dist
 
 install: travis_retry composer install --no-interaction --prefer-dist
