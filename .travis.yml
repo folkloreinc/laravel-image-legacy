@@ -62,12 +62,9 @@ before_install:
     - pear config-set preferred_state beta
     - pecl channel-update pecl.php.net
     - ./scripts/install_php_extensions.sh "imagick.so:imagick gmagick.so:gmagick"
-    - export TESTBENCH_VERSION=${ILLUMINATE_VERSION/5\./3\.}
-    - export DATABASE_VERSION=${DATABASE_VERSION:-${ILLUMINATE_VERSION/5\./3\.}}
     - composer global require hirak/prestissimo --update-no-dev
     - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
     - composer require "orchestra/testbench:${ILLUMINATE_VERSION/5\./3\.}" --no-update --prefer-dist
-    - composer require "orchestra/database:${DATABASE_VERSION}" --no-update --prefer-dist
     - composer require "phpunit/phpunit:${PHPUNIT_VERSION}" --no-update --prefer-dist
 
 install: travis_retry composer install --no-interaction --prefer-dist
