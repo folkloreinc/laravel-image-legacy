@@ -65,6 +65,6 @@ class RoutesTest extends TestCase
         $this->assertRegExp('/'.$patterns['image_pattern'].'/', 'image.jpg');
 
         $response = $this->call('GET', $url);
-        // dd($response);
+        $this->assertEquals($response->headers->get('Content-type'), 'image/jpeg');
     }
 }
