@@ -77,13 +77,13 @@ class ImageResponse extends StreamedResponse
      */
     protected function sendImageFromPath()
     {
-        $output = fopen('php://output', 'w');
         $file = fopen($this->imagePath, 'r');
-        while ($buf = fread($file, 4096)) {
-            fwrite($output, $buf);
+        while ($buffer = fread($file, 4096)) {
+            echo $buffer;
+            ob_flush();
+            flush();
         }
         fclose($file);
-        fclose($output);
     }
 
     /**
