@@ -3,6 +3,7 @@
 namespace Folklore\Image\Http;
 
 use Folklore\Image\Http\ImageResponse;
+use Folklore\Image\Contracts\ImageDataHandler;
 use Illuminate\Contracts\Filesystem\Factory;
 use Closure;
 
@@ -60,7 +61,7 @@ class CacheMiddleware
         // Otherwise, ignore it.
         if ($response instanceof ImageResponse) {
             $image = $response->getImage();
-            $image->save($cacheFilePath);
+            app(ImageDataHandler::class)->save($image, $cacheFilePath);
             $response->setImagePath($cacheFilePath);
         }
 

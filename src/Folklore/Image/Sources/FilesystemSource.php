@@ -2,6 +2,7 @@
 
 namespace Folklore\Image\Sources;
 
+use Folklore\Image\Contracts\ImageDataHandler;
 use League\Flysystem\Adapter\Local;
 use Imagine\Image\ImageInterface;
 use finfo;
@@ -99,11 +100,11 @@ class FilesystemSource extends AbstractSource
 
         if ($disk->getAdapter() instanceof Local) {
             $localPath = $disk->getAdapter()->getPathPrefix();
-            return $image->save(rtrim($localPath, '/').'/'.ltrim($fullPath, '/'));
+            return app(ImageDataHandler::class)->save($image, rtrim($localPath, '/').'/'.ltrim($fullPath, '/'));
         }
 
         $format = pathinfo($fullPath, \PATHINFO_EXTENSION);
-        $content = $image->get($format);
+        $content = app(ImageDataHandler::class)->get($image, $format);
 
         $disk->put($fullPath, $content);
 

@@ -4,6 +4,7 @@ use Illuminate\Support\ServiceProvider;
 use Folklore\Image\Http\ImageResponse;
 use Folklore\Image\RouteRegistrar;
 use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
+use Folklore\Image\Contracts\ImageDataHandler as ImageDataHandlerContract;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 
 class ImageServiceProvider extends ServiceProvider
@@ -115,6 +116,8 @@ class ImageServiceProvider extends ServiceProvider
 
         $this->registerImageHandler();
 
+        $this->registerImageDataHandler();
+
         $this->registerMiddlewares();
     }
 
@@ -217,6 +220,16 @@ class ImageServiceProvider extends ServiceProvider
             $handler->setMemoryLimit($app['config']['image.memory_limit']);
             return $handler;
         });
+    }
+
+    /**
+     * Register the image data handler
+     *
+     * @return void
+     */
+    public function registerImageDataHandler()
+    {
+        $this->app->bind(ImageDataHandlerContract::class, ImageDataHandler::class);
     }
 
     /**

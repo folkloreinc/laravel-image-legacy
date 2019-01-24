@@ -4,6 +4,7 @@ namespace Folklore\Image\Sources;
 
 use Folklore\Image\ImagineManager;
 use Imagine\Image\ImageInterface;
+use Folklore\Image\Contracts\ImageDataHandler;
 
 class LocalSource extends AbstractSource
 {
@@ -94,6 +95,6 @@ class LocalSource extends AbstractSource
     {
         $dir = isset($this->config['path']) ? $this->config['path']:public_path();
         $realPath = rtrim($dir, '/').'/'.ltrim($path, '/');
-        return $image->save($realPath);
+        return app(ImageDataHandler::class)->save($image, $realPath);
     }
 }

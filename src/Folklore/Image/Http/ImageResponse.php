@@ -2,6 +2,7 @@
 
 namespace Folklore\Image\Http;
 
+use Folklore\Image\Contracts\ImageDataHandler;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\ResponseTrait;
 use Imagine\Image\ImageInterface;
@@ -119,9 +120,9 @@ class ImageResponse extends StreamedResponse
             return file_get_contents($this->imagePath);
         }
 
-        return $this->image->get($this->format, [
+        return app(ImageDataHandler::class)->get($this->image, $this->format, [
             'jpeg_quality' => $this->quality,
-            'png_compression_level' => ($this->quality / 100) * 9
+            'png_compression_level' => ($this->quality / 100) * 9,
         ]);
     }
 
