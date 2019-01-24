@@ -157,6 +157,10 @@ class ImageResponse extends StreamedResponse
     public function setImagePath($path)
     {
         $this->imagePath = $path;
+        if (!is_null($path)) {
+            $size = filesize($path);
+            $this->header('Content-length', $size);
+        }
 
         return $this;
     }
