@@ -80,7 +80,6 @@ class ImageResponse extends StreamedResponse
         $file = fopen($this->imagePath, 'r');
         while ($buffer = fread($file, 4096)) {
             echo $buffer;
-            ob_flush();
             flush();
         }
         fclose($file);
