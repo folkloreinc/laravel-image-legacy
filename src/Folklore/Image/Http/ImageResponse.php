@@ -78,7 +78,7 @@ class ImageResponse extends StreamedResponse
     protected function sendImageFromPath()
     {
         $file = fopen($this->imagePath, 'r');
-        while ($buffer = fread($file, 4096)) {
+        while ($buffer = fread($file, 1024*1024)) {
             echo $buffer;
             flush();
         }
