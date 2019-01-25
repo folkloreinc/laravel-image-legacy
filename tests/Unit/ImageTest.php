@@ -29,7 +29,7 @@ class ImageTest extends TestCase
      */
     public function testConstructor()
     {
-        $image = new Image(app());
+        $image = new Image(app(), app('router'));
         $this->assertInstanceOf(Image::class, $image);
     }
 

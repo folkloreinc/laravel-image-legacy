@@ -3,7 +3,7 @@ namespace Folklore\Image;
 
 use Illuminate\Routing\Router;
 use Illuminate\Container\Container;
-use Folklore\Image\UrlGenerator;
+use Folklore\Image\Contracts\UrlGenerator;
 
 class RouteRegistrar
 {

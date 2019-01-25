@@ -1,14 +1,17 @@
 <?php namespace Folklore\Image;
 
-use Closure;
-use Illuminate\Foundation\Application;
+use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Routing\Registrar as RouteRegistrar;
+use Folklore\Image\Contracts\Factory as FactoryContract;
 use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
+use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
+use Closure;
 
-class Image
+class Image implements FactoryContract
 {
-    protected $app;
+    protected $container;
 
-    protected $urlGenerator;
+    protected $router;
 
     /**
      * All handlers
@@ -24,9 +27,18 @@ class Image
      */
     protected $filters = [];
 
-    public function __construct(Application $app)
+    /**
+     * Route config
+     *
+     * @var array
+     */
+    protected $routeConfig = [];
+
+
+    public function __construct(Container $container, RouteRegistrar $router)
     {
-        $this->app = $app;
+        $this->container = $container;
+        $this->router = $router;
     }
 
     /**
@@ -113,7 +125,7 @@ class Image
 
         $sourceManager = $this->getSourceManager();
         $source = $sourceManager->driver($name);
-        $handler =  $this->app->make(ImageHandlerContract::class);
+        $handler =  $this->container->make(ImageHandlerContract::class);
         $handler->setSource($source);
 
         return $this->handlers[$key] = $handler;
@@ -170,15 +182,14 @@ class Image
      */
     public function routes($config = [])
     {
-        $routeConfig = $this->app['config']->get('image.routes', []);
-        $config = array_merge([], $routeConfig, is_string($config) ? [
+        $config = array_merge($this->routeConfig, is_string($config) ? [
             'map' => $config
         ] : $config);
         $groupConfig = array_only($config, ['domain', 'prefix', 'as', 'namespace', 'middleware']);
         $map = array_get($config, 'map', null);
 
         // Map routes defined in the routes files
-        $this->app['router']->group($groupConfig, function ($router) use ($map) {
+        $this->router->group($groupConfig, function ($router) use ($map) {
             if (!is_null($map) && is_file($map)) {
                 require $map;
             } else {
@@ -300,13 +311,45 @@ class Image
     }
 
     /**
+     * Set route config
+     *
+     * @param  array    $routeConfig
+     * @return $this
+     */
+    public function setRouteConfig($routeConfig)
+    {
+        $this->routeConfig = $routeConfig;
+        return $this;
+    }
+
+    /**
+     * Get the source manager
+     *
+     * @return \Folklore\Image\SourceManager
+     */
+    public function getSourceManager()
+    {
+        return $this->container->make('image.source');
+    }
+
+    /**
+     * Get the url generator
+     *
+     * @return \Folklore\Image\Contracts\UrlGenerator
+     */
+    public function getUrlGenerator()
+    {
+        return $this->container->make(UrlGeneratorContract::class);
+    }
+
+    /**
      * Get the imagine manager
      *
      * @return \Folklore\Image\ImageManager
      */
     public function getImagineManager()
     {
-        return $this->app['image.imagine'];
+        return $this->container->make('image.imagine');
     }
 
     /**
@@ -318,26 +361,6 @@ class Image
     {
         $manager = $this->getImagineManager();
         return $manager->driver();
-    }
-
-    /**
-     * Get the source manager
-     *
-     * @return \Folklore\Image\SourceManager
-     */
-    public function getSourceManager()
-    {
-        return $this->app['image.source'];
-    }
-
-    /**
-     * Get the url generator
-     *
-     * @return \Folklore\Image\UrlGenerator
-     */
-    public function getUrlGenerator()
-    {
-        return $this->app['image.url'];
     }
 
     /**

@@ -7,46 +7,25 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
+use Folklore\Image\Contracts\RouteResolver;
 use Folklore\Image\Exception\Exception;
 use Folklore\Image\Exception\FileMissingException;
 use Folklore\Image\Exception\ParseException;
-
-use App;
-use Image;
 
 class ImageController extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
 
+    public function __construct(RouteResolver $routeResolver)
+    {
+        $this->routeResolver = $routeResolver;
+    }
+
     public function serve(Request $request, $path)
     {
-        // Get config from route
-        $route = $request->route();
-        $config = $route ? array_get($route->getAction(), 'image', []):[];
-        $source = array_get($config, 'source');
-        $quality = (float)array_get($config, 'quality', 100);
-        $expires = array_get($config, 'expires', null);
-        $urlConfig = array_get($config, 'pattern', []);
-        $routeFilters = array_get($config, 'filters', []);
-
-        // Parse the path
-        $parseData = app('image.url')->parse($path, $urlConfig);
-        $path = $parseData['path'];
-        $pathFilters = $parseData['filters'];
-        $filters = array_merge($pathFilters, $routeFilters);
-
-        // Return the response
+        // Make the image from the route and return the response
         try {
-            // Make the image
-            $handler = $source ? app('image')->source($source):app('image');
-            $image = $handler->make($path, $filters);
-            $format = $handler->format($path);
-
-            $response = response()->image($image)
-                ->setQuality($quality)
-                ->setFormat($format)
-                ->setExpiresIn($expires);
-            return $response;
+            return $this->routeResolver->resolveToResponse($request->route());
         } catch (ParseException $e) {
             return abort(404);
         } catch (FileMissingException $e) {

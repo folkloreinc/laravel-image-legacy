@@ -3,8 +3,12 @@
 use Illuminate\Support\ServiceProvider;
 use Folklore\Image\Http\ImageResponse;
 use Folklore\Image\RouteRegistrar;
+use Folklore\Image\Contracts\Factory as FactoryContract;
 use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
 use Folklore\Image\Contracts\ImageDataHandler as ImageDataHandlerContract;
+use Folklore\Image\Contracts\CacheManager as CacheManagerContract;
+use Folklore\Image\Contracts\RouteResolver as RouteResolverContract;
+use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 
 class ImageServiceProvider extends ServiceProvider
@@ -34,6 +38,8 @@ class ImageServiceProvider extends ServiceProvider
         $this->bootRouter();
 
         $this->bootHttp();
+
+        $this->bootConsole();
     }
 
     public function bootPublishes()
@@ -98,6 +104,20 @@ class ImageServiceProvider extends ServiceProvider
     }
 
     /**
+     * Add commands
+     *
+     * @return void
+     */
+    public function bootConsole()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                'image.console.create_url_cache',
+            ]);
+        }
+    }
+
+    /**
      * Register the service provider.
      *
      * @return void
@@ -116,9 +136,11 @@ class ImageServiceProvider extends ServiceProvider
 
         $this->registerImageHandler();
 
-        $this->registerImageDataHandler();
+        $this->registerContracts();
 
         $this->registerMiddlewares();
+
+        $this->registerConsole();
     }
 
     /**
@@ -129,9 +151,11 @@ class ImageServiceProvider extends ServiceProvider
     public function registerImage()
     {
         $this->app->singleton('image', function ($app) {
-            $filters = $this->app['config']->get('image.filters', []);
-            $image = new Image($app);
-            $image->setFilters($filters);
+            $router = $this->getRouter();
+            $config = $this->app['config'];
+            $image = new Image($app, $router);
+            $image->setFilters($config->get('image.filters', []));
+            $image->setRouteConfig($config->get('image.routes', []));
             return $image;
         });
     }
@@ -223,16 +247,6 @@ class ImageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the image data handler
-     *
-     * @return void
-     */
-    public function registerImageDataHandler()
-    {
-        $this->app->bind(ImageDataHandlerContract::class, ImageDataHandler::class);
-    }
-
-    /**
      * Register the image factory
      *
      * @return void
@@ -240,6 +254,30 @@ class ImageServiceProvider extends ServiceProvider
     public function registerMiddlewares()
     {
         $this->app->bind('image.middleware.cache', \Folklore\Image\Http\CacheMiddleware::class);
+    }
+
+    /**
+     * Register contracts
+     *
+     * @return void
+     */
+    public function registerContracts()
+    {
+        $this->app->bind(FactoryContract::class, 'image');
+        $this->app->bind(ImageDataHandlerContract::class, ImageDataHandler::class);
+        $this->app->bind(CacheManagerContract::class, CacheManager::class);
+        $this->app->bind(RouteResolverContract::class, RouteResolver::class);
+        $this->app->bind(UrlGeneratorContract::class, 'image.url');
+    }
+
+    /**
+     * Register console
+     *
+     * @return void
+     */
+    public function registerConsole()
+    {
+        $this->app->bind('image.console.create_url_cache', \Folklore\Image\Console\CreateUrlCacheCommand::class);
     }
 
     /**
