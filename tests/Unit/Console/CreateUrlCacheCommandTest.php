@@ -26,8 +26,10 @@ class CreateUrlCacheCommandTest extends TestCase
      */
     public function testRun()
     {
-        $this->withoutMockingConsoleOutput();
-        
+        if (method_exists($this, 'withoutMockingConsoleOutput')) {
+            $this->withoutMockingConsoleOutput();
+        }
+
         $returnCode = $this->artisan('image:create_url_cache', [
             'url' => '/image.jpg',
             '--filters' => ['negative']
