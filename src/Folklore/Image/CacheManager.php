@@ -18,7 +18,7 @@ class CacheManager implements CacheManagerContract
         $this->dataHandler = $dataHandler;
     }
 
-    public function put(ImageInterface $image, string $path, string $directory = null)
+    public function put(ImageInterface $image, $path, $directory = null)
     {
         if (is_null($directory)) {
             $directory = public_path();

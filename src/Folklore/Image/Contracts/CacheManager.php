@@ -6,5 +6,5 @@ use Imagine\Image\ImageInterface;
 
 interface CacheManager
 {
-    public function put(ImageInterface $image, string $url, string $directory = null);
+    public function put(ImageInterface $image, $url, $directory = null);
 }
