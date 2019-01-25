@@ -3,7 +3,7 @@ namespace Folklore\Image;
 
 use Illuminate\Routing\Router;
 use Illuminate\Container\Container;
-use Folklore\Image\Contracts\UrlGenerator;
+use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
 
 class RouteRegistrar
 {
@@ -33,7 +33,7 @@ class RouteRegistrar
      * @param \Folklore\Image\UrlGenerator $urlGenerator The url generator
      * @return void
      */
-    public function __construct(Router $router, UrlGenerator $urlGenerator)
+    public function __construct(Router $router, UrlGeneratorContract $urlGenerator)
     {
         $this->router = $router;
         $this->urlGenerator = $urlGenerator;
