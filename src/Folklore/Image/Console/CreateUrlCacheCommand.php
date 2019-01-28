@@ -5,7 +5,7 @@ namespace Folklore\Image\Console;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Routing\Router;
 use Illuminate\Http\Request;
 use Folklore\Image\Contracts\UrlGenerator;
@@ -14,8 +14,6 @@ use Folklore\Image\Jobs\CreateUrlCache;
 
 class CreateUrlCacheCommand extends Command
 {
-    use DispatchesJobs;
-
     /**
      * The console command name.
      *
@@ -33,17 +31,20 @@ class CreateUrlCacheCommand extends Command
     protected $router;
     protected $urlGenerator;
     protected $routeResolver;
+    protected $dispatcher;
 
     public function __construct(
         Router $router,
         UrlGenerator $urlGenerator,
-        RouteResolver $routeResolver
+        RouteResolver $routeResolver,
+        Dispatcher $dispatcher
     ) {
         parent::__construct();
 
         $this->router = $router;
         $this->urlGenerator = $urlGenerator;
         $this->routeResolver = $routeResolver;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -59,9 +60,9 @@ class CreateUrlCacheCommand extends Command
         $routeName = $this->option('route');
 
         if ($queue) {
-            $this->dispatch(new CreateUrlCache($url, $filters, $routeName));
+            $this->dispatcher->dispatch(new CreateUrlCache($url, $filters, $routeName));
         } else {
-            $this->dispatchNow(new CreateUrlCache($url, $filters, $routeName));
+            $this->dispatcher->dispatchNow(new CreateUrlCache($url, $filters, $routeName));
         }
 
         $route = !empty($routeName) ? $this->router->getRoutes()->getByName($routeName) : null;
