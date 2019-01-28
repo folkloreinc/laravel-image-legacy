@@ -5,14 +5,17 @@ namespace Folklore\Image\Console;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Router;
 use Illuminate\Http\Request;
 use Folklore\Image\Contracts\UrlGenerator;
 use Folklore\Image\Contracts\RouteResolver;
-use Folklore\Image\Contracts\CacheManager;
+use Folklore\Image\Jobs\CreateUrlCache;
 
 class CreateUrlCacheCommand extends Command
 {
+    use DispatchesJobs;
+
     /**
      * The console command name.
      *
@@ -30,20 +33,17 @@ class CreateUrlCacheCommand extends Command
     protected $router;
     protected $urlGenerator;
     protected $routeResolver;
-    protected $cacheManager;
 
     public function __construct(
         Router $router,
         UrlGenerator $urlGenerator,
-        RouteResolver $routeResolver,
-        CacheManager $cacheManager
+        RouteResolver $routeResolver
     ) {
         parent::__construct();
 
         $this->router = $router;
         $this->urlGenerator = $urlGenerator;
         $this->routeResolver = $routeResolver;
-        $this->cacheManager = $cacheManager;
     }
 
     /**
@@ -53,27 +53,22 @@ class CreateUrlCacheCommand extends Command
      */
     public function handle()
     {
+        $queue = $this->option('queue');
         $url = $this->argument('url');
         $filters = $this->option('filters');
         $routeName = $this->option('route');
+
+        if ($queue) {
+            $this->dispatch(new CreateUrlCache($url, $filters, $routeName));
+        } else {
+            $this->dispatchNow(new CreateUrlCache($url, $filters, $routeName));
+        }
 
         $route = !empty($routeName) ? $this->router->getRoutes()->getByName($routeName) : null;
         $routeConfig = !is_null($route) ? $this->routeResolver->getConfigFromRoute($route) : [];
         $finalUrl = $this->urlGenerator->make($url, array_merge($filters, !empty($route) ? [
             'pattern' => array_get($routeConfig, 'pattern', [])
         ] : []));
-
-        if (!is_null($route)) {
-            $method = in_array('POST', $route->methods()) ? 'POST' : 'GET';
-            $request = Request::create($finalUrl, $method);
-            $image = $this->routeResolver->resolveToImage($route->bind($request));
-        } else {
-            $parsedPath = $this->urlGenerator->parse($finalUrl);
-            $image = app('image')->make($parsedPath['path'], $parsedPath['filters']);
-        }
-
-        $cachePath = !is_null($route) ? array_get($routeConfig, 'cache_path') : null;
-        $this->cacheManager->put($image, $finalUrl, $cachePath);
 
         $this->line('<info>Created:</info> '.$finalUrl.' for image '.$url);
     }
@@ -100,6 +95,7 @@ class CreateUrlCacheCommand extends Command
         return [
             ['filters', 'f', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The filters to apply on the image'],
             ['route', 'r', InputOption::VALUE_REQUIRED, 'The route name', 'image'],
+            ['queue', null, InputOption::VALUE_NONE, 'Dispatch the job on the queue'],
         ];
     }
 }
