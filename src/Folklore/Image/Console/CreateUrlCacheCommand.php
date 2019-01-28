@@ -10,7 +10,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Http\Request;
 use Folklore\Image\Contracts\UrlGenerator;
 use Folklore\Image\Contracts\RouteResolver;
-use Folklore\Image\Jobs\CreateUrlCache;
+use Folklore\Image\Jobs\CreateUrlCacheJob;
 
 class CreateUrlCacheCommand extends Command
 {
@@ -60,9 +60,9 @@ class CreateUrlCacheCommand extends Command
         $routeName = $this->option('route');
 
         if ($queue) {
-            $this->dispatcher->dispatch(new CreateUrlCache($url, $filters, $routeName));
+            $this->dispatcher->dispatch(new CreateUrlCacheJob($url, $filters, $routeName));
         } else {
-            $this->dispatcher->dispatchNow(new CreateUrlCache($url, $filters, $routeName));
+            $this->dispatcher->dispatchNow(new CreateUrlCacheJob($url, $filters, $routeName));
         }
 
         $route = !empty($routeName) ? $this->router->getRoutes()->getByName($routeName) : null;

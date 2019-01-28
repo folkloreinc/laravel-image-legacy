@@ -1,6 +1,7 @@
 <?php namespace Folklore\Image;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Bus\Dispatcher;
 use Folklore\Image\Http\ImageResponse;
 use Folklore\Image\RouteRegistrar;
 use Folklore\Image\Contracts\Factory as FactoryContract;
@@ -138,6 +139,8 @@ class ImageServiceProvider extends ServiceProvider
 
         $this->registerContracts();
 
+        $this->registerJobHandlers();
+
         $this->registerMiddlewares();
 
         $this->registerConsole();
@@ -247,16 +250,6 @@ class ImageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the image factory
-     *
-     * @return void
-     */
-    public function registerMiddlewares()
-    {
-        $this->app->bind('image.middleware.cache', \Folklore\Image\Http\CacheMiddleware::class);
-    }
-
-    /**
      * Register contracts
      *
      * @return void
@@ -268,6 +261,32 @@ class ImageServiceProvider extends ServiceProvider
         $this->app->bind(CacheManagerContract::class, CacheManager::class);
         $this->app->bind(RouteResolverContract::class, RouteResolver::class);
         $this->app->bind(UrlGeneratorContract::class, 'image.url');
+    }
+
+    /**
+     * Register job handlers
+     *
+     * @return void
+     */
+    public function registerJobHandlers()
+    {
+        $dispatcher = $this->app->make(Dispatcher::class);
+        if (method_exists($dispatcher, 'maps')) {
+            $dispatcher->maps([
+                \Folklore\Image\Jobs\CreateUrlCacheJob::class =>
+                    \Folklore\Image\Handlers\CreateUrlCacheHandler::class.'@handle'
+            ]);
+        }
+    }
+
+    /**
+     * Register the image factory
+     *
+     * @return void
+     */
+    public function registerMiddlewares()
+    {
+        $this->app->bind('image.middleware.cache', \Folklore\Image\Http\CacheMiddleware::class);
     }
 
     /**
