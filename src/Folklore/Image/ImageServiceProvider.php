@@ -127,7 +127,7 @@ class ImageServiceProvider extends ServiceProvider
         $dispatcher = $this->app->make(Dispatcher::class);
         if (method_exists($dispatcher, 'maps')) {
             $dispatcher->maps([
-                \Folklore\Image\Jobs\CreateUrlCacheJob::class =>
+                \Folklore\Image\Jobs\CreateUrlCache::class =>
                     \Folklore\Image\Handlers\CreateUrlCacheHandler::class.'@handle'
             ]);
         }

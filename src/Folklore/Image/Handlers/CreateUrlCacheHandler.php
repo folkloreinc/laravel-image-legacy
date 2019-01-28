@@ -8,7 +8,7 @@ use Folklore\Image\Contracts\ImageHandlerFactory;
 use Folklore\Image\Contracts\UrlGenerator;
 use Folklore\Image\Contracts\RouteResolver;
 use Folklore\Image\Contracts\CacheManager;
-use Folklore\Image\Jobs\CreateUrlCacheJob;
+use Folklore\Image\Jobs\CreateUrlCache;
 
 class CreateUrlCacheHandler
 {
@@ -44,10 +44,10 @@ class CreateUrlCacheHandler
     /**
      * Handle the job.
      *
-     * @param  CreateUrlCacheJob  $job
+     * @param  CreateUrlCache  $job
      * @return void
      */
-    public function handle(CreateUrlCacheJob $job)
+    public function handle(CreateUrlCache $job)
     {
         $route = !empty($job->route) ? $this->router->getRoutes()->getByName($job->route) : null;
         $routeConfig = !is_null($route) ? $this->routeResolver->getConfigFromRoute($route) : [];

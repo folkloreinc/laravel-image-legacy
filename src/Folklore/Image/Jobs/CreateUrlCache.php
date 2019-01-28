@@ -6,7 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Container\Container;
 use Folklore\Image\Handlers\CreateUrlCacheHandler;
 
-class CreateUrlCacheJob implements ShouldQueue
+class CreateUrlCache implements ShouldQueue
 {
     public $url;
     public $filters = [];
