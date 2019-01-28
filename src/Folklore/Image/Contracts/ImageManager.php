@@ -28,14 +28,6 @@ interface ImageManager
     public function routes($config = []);
 
     /**
-     * Set route config
-     *
-     * @param  array    $routeConfig
-     * @return $this
-     */
-    public function setRouteConfig($routeConfig);
-
-    /**
      * Get the source manager
      *
      * @return \Folklore\Image\SourceManager
