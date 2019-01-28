@@ -4,13 +4,14 @@ namespace Folklore\Image\Jobs;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Routing\Router;
 use Illuminate\Http\Request;
 use Folklore\Image\Contracts\UrlGenerator;
 use Folklore\Image\Contracts\RouteResolver;
 use Folklore\Image\Contracts\CacheManager;
 
-class CreateUrlCache implements ShouldQueue
+class CreateUrlCache implements ShouldQueue, SelfHandling
 {
     use InteractsWithQueue;
 
