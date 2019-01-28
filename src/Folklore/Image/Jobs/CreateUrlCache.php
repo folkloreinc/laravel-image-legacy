@@ -2,10 +2,8 @@
 
 namespace Folklore\Image\Jobs;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Routing\Router;
 use Illuminate\Http\Request;
 use Folklore\Image\Contracts\UrlGenerator;
@@ -14,7 +12,7 @@ use Folklore\Image\Contracts\CacheManager;
 
 class CreateUrlCache implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable;
+    use InteractsWithQueue;
 
     public $url;
     public $filters = [];
