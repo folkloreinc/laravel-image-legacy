@@ -1,6 +1,7 @@
 <?php
 
 use Folklore\Image\UrlGenerator;
+use Folklore\Image\Contracts\FiltersManager;
 
 /**
  * @coversDefaultClass Folklore\Image\UrlGenerator
@@ -17,7 +18,7 @@ class UrlGeneratorTest extends TestCase
     {
         parent::setUp();
 
-        $this->generator = new UrlGenerator(app('image'), app('router'));
+        $this->generator = new UrlGenerator($this->app['router'], $this->app[FiltersManager::class]);
 
         $this->config = [
             'pattern' => [

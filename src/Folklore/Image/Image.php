@@ -1,17 +1,19 @@
 <?php namespace Folklore\Image;
 
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Routing\Registrar as RouteRegistrar;
-use Folklore\Image\Contracts\Factory as FactoryContract;
+use Folklore\Image\Contracts\ImageHandlerFactory as ImageHandlerFactoryContract;
 use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
+use Folklore\Image\Contracts\FiltersManager as FiltersManagerContract;
+use Folklore\Image\Contracts\ImageManager as ImageManagerContract;
 use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
 use Closure;
 
-class Image implements FactoryContract
+class Image implements
+    ImageHandlerFactoryContract,
+    FiltersManagerContract,
+    ImageManagerContract
 {
     protected $container;
-
-    protected $router;
 
     /**
      * All handlers
@@ -35,10 +37,9 @@ class Image implements FactoryContract
     protected $routeConfig = [];
 
 
-    public function __construct(Container $container, RouteRegistrar $router)
+    public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->router = $router;
     }
 
     /**
@@ -112,22 +113,21 @@ class Image implements FactoryContract
      * Get an ImageHandler for a specific source
      *
      * @param string|null $name The name of the source
-     * @return Folklore\Image\ImageHandler The image manipulator object, bound
+     * @return Folklore\Image\Contracts\ImageHandlerContract The image manipulator object, bound
      * the to specified source
      */
     public function source($name = null)
     {
-        $key = $name ? $name:'default';
+        $key = $name ? $name : 'default';
 
         if (isset($this->handlers[$key])) {
             return $this->handlers[$key];
         }
 
-        $sourceManager = $this->getSourceManager();
-        $source = $sourceManager->driver($name);
-        $handler =  $this->container->make(ImageHandlerContract::class);
+        $source = $this->getSourceManager()->driver($name);
+        $handler = $this->container->make(ImageHandlerContract::class);
         $handler->setSource($source);
-
+        
         return $this->handlers[$key] = $handler;
     }
 
@@ -189,7 +189,7 @@ class Image implements FactoryContract
         $map = array_get($config, 'map', null);
 
         // Map routes defined in the routes files
-        $this->router->group($groupConfig, function ($router) use ($map) {
+        $this->container->make('router')->group($groupConfig, function ($router) use ($map) {
             if (!is_null($map) && is_file($map)) {
                 require $map;
             } else {
@@ -333,6 +333,16 @@ class Image implements FactoryContract
     }
 
     /**
+     * Get the source manager
+     *
+     * @return \Folklore\Image\Contracts\FiltersManager
+     */
+    public function getFiltersManager()
+    {
+        return $this->container->make(FiltersManagerContract::class);
+    }
+
+    /**
      * Get the url generator
      *
      * @return \Folklore\Image\Contracts\UrlGenerator
@@ -345,7 +355,7 @@ class Image implements FactoryContract
     /**
      * Get the imagine manager
      *
-     * @return \Folklore\Image\ImageManager
+     * @return \Folklore\Image\getImagineManager
      */
     public function getImagineManager()
     {

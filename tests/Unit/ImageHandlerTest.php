@@ -3,6 +3,7 @@
 use Folklore\Image\ImageHandler;
 use Folklore\Image\Filters\Rotate as RotateFilter;
 use Folklore\Image\Filters\Resize as ResizeFilter;
+use Folklore\Image\Contracts\FiltersManager as FiltersManagerContract;
 use Imagine\Image\ImageInterface;
 
 /**
@@ -11,12 +12,15 @@ use Imagine\Image\ImageInterface;
 class ImageHandlerTest extends TestCase
 {
     protected $handler;
+    protected $localSource;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->handler = new ImageHandler(app('image'));
+        $this->localSource = $this->app->make('image.source')->driver('local');
+        $this->handler = $this->app->make(ImageHandler::class);
+        $this->handler->setSource($this->localSource);
     }
 
     public function tearDown()
@@ -36,7 +40,9 @@ class ImageHandlerTest extends TestCase
      */
     public function testGetSource()
     {
-        $source = app('image.source')->driver('local');
+        $this->assertEquals($this->localSource, $this->handler->getSource());
+
+        $source = $this->app->make('image.source')->driver('filesystem');
         $this->handler->setSource($source);
         $this->assertEquals($source, $this->handler->getSource());
     }
@@ -48,8 +54,6 @@ class ImageHandlerTest extends TestCase
      */
     public function testOpen()
     {
-        $this->handler->setSource(app('image.source')->driver('local'));
-
         $image = $this->handler->open('image.jpg');
 
         $this->assertInstanceOf(ImageInterface::class, $image);
@@ -65,8 +69,6 @@ class ImageHandlerTest extends TestCase
      */
     public function testFormat()
     {
-        $this->handler->setSource(app('image.source')->driver('local'));
-
         $format = $this->handler->format('image.jpg');
         $this->assertEquals('jpeg', $format);
 
@@ -82,8 +84,6 @@ class ImageHandlerTest extends TestCase
      */
     public function testMake()
     {
-        $this->handler->setSource(app('image.source')->driver('local'));
-
         $returnImage = $this->handler->open('image.jpg');
         $returnImage = with(new ResizeFilter())->apply($returnImage, [
             'width' => 100,
@@ -111,8 +111,6 @@ class ImageHandlerTest extends TestCase
         app('image')->filter('rotate', $rotateFilterMock);
         app('image')->filter('resize', $resizeFilterMock);
 
-        $this->handler->setSource(app('image.source')->driver('local'));
-
         $image = $this->handler->make('image.jpg', [
             'width' => 100,
             'height' => 90,
@@ -134,8 +132,6 @@ class ImageHandlerTest extends TestCase
      */
     public function testMakeWithWrongPath()
     {
-        $this->handler->setSource(app('image.source')->driver('local'));
-
         $image = $this->handler->make('doesnt-exists.jpg');
     }
 
@@ -147,8 +143,6 @@ class ImageHandlerTest extends TestCase
      */
     public function testMakeWithWrongFormat()
     {
-        $this->handler->setSource(app('image.source')->driver('local'));
-
         $image = $this->handler->make('wrong.jpg');
     }
 
@@ -160,8 +154,6 @@ class ImageHandlerTest extends TestCase
      */
     public function testMakeWithWrongFilter()
     {
-        $this->handler->setSource(app('image.source')->driver('local'));
-
         $image = $this->handler->make('image.jpg', [
             'wrong' => true
         ]);
@@ -174,8 +166,6 @@ class ImageHandlerTest extends TestCase
      */
     public function testSave()
     {
-        $this->handler->setSource(app('image.source')->driver('local'));
-
         $image = $this->handler->open('image.jpg');
         $this->handler->save($image, 'image-test.jpg');
 

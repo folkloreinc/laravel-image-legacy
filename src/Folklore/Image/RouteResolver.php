@@ -2,7 +2,7 @@
 namespace Folklore\Image;
 
 use Illuminate\Routing\Route;
-use Folklore\Image\Contracts\Factory as FactoryContract;
+use Folklore\Image\Contracts\ImageHandlerFactory as ImageHandlerFactoryContract;
 use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
 use Folklore\Image\Contracts\RouteResolver as RouteResolverContract;
 
@@ -12,7 +12,7 @@ class RouteResolver implements RouteResolverContract
 
     protected $urlGenerator;
 
-    public function __construct(FactoryContract $image, UrlGeneratorContract $urlGenerator)
+    public function __construct(ImageHandlerFactoryContract $image, UrlGeneratorContract $urlGenerator)
     {
         $this->image = $image;
         $this->urlGenerator = $urlGenerator;

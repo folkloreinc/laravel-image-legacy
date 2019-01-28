@@ -4,7 +4,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Bus\Dispatcher;
 use Folklore\Image\Http\ImageResponse;
 use Folklore\Image\RouteRegistrar;
-use Folklore\Image\Contracts\Factory as FactoryContract;
+use Folklore\Image\Contracts\ImageHandlerFactory as ImageHandlerFactoryContract;
+use Folklore\Image\Contracts\FiltersManager as FiltersManagerContract;
+use Folklore\Image\Contracts\ImageManager as ImageManagerContract;
 use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
 use Folklore\Image\Contracts\ImageDataHandler as ImageDataHandlerContract;
 use Folklore\Image\Contracts\CacheManager as CacheManagerContract;
@@ -22,11 +24,6 @@ class ImageServiceProvider extends ServiceProvider
      */
     protected $defer = false;
 
-    protected function getRouter()
-    {
-        return $this->app['router'];
-    }
-
     /**
      * Bootstrap the application events.
      *
@@ -41,6 +38,8 @@ class ImageServiceProvider extends ServiceProvider
         $this->bootHttp();
 
         $this->bootConsole();
+
+        $this->bootJobHandlers();
     }
 
     public function bootPublishes()
@@ -119,6 +118,22 @@ class ImageServiceProvider extends ServiceProvider
     }
 
     /**
+     * Add job handlers
+     *
+     * @return void
+     */
+    public function bootJobHandlers()
+    {
+        $dispatcher = $this->app->make(Dispatcher::class);
+        if (method_exists($dispatcher, 'maps')) {
+            $dispatcher->maps([
+                \Folklore\Image\Jobs\CreateUrlCacheJob::class =>
+                    \Folklore\Image\Handlers\CreateUrlCacheHandler::class.'@handle'
+            ]);
+        }
+    }
+
+    /**
      * Register the service provider.
      *
      * @return void
@@ -131,15 +146,13 @@ class ImageServiceProvider extends ServiceProvider
 
         $this->registerSourceManager();
 
-        $this->registerRouteRegistrar();
-
         $this->registerUrlGenerator();
+
+        $this->registerRouteRegistrar();
 
         $this->registerImageHandler();
 
         $this->registerContracts();
-
-        $this->registerJobHandlers();
 
         $this->registerMiddlewares();
 
@@ -154,11 +167,9 @@ class ImageServiceProvider extends ServiceProvider
     public function registerImage()
     {
         $this->app->singleton('image', function ($app) {
-            $router = $this->getRouter();
-            $config = $this->app['config'];
-            $image = new Image($app, $router);
-            $image->setFilters($config->get('image.filters', []));
-            $image->setRouteConfig($config->get('image.routes', []));
+            $image = new Image($app, $app['router']);
+            $image->setFilters($app['config']->get('image.filters', []));
+            $image->setRouteConfig($app['config']->get('image.routes', []));
             return $image;
         });
     }
@@ -188,23 +199,6 @@ class ImageServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the route registrar
-     *
-     * @return void
-     */
-    public function registerRouteRegistrar()
-    {
-        $this->app->singleton('image.routes', function ($app) {
-            $router = $this->getRouter();
-            $registrar = new RouteRegistrar($router, $app['image.url']);
-            $registrar->setPatternName($app['config']['image.routes.pattern_name']);
-            $registrar->setCacheMiddleware($app['config']['image.routes.cache_middleware']);
-            $registrar->setController($app['config']['image.routes.controller']);
-            return $registrar;
-        });
-    }
-
-    /**
      * Register the url generator
      *
      * @return void
@@ -212,26 +206,35 @@ class ImageServiceProvider extends ServiceProvider
     public function registerUrlGenerator()
     {
         $this->app->singleton('image.url', function ($app) {
-            $generator = new UrlGenerator($app['image'], $app['router']);
-
-            // Set default values from config
-            $config = $app['config'];
-            $generator->setFormat(
-                $config->get('image.url.format', '')
-            );
-            $generator->setFiltersFormat(
-                $config->get('image.url.filters_format', '')
-            );
-            $generator->setFilterFormat(
-                $config->get('image.url.filter_format', '')
-            );
-            $generator->setFilterSeparator(
-                $config->get('image.url.filter_separator', '')
-            );
-            $generator->setPlaceholdersPatterns(
-                $config->get('image.url.placeholders_patterns', '')
-            );
+            $router = $app['router'];
+            $filtersManager = $app->make(FiltersManagerContract::class);
+            $generator = new UrlGenerator($router, $filtersManager);
+            $config = $app['config']->get('image.url', []);
+            $generator->setFormat(array_get($config, 'format', ''));
+            $generator->setFiltersFormat(array_get($config, 'filters_format', ''));
+            $generator->setFilterFormat(array_get($config, 'filter_format', ''));
+            $generator->setFilterSeparator(array_get($config, 'filter_separator', ''));
+            $generator->setPlaceholdersPatterns(array_get($config, 'placeholders_patterns', ''));
             return $generator;
+        });
+    }
+
+    /**
+     * Register the route registrar
+     *
+     * @return void
+     */
+    public function registerRouteRegistrar()
+    {
+        $this->app->singleton('image.routes', function ($app) {
+            $router = $app['router'];
+            $urlGenerator = $app->make(UrlGeneratorContract::class);
+            $registrar = new RouteRegistrar($router, $urlGenerator);
+            $config = $app['config']->get('image.routes', []);
+            $registrar->setPatternName(array_get($config, 'pattern_name'));
+            $registrar->setCacheMiddleware(array_get($config, 'cache_middleware'));
+            $registrar->setController(array_get($config, 'controller'));
+            return $registrar;
         });
     }
 
@@ -242,10 +245,10 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerImageHandler()
     {
-        $this->app->bind(ImageHandlerContract::class, function ($app) {
-            $handler = new ImageHandler($app['image']);
-            $handler->setMemoryLimit($app['config']['image.memory_limit']);
-            return $handler;
+        $this->app->bind(ImageHandler::class, function ($app) {
+            $filtersManager = $app->make(FiltersManagerContract::class);
+            $memoryLimit = $app['config']->get('image.memory_limit', '128MB');
+            return new ImageHandler($filtersManager, $memoryLimit);
         });
     }
 
@@ -256,27 +259,14 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerContracts()
     {
-        $this->app->bind(FactoryContract::class, 'image');
+        $this->app->bind(ImageManagerContract::class, 'image');
+        $this->app->bind(ImageHandlerFactoryContract::class, 'image');
+        $this->app->bind(FiltersManagerContract::class, 'image');
+        $this->app->bind(ImageHandlerContract::class, ImageHandler::class);
         $this->app->bind(ImageDataHandlerContract::class, ImageDataHandler::class);
         $this->app->bind(CacheManagerContract::class, CacheManager::class);
         $this->app->bind(RouteResolverContract::class, RouteResolver::class);
         $this->app->bind(UrlGeneratorContract::class, 'image.url');
-    }
-
-    /**
-     * Register job handlers
-     *
-     * @return void
-     */
-    public function registerJobHandlers()
-    {
-        $dispatcher = $this->app->make(Dispatcher::class);
-        if (method_exists($dispatcher, 'maps')) {
-            $dispatcher->maps([
-                \Folklore\Image\Jobs\CreateUrlCacheJob::class =>
-                    \Folklore\Image\Handlers\CreateUrlCacheHandler::class.'@handle'
-            ]);
-        }
     }
 
     /**

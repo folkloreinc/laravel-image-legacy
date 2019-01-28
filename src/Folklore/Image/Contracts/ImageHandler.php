@@ -14,7 +14,7 @@ interface ImageHandler
 
     public function format($path);
 
-    public function setSource(Source $source);
-
     public function getSource();
+
+    public function setSource(Source $source);
 }

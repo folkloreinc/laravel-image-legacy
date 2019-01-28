@@ -4,7 +4,7 @@ namespace Folklore\Image\Handlers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Http\Request;
-use Folklore\Image\Contracts\Factory as ImageFactory;
+use Folklore\Image\Contracts\ImageHandlerFactory;
 use Folklore\Image\Contracts\UrlGenerator;
 use Folklore\Image\Contracts\RouteResolver;
 use Folklore\Image\Contracts\CacheManager;
@@ -28,7 +28,7 @@ class CreateUrlCacheHandler
      * @return void
      */
     public function __construct(
-        ImageFactory $image,
+        ImageHandlerFactory $image,
         Router $router,
         UrlGenerator $urlGenerator,
         RouteResolver $routeResolver,

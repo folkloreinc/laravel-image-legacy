@@ -1,6 +1,7 @@
 <?php namespace Folklore\Image;
 
 use Illuminate\Foundation\Application;
+use Folklore\Image\Contracts\FiltersManager as FiltersManagerContract;
 use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
 use Folklore\Image\Contracts\Source as SourceContract;
 use Folklore\Image\Contracts\FilterWithValue as FilterWithValueContract;
@@ -8,7 +9,6 @@ use Folklore\Image\Exception\FileMissingException;
 use Folklore\Image\Exception\FilterMissingException;
 use Folklore\Image\Exception\FormatException;
 use Folklore\Image\Filters\Resize;
-use Folklore\Image\Image;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Box;
@@ -16,15 +16,16 @@ use Imagine\Image\Point;
 
 class ImageHandler implements ImageHandlerContract
 {
-    protected $manager;
+    protected $filters;
 
     protected $source;
 
     protected $memoryLimit = null;
 
-    public function __construct(Image $manager)
+    public function __construct(FiltersManagerContract $filters, $memoryLimit = '128MB')
     {
-        $this->manager = $manager;
+        $this->filters = $filters;
+        $this->memoryLimit = $memoryLimit;
     }
 
     /**
@@ -75,13 +76,13 @@ class ImageHandler implements ImageHandlerContract
 
         // Check if all filters exists
         foreach ($filters as $key => $value) {
-            if (!$this->manager->hasFilter($key)) {
+            if (!$this->filters->hasFilter($key)) {
                 throw new FilterMissingException('Filter "'.$key.'" doesn\'t exists.');
             }
         }
 
         // Increase memory limit, because some images require a lot
-        if (isset($config['memory_limit'])) {
+        if (isset($config['memory_limit']) && !empty($config['memory_limit'])) {
             ini_set('memory_limit', $config['memory_limit']);
         }
 
@@ -210,7 +211,7 @@ class ImageHandler implements ImageHandlerContract
         // Get filters and merge if it's an array
         $newFilters = [];
         foreach ($options as $key => $arguments) {
-            $filter = $this->manager->getFilter($key);
+            $filter = $this->filters->getFilter($key);
             if (is_array($filter)) {
                 $newFilters = array_merge($newFilters, $filter);
             } else {
@@ -245,7 +246,7 @@ class ImageHandler implements ImageHandlerContract
      */
     protected function applyFilter(ImageInterface $image, $name)
     {
-        $filters = $this->manager->getFilters();
+        $filters = $this->filters->getFilters();
 
         // Get all arguments following $name and add $image as the first
         // arguments then call the filter.
@@ -325,43 +326,5 @@ class ImageHandler implements ImageHandlerContract
         $this->memoryLimit = $limit;
 
         return $this;
-    }
-
-    /**
-     * Get the imagine manager
-     *
-     * @return ImagineManager
-     */
-    public function getImagineManager()
-    {
-        return $this->manager->getImagineManager();
-    }
-
-    /**
-     * Get the imagine driver
-     *
-     * @return ImagineInterface
-     */
-    public function getImagine()
-    {
-        $imagine = $this->getImagineManager();
-        return $imagine->driver();
-    }
-
-    /**
-     * Dynamically call the default driver instance.
-     *
-     * @param  string  $method
-     * @param  array   $parameters
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        if (method_exists($this->manager, $method)) {
-            return call_user_func_array([$this->manager, $method], $parameters);
-        }
-
-        $imagine = $this->getImagineManager();
-        return call_user_func_array([$imagine, $method], $parameters);
     }
 }

@@ -1,13 +1,15 @@
 <?php namespace Folklore\Image;
 
 use Folklore\Image\Exception\ParseException;
-use Illuminate\Foundation\Application;
-use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
 use Illuminate\Routing\Router as BaseRouter;
+use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
+use Folklore\Image\Contracts\FiltersManager as FiltersManagerContract;
 
 class UrlGenerator implements UrlGeneratorContract
 {
-    protected $image;
+    protected $router;
+
+    protected $filters;
 
     protected $host = null;
 
@@ -27,10 +29,10 @@ class UrlGenerator implements UrlGeneratorContract
         'extension' => '([^\.]+)',
     ];
 
-    public function __construct(Image $image, BaseRouter $router)
+    public function __construct(BaseRouter $router, FiltersManagerContract $filters)
     {
-        $this->image = $image;
         $this->router = $router;
+        $this->filters = $filters;
     }
 
     /**
@@ -386,7 +388,7 @@ class UrlGenerator implements UrlGeneratorContract
 
             // If the filter is a custom filter, check if it's a closure or an array.
             // If it's an array, merge it with filters
-            $imagefilter = $this->image->getFilter($key);
+            $imagefilter = $this->filters->getFilter($key);
             $value = isset($withValueMatches[2]) ? $withValueMatches[2]:null;
             if (isset($imagefilter) && is_array($imagefilter)) {
                 $filters = array_merge($filters, $imagefilter);
