@@ -39,8 +39,8 @@ class ImageServiceProvider extends ServiceProvider
         $router = $app['router'];
         $config = $app['config'];
         
-        $pattern = $app['image']->pattern();
-        $proxyPattern = $config->get('image.proxy_route_pattern');
+	$pattern = $config['image.pattern'];
+	$proxyPattern = $config->get('image.proxy_route_pattern');
         $router->pattern('image_pattern', $pattern);
         $router->pattern('image_proxy_pattern', $proxyPattern ? $proxyPattern:$pattern);
 
