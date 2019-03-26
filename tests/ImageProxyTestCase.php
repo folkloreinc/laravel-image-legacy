@@ -11,22 +11,22 @@ class ImageProxyTestCase extends TestCase
     protected $imageSize;
     protected $imageSmallSize;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        
+
         $this->image = $this->app['image'];
         $this->imageSize = getimagesize(public_path().$this->imagePath);
         $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $customPath = $this->app['path.public'].'/custom';
         $this->app['config']->set('image.write_path', $customPath);
-        
+
         $this->image->deleteManipulated($this->imagePath);
-        
+
         parent::tearDown();
     }
 
@@ -37,13 +37,13 @@ class ImageProxyTestCase extends TestCase
         ]);
         $response = $this->call('GET', $url);
         $this->assertTrue($response->isOk());
-        
+
         $image = imagecreatefromstring($response->getContent());
         $this->assertTrue($image !== false);
-        
+
         $this->assertEquals(imagesx($image), 300);
         $this->assertEquals(imagesy($image), 300);
-        
+
         imagedestroy($image);
     }
 
@@ -52,22 +52,22 @@ class ImageProxyTestCase extends TestCase
         $this->app['config']->set('image.host', '/proxy/http://placehold.it/');
         $this->app['config']->set('image.proxy_filesystem', null);
         $this->app['config']->set('image.proxy_route_pattern', '^(.*)$');
-        
+
         $url = $this->image->url('/640x480.png', 300, 300, [
             'crop' => true
         ]);
         $response = $this->call('GET', $url);
         $this->assertTrue($response->isOk());
-        
+
         $image = imagecreatefromstring($response->getContent());
         $this->assertTrue($image !== false);
-        
+
         $this->assertEquals(imagesx($image), 300);
         $this->assertEquals(imagesy($image), 300);
-        
+
         imagedestroy($image);
     }
-    
+
     /**
      * Define environment setup.
      *
@@ -77,22 +77,22 @@ class ImageProxyTestCase extends TestCase
     protected function getEnvironmentSetUp($app)
     {
         $app->instance('path.public', __DIR__.'/fixture');
-        
+
         $app['config']->set('image.host', '/proxy');
         $app['config']->set('image.serve', false);
         $app['config']->set('image.proxy', true);
         $app['config']->set('image.proxy_route', '/proxy/{image_proxy_pattern}');
         $app['config']->set('image.proxy_filesystem', 'image_testbench');
         $app['config']->set('image.proxy_cache_filesystem', null);
-        
+
         $app['config']->set('filesystems.default', 'image_testbench');
         $app['config']->set('filesystems.cloud', 'image_testbench');
-        
+
         $app['config']->set('filesystems.disks.image_testbench', [
             'driver' => 'local',
             'root' => __DIR__.'/fixture'
         ]);
-        
+
         $app['config']->set('filesystems.disks.image_testbench_cache', [
             'driver' => 'local',
             'root' => __DIR__.'/fixture/cache'
