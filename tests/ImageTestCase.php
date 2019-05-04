@@ -11,7 +11,7 @@ class ImageTestCase extends TestCase
     protected $imageSize;
     protected $imageSmallSize;
 
-    public function setUp():void
+    public function setUp()
     {
         parent::setUp();
         
@@ -20,7 +20,7 @@ class ImageTestCase extends TestCase
         $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
     }
 
-    public function tearDown():void
+    public function tearDown()
     {
         $customPath = $this->app['path.public'].'/custom';
         $this->app['config']->set('image.write_path', $customPath);
