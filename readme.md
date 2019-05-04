@@ -71,6 +71,7 @@ This package also provides some common filters ready to use ([more on this](http
  5.0.x    | 0.2.x
  5.1.x    | 0.3.x
  5.2.x    | 0.3.x
+ 5.8.x    | 0.4.x
 
 ## Installation
 
