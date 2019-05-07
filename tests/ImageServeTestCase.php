@@ -11,25 +11,51 @@ class ImageServeTestCase extends TestCase
     protected $imageSize;
     protected $imageSmallSize;
 
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->image = $this->app['image'];
-        $this->imageSize = getimagesize(public_path().$this->imagePath);
-        $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
+    if ((!defined('PHP_VERSION_ID')) {
+        $version = explode('.',PHP_VERSION);
+        define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
     }
 
-    public function tearDown()
+    if(PHP_VERSION_ID <= 70000)
     {
-        $customPath = $this->app['path.public'].'/custom';
-        $this->app['config']->set('image.write_path', $customPath);
+        public function setUp()
+        {
+            parent::setUp();
 
-        $this->image->deleteManipulated($this->imagePath);
+            $this->image = $this->app['image'];
+            $this->imageSize = getimagesize(public_path().$this->imagePath);
+            $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
+        }
 
-        parent::tearDown();
+        public function tearDown()
+        {
+            $customPath = $this->app['path.public'].'/custom';
+            $this->app['config']->set('image.write_path', $customPath);
+
+            $this->image->deleteManipulated($this->imagePath);
+
+            parent::tearDown();
+        }
+    }else{
+        public function setUp():void
+        {
+            parent::setUp();
+
+            $this->image = $this->app['image'];
+            $this->imageSize = getimagesize(public_path().$this->imagePath);
+            $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
+        }
+
+        public function tearDown():void
+        {
+            $customPath = $this->app['path.public'].'/custom';
+            $this->app['config']->set('image.write_path', $customPath);
+
+            $this->image->deleteManipulated($this->imagePath);
+
+            parent::tearDown();
+        }
     }
-
     public function testServeWriteImage()
     {
         $this->app['config']->set('image.write_image', true);
