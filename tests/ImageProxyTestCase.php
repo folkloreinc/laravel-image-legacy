@@ -6,37 +6,16 @@ use Orchestra\Testbench\TestCase;
 
 class ImageProxyTestCase extends TestCase
 {
+  
     protected $imagePath = '/image.jpg';
     protected $imageSmallPath = '/image_small.jpg';
     protected $imageSize;
     protected $imageSmallSize;
 
-    if ((!defined('PHP_VERSION_ID')) {
-        $version = explode('.',PHP_VERSION);
-        define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
-    }
 
-    if(PHP_VERSION_ID <= 70000)
-    {
-        public function setUp()
-        {
-            parent::setUp();
-            
-            $this->image = $this->app['image'];
-            $this->imageSize = getimagesize(public_path().$this->imagePath);
-            $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
-        }
-
-        public function tearDown()
-        {
-            $customPath = $this->app['path.public'].'/custom';
-            $this->app['config']->set('image.write_path', $customPath);
-            
-            $this->image->deleteManipulated($this->imagePath);
-            
-            parent::tearDown();
-        }
-    }else{
+        /**
+         * @requires PHP 7.1
+         */
         public function setUp():void
         {
             parent::setUp();
@@ -46,17 +25,40 @@ class ImageProxyTestCase extends TestCase
             $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
         }
 
+        /**
+         * @requires PHP 5.3
+         */
+        public function setUp()
+        {
+            parent::setUp();
+            
+            $this->image = $this->app['image'];
+            $this->imageSize = getimagesize(public_path().$this->imagePath);
+            $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
+        }
+
+        /**
+         * @requires PHP 5.3
+         */
+        public function tearDown()
+        {
+            $customPath = $this->app['path.public'].'/custom';
+            $this->app['config']->set('image.write_path', $customPath);
+            $this->image->deleteManipulated($this->imagePath);
+            parent::tearDown();
+        }
+
+        /**
+         * @requires PHP 7.1
+         */
         public function tearDown():void
         {
             $customPath = $this->app['path.public'].'/custom';
             $this->app['config']->set('image.write_path', $customPath);
-            
             $this->image->deleteManipulated($this->imagePath);
-            
             parent::tearDown();
         }
-    }
-
+    
     public function testProxy()
     {
         $url = $this->image->url($this->imagePath, 300, 300, [

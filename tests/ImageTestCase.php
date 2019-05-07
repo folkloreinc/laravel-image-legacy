@@ -11,13 +11,9 @@ class ImageTestCase extends TestCase
     protected $imageSize;
     protected $imageSmallSize;
 
-    if ((!defined('PHP_VERSION_ID')) {
-        $version = explode('.',PHP_VERSION);
-        define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
-    }
-
-    if(PHP_VERSION_ID <= 70000)
-    {
+        /**
+         * @requires PHP 5.3
+         */
         public function setUp()
         {
             parent::setUp();
@@ -27,6 +23,9 @@ class ImageTestCase extends TestCase
             $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
         }
 
+        /**
+         * @requires PHP 5.3
+         */
         public function tearDown()
         {
             $customPath = $this->app['path.public'].'/custom';
@@ -36,7 +35,10 @@ class ImageTestCase extends TestCase
             
             parent::tearDown();
         }
-    }else{
+        
+        /**
+         * @requires PHP 7.1
+         */
         public function setUp():void
         {
             parent::setUp();
@@ -46,6 +48,9 @@ class ImageTestCase extends TestCase
             $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
         }
 
+        /**
+         * @requires PHP 7.1
+         */
         public function tearDown():void
         {
             $customPath = $this->app['path.public'].'/custom';
