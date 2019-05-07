@@ -1,4 +1,6 @@
-<?php namespace Folklore\Image\Tests;
+<?php
+declare(strict_types=1);
+namespace Folklore\Image\Tests;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Folklore\Image\Exception\FormatException;
@@ -13,21 +15,6 @@ class ImageProxyTestCase extends TestCase
     protected $imageSmallSize;
 
 
-        /**
-         * @requires PHP 7.1
-         */
-        public function setUp():void
-        {
-            parent::setUp();
-            
-            $this->image = $this->app['image'];
-            $this->imageSize = getimagesize(public_path().$this->imagePath);
-            $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
-        }
-
-        /**
-         * @requires PHP 5.3
-         */
         public function setUp()
         {
             parent::setUp();
@@ -37,21 +24,7 @@ class ImageProxyTestCase extends TestCase
             $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
         }
 
-        /**
-         * @requires PHP 5.3
-         */
         public function tearDown()
-        {
-            $customPath = $this->app['path.public'].'/custom';
-            $this->app['config']->set('image.write_path', $customPath);
-            $this->image->deleteManipulated($this->imagePath);
-            parent::tearDown();
-        }
-
-        /**
-         * @requires PHP 7.1
-         */
-        public function tearDown():void
         {
             $customPath = $this->app['path.public'].'/custom';
             $this->app['config']->set('image.write_path', $customPath);
