@@ -14,7 +14,7 @@ class ImageServeTestCase extends TestCase
     protected $imageSmallSize;
 
         
-        public function setUp()
+        public function setUp(): void
         {
             parent::setUp();
 
@@ -23,7 +23,7 @@ class ImageServeTestCase extends TestCase
             $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
         }
 
-        public function tearDown()
+        public function tearDown(): void
         {
             $customPath = $this->app['path.public'].'/custom';
             $this->app['config']->set('image.write_path', $customPath);
@@ -32,7 +32,7 @@ class ImageServeTestCase extends TestCase
 
             parent::tearDown();
         }
-        
+
     public function testServeWriteImage()
     {
         $this->app['config']->set('image.write_image', true);
