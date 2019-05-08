@@ -2,8 +2,8 @@
 
 namespace Folklore\Image\Sources;
 
-use Folklore\Image\ImagineManager;
-use Folklore\Image\UrlGenerator;
+use Imagine\Image\ImagineInterface;
+use Folklore\Image\Contracts\UrlGenerator;
 use Folklore\Image\Contracts\Source;
 
 abstract class AbstractSource implements Source
@@ -12,7 +12,7 @@ abstract class AbstractSource implements Source
     protected $urlGenerator;
     protected $config;
 
-    public function __construct(ImagineManager $imagine, Urlgenerator $urlGenerator, $config)
+    public function __construct(ImagineInterface $imagine, UrlGenerator $urlGenerator, $config)
     {
         $this->imagine = $imagine;
         $this->urlGenerator = $urlGenerator;

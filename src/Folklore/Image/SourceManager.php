@@ -1,5 +1,6 @@
 <?php namespace Folklore\Image;
 
+use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
 use Folklore\Image\Sources\LocalSource;
 use Folklore\Image\Sources\FilesystemSource;
 use Folklore\Image\Exception\InvalidSourceException;
@@ -17,7 +18,9 @@ class SourceManager extends Manager
      */
     protected function createLocalDriver($config)
     {
-        return new LocalSource($this->app['image.imagine'], $this->app['image.url'], $config);
+        $imagine = $this->app['image.imagine']->driver();
+        $urlGenerator = $this->app->make(UrlGeneratorContract::class);
+        return new LocalSource($imagine, $urlGenerator, $config);
     }
 
     /**
@@ -27,7 +30,9 @@ class SourceManager extends Manager
      */
     protected function createFilesystemDriver($config)
     {
-        return new FilesystemSource($this->app['image.imagine'], $this->app['image.url'], $config);
+        $imagine = $this->app['image.imagine']->driver();
+        $urlGenerator = $this->app->make(UrlGeneratorContract::class);
+        return new FilesystemSource($imagine, $urlGenerator, $config);
     }
 
     /**

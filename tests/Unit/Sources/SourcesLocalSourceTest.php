@@ -15,7 +15,7 @@ class SourcesLocalSourceTest extends TestCase
         parent::setUp();
 
         $config = $this->app['config']->get('image.sources.local');
-        $this->source = new LocalSource(app('image.imagine'), app('image.url'), $config);
+        $this->source = new LocalSource(app('image.imagine')->driver(), app('image.url'), $config);
     }
 
     public function tearDown()

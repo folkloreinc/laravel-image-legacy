@@ -15,7 +15,7 @@ class SourcesFilesystemSourceTest extends TestCase
         parent::setUp();
 
         $config = $this->app['config']->get('image.sources.filesystem');
-        $this->source = new FilesystemSource(app('image.imagine'), app('image.url'), $config);
+        $this->source = new FilesystemSource(app('image.imagine')->driver(), app('image.url'), $config);
     }
 
     public function tearDown()

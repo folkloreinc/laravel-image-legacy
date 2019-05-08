@@ -15,7 +15,7 @@ class SourceManagerTest extends TestCase
     {
         parent::setUp();
 
-        $this->manager = new SourceManager(app());
+        $this->manager = new SourceManager($this->app);
     }
 
     /**
@@ -28,7 +28,7 @@ class SourceManagerTest extends TestCase
     {
         $driver = $this->manager->driver('local');
         $config = app('config')->get('image.sources.local');
-        $this->assertEquals(new LocalSource(app('image.imagine'), app('image.url'), $config), $driver);
+        $this->assertEquals(new LocalSource(app('image.imagine')->driver(), app('image.url'), $config), $driver);
     }
 
     /**
@@ -41,7 +41,7 @@ class SourceManagerTest extends TestCase
     {
         $driver = $this->manager->driver('filesystem');
         $config = app('config')->get('image.sources.filesystem');
-        $this->assertEquals(new FilesystemSource(app('image.imagine'), app('image.url'), $config), $driver);
+        $this->assertEquals(new FilesystemSource(app('image.imagine')->driver(), app('image.url'), $config), $driver);
     }
 
     /**
