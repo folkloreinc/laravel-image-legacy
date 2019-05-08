@@ -7,7 +7,6 @@ cache:
     - ${TRAVIS_BUILD_DIR}/travis/extension-cache
 
 php:
-    - 7.0
     - 7.1
 
 env:
