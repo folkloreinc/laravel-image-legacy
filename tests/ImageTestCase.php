@@ -1,4 +1,6 @@
-<?php namespace Folklore\Image\Tests;
+<?php 
+declare(strict_types=1);
+namespace Folklore\Image\Tests;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Folklore\Image\Exception\FormatException;
@@ -11,24 +13,25 @@ class ImageTestCase extends TestCase
     protected $imageSize;
     protected $imageSmallSize;
 
-    public function setUp()
-    {
-        parent::setUp();
-        
-        $this->image = $this->app['image'];
-        $this->imageSize = getimagesize(public_path().$this->imagePath);
-        $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
-    }
+        public function setUp():void
+        {
+            parent::setUp();
+            
+            $this->image = $this->app['image'];
+            $this->imageSize = getimagesize(public_path().$this->imagePath);
+            $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
+        }
 
-    public function tearDown()
-    {
-        $customPath = $this->app['path.public'].'/custom';
-        $this->app['config']->set('image.write_path', $customPath);
+        public function tearDown():void
+        {
+            $customPath = $this->app['path.public'].'/custom';
+            $this->app['config']->set('image.write_path', $customPath);
+            
+            $this->image->deleteManipulated($this->imagePath);
+            
+            parent::tearDown();
+        }
         
-        $this->image->deleteManipulated($this->imagePath);
-        
-        parent::tearDown();
-    }
 
     public function testURLisValid()
     {
