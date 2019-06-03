@@ -3,6 +3,7 @@
 /coverage
 /docs
 /js
+/.idea
 node_modules
 composer.phar
 composer.lock
