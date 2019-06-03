@@ -40,15 +40,5 @@
         "classmap": [
             "tests/"
         ]
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Folklore\\Image\\ImageServiceProvider"
-            ],
-            "aliases": {
-                "Image": "Folklore\\Image\\Facades\\Image"
-            }
-        }
     }
 }
