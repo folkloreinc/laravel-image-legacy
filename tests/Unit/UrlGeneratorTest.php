@@ -14,7 +14,7 @@ class UrlGeneratorTest extends TestCase
 
     protected $filters;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

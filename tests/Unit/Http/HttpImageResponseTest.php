@@ -9,7 +9,7 @@ class HttpImageResponseTest extends TestCase
 {
     protected $response;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

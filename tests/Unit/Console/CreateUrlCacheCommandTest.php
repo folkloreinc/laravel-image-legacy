@@ -7,7 +7,7 @@ use Folklore\Image\Filters\CreateUrlCacheCommand;
  */
 class CreateUrlCacheCommandTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         $url = $this->app['image.url']->make('/image.jpg', ['negative']);
         $cachePath = public_path($url);

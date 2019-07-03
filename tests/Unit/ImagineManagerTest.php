@@ -12,7 +12,7 @@ class ImagineManagerTest extends TestCase
 {
     protected $manager;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

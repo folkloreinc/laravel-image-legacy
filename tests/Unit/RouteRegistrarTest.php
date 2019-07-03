@@ -11,7 +11,7 @@ class RouteRegistrarTest extends TestCase
 {
     protected $registrar;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

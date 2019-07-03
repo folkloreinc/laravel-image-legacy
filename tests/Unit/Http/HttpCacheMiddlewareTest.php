@@ -9,12 +9,12 @@ class HttpCacheMiddlewareTest extends TestCase
 {
     protected $middleware;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         $path = app('image')->url('image.jpg', [
             'width' => 100,

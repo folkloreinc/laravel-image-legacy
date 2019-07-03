@@ -9,7 +9,7 @@ class FiltersNegativeTest extends TestCase
 {
     protected $filter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

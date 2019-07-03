@@ -10,7 +10,7 @@ class SourcesLocalSourceTest extends TestCase
 {
     protected $source;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -18,7 +18,7 @@ class SourcesLocalSourceTest extends TestCase
         $this->source = new LocalSource(app('image.imagine')->driver(), app('image.url'), $config);
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         if (file_exists(public_path('image-test.jpg'))) {
             unlink(public_path('image-test.jpg'));

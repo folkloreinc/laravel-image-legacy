@@ -9,7 +9,7 @@ class FiltersGrayscaleTest extends TestCase
 {
     protected $filter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

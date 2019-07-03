@@ -14,7 +14,7 @@ class ImageHandlerTest extends TestCase
     protected $handler;
     protected $localSource;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -23,7 +23,7 @@ class ImageHandlerTest extends TestCase
         $this->handler->setSource($this->localSource);
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         if (file_exists(public_path('image-test.jpg'))) {
             unlink(public_path('image-test.jpg'));
