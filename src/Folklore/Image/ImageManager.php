@@ -6,6 +6,7 @@ use Folklore\Image\Exception\ParseException;
 use Folklore\Image\Exception\FormatException;
 
 use Illuminate\Support\Manager;
+use Illuminate\Support\Arr;
 
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
@@ -226,7 +227,7 @@ class ImageManager extends Manager
     public function serve($path, $config = array())
     {
         //Use user supplied quality or the config value
-        $quality = array_get($config, 'quality', $this->app['config']['image.quality']);
+        $quality = Arr::get($config, 'quality', $this->app['config']['image.quality']);
         //if nothing works fallback to the hardcoded value
         $quality = $quality ?: $this->defaultOptions['quality'];
 
