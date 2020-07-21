@@ -4,6 +4,8 @@ use Folklore\Image\Exception\FileMissingException;
 use Folklore\Image\Exception\Exception;
 use Folklore\Image\Events\ImageSaved;
 
+use Illuminate\Support\Arr;
+
 class ImageServe
 {
     protected $image;
@@ -75,7 +77,7 @@ class ImageServe
 
         //Get the image content
         $saveOptions = array();
-        $quality = array_get($options, 'quality', $this->config['quality']);
+        $quality = Arr::get($options, 'quality', $this->config['quality']);
         if ($format === 'jpeg') {
             $saveOptions['jpeg_quality'] = $quality;
         } elseif ($format === 'png') {
