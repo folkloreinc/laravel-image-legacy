@@ -15,7 +15,7 @@ class ImageServeTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->image = $this->app['image'];
+        $this->image = $this->app['folkloreimage'];
         $this->imageSize = getimagesize(public_path().$this->imagePath);
         $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
     }
@@ -214,7 +214,7 @@ class ImageServeTestCase extends TestCase
     protected function getPackageAliases($app)
     {
         return array(
-            'Image' => 'Folklore\Image\Facades\Image'
+            'FolkloreImage' => 'Folklore\Image\Facades\Image'
         );
     }
 }

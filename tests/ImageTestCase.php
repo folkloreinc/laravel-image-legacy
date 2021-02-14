@@ -14,8 +14,8 @@ class ImageTestCase extends TestCase
     public function setUp()
     {
         parent::setUp();
-        
-        $this->image = $this->app['image'];
+
+        $this->image = $this->app['folkloreimage'];
         $this->imageSize = getimagesize(public_path().$this->imagePath);
         $this->imageSmallSize = getimagesize(public_path().$this->imageSmallPath);
     }
@@ -24,9 +24,9 @@ class ImageTestCase extends TestCase
     {
         $customPath = $this->app['path.public'].'/custom';
         $this->app['config']->set('image.write_path', $customPath);
-        
+
         $this->image->deleteManipulated($this->imagePath);
-        
+
         parent::tearDown();
     }
 
@@ -78,7 +78,7 @@ class ImageTestCase extends TestCase
 
         }
     }
-    
+
     /**
      * Define environment setup.
      *
@@ -98,7 +98,7 @@ class ImageTestCase extends TestCase
     protected function getPackageAliases($app)
     {
         return array(
-            'Image' => 'Folklore\Image\Facades\Image'
+            'FolkloreImage' => 'Folklore\Image\Facades\Image'
         );
     }
 }

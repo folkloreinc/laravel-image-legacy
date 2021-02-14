@@ -21,7 +21,7 @@ class ImageController extends BaseController
         // Serve the image response. If there is a file missing
         // exception or parse exception, throw a 404.
         try {
-            return app('image')->serve($path);
+            return app('folkloreimage')->serve($path);
         } catch (ParseException $e) {
             return abort(404);
         } catch (FileMissingException $e) {
@@ -36,7 +36,7 @@ class ImageController extends BaseController
         // Serve the image response from proxy. If there is a file missing
         // exception or parse exception, throw a 404.
         try {
-            return app('image')->proxy($path);
+            return app('folkloreimage')->proxy($path);
         } catch (ParseException $e) {
             return abort(404);
         } catch (FileMissingException $e) {

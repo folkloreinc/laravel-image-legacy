@@ -1,3 +1,7 @@
+# Mod for Laravel 6-8
+- Changed Manager variable $app => $container for new [format](https://laravel.com/docs/8.x/upgrade#manager-app-property)
+- Rename 'image' to 'folkloreimage' - for using with no conflicts with [Intervention](http://image.intervention.io) (config not renamed)
+
 # Laravel Image
 Laravel Image is an image manipulation package for Laravel 4 and 5 based on the [PHP Imagine library](https://github.com/avalanche123/Imagine). It is inspired by [Croppa](https://github.com/BKWLD/croppa) as it can use specially formatted urls to do the manipulations. It supports basic image manipulations such as resize, crop, rotation and flip. It also supports effects such as negative, grayscale, gamma, colorize and blur. You can also define custom filters for greater flexibility.
 
@@ -15,22 +19,22 @@ To create a 300x300 version of this image in black and white, you use the URL:
 
     /uploads/photo-image(300x300-crop-grayscale).jpg
     
-To help you generate the URL to an image, you can use the `Image::url()` method
+To help you generate the URL to an image, you can use the `FolkloreImage::url()` method
 
 ```php
-Image::url('/uploads/photo.jpg',300,300,array('crop','grayscale'));
+FolkloreImage::url('/uploads/photo.jpg',300,300,array('crop','grayscale'));
 ```
 
 or
 
 ```html
-<img src="<?=Image::url('/uploads/photo.jpg',300,300,array('crop','grayscale'))?>" />
+<img src="<?=FolkloreImage::url('/uploads/photo.jpg',300,300,array('crop','grayscale'))?>" />
 ```
 
-Alternatively, you can programmatically manipulate images using the `Image::make()` method. It supports all the same options as the `Image::url()` method.
+Alternatively, you can programmatically manipulate images using the `FolkloreImage::make()` method. It supports all the same options as the `FolkloreImage::url()` method.
 
 ```php
-Image::make('/uploads/photo.jpg',array(
+FolkloreImage::make('/uploads/photo.jpg',array(
 	'width' => 300,
 	'height' => 300,
 	'grayscale' => true
@@ -40,7 +44,7 @@ Image::make('/uploads/photo.jpg',array(
 or use directly the Imagine library
 
 ```php
-$thumbnail = Image::open('/uploads/photo.jpg')
+$thumbnail = FolkloreImage::open('/uploads/photo.jpg')
 			->thumbnail(new Imagine\Image\Box(300,300));
 
 $thumbnail->effects()->grayscale();
@@ -114,7 +118,7 @@ $ composer update
 
 **4-** Add the facade to your `app/config/app.php` file
 ```php
-'Image' => 'Folklore\Image\Facades\Image',
+'FolkloreImage' => 'Folklore\Image\Facades\Image',
 ```
 
 **5-** Publish the configuration file and public files
