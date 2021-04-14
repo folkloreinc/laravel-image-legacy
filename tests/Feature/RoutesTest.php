@@ -66,7 +66,11 @@ class RoutesTest extends TestCase
         $this->assertEquals('http://localhost/thumbnail/image.jpg', $url);
 
         $patterns = $this->app['router']->getPatterns();
-        $this->assertMatchesRegularExpression('/'.$patterns['image_pattern'].'/', 'image.jpg');
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression('/'.$patterns['image_pattern'].'/', 'image.jpg');
+        } else {
+            $this->assertRegExp('/'.$patterns['image_pattern'].'/', 'image.jpg');
+        }
 
         $response = $this->call('GET', $url);
         $this->assertEquals($response->headers->get('Content-type'), 'image/jpeg');
