@@ -1,11 +1,15 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit\Filters;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\Filters\Resize as ResizeFilter;
+use Folklore\Image\Facade as Image;
 
 /**
  * @coversDefaultClass Folklore\Image\Filters\Resize
  */
-class FiltersResizeTest extends TestCase
+class ResizeTest extends TestCase
 {
     protected $filter;
 

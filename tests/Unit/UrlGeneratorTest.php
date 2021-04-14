@@ -1,5 +1,8 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\UrlGenerator;
 use Folklore\Image\Contracts\FiltersManager;
 

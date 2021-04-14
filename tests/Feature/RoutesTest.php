@@ -1,5 +1,9 @@
 <?php
 
+namespace Folklore\Image\Tests\Feature;
+
+use Folklore\Image\Tests\TestCase;
+
 /**
  *
  */
@@ -62,7 +66,7 @@ class RoutesTest extends TestCase
         $this->assertEquals('http://localhost/thumbnail/image.jpg', $url);
 
         $patterns = $this->app['router']->getPatterns();
-        $this->assertRegExp('/'.$patterns['image_pattern'].'/', 'image.jpg');
+        $this->assertMatchesRegularExpression('/'.$patterns['image_pattern'].'/', 'image.jpg');
 
         $response = $this->call('GET', $url);
         $this->assertEquals($response->headers->get('Content-type'), 'image/jpeg');

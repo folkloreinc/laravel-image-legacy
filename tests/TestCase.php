@@ -1,5 +1,7 @@
 <?php
 
+namespace Folklore\Image\Tests;
+
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Folklore\Image\Exception\FormatException;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -42,14 +44,14 @@ class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-            \Folklore\Image\ImageServiceProvider::class
+            \Folklore\Image\ServiceProvider::class
         ];
     }
 
     protected function getPackageAliases($app)
     {
         return [
-            'Image' => \Folklore\Image\Support\Facades\Image::class
+            'Image' => \Folklore\Image\Facade::class
         ];
     }
 }

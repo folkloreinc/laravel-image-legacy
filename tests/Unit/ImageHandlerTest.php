@@ -1,5 +1,8 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\ImageHandler;
 use Folklore\Image\Filters\Rotate as RotateFilter;
 use Folklore\Image\Filters\Resize as ResizeFilter;
@@ -127,33 +130,33 @@ class ImageHandlerTest extends TestCase
     /**
      * Test making an image with wrong path
      * @test
-     * @expectedException \Folklore\Image\Exception\FileMissingException
      * @covers ::make
      */
     public function testMakeWithWrongPath()
     {
+        $this->expectException(\Folklore\Image\Exception\FileMissingException::class);
         $image = $this->handler->make('doesnt-exists.jpg');
     }
 
     /**
      * Test making an image with wrong format
      * @test
-     * @expectedException \Folklore\Image\Exception\FormatException
      * @covers ::make
      */
     public function testMakeWithWrongFormat()
     {
+        $this->expectException(\Folklore\Image\Exception\FormatException::class);
         $image = $this->handler->make('wrong.jpg');
     }
 
     /**
      * Test making an image with wrong format
      * @test
-     * @expectedException \Folklore\Image\Exception\FilterMissingException
      * @covers ::make
      */
     public function testMakeWithWrongFilter()
     {
+        $this->expectException(\Folklore\Image\Exception\FilterMissingException::class);
         $image = $this->handler->make('image.jpg', [
             'wrong' => true
         ]);

@@ -52,7 +52,7 @@ class CreateUrlCacheHandler
         $route = !empty($job->route) ? $this->router->getRoutes()->getByName($job->route) : null;
         $routeConfig = !is_null($route) ? $this->routeResolver->getConfigFromRoute($route) : [];
         $finalFilters = array_merge($job->filters, !empty($route) ? [
-            'pattern' => array_get($routeConfig, 'pattern', [])
+            'pattern' => data_get($routeConfig, 'pattern', [])
         ] : []);
         $finalUrl = $this->urlGenerator->make($job->url, $finalFilters);
 
@@ -65,7 +65,7 @@ class CreateUrlCacheHandler
             $image = $this->image->source()->make($parsedPath['path'], $parsedPath['filters']);
         }
 
-        $cachePath = !is_null($route) ? array_get($routeConfig, 'cache_path') : null;
+        $cachePath = !is_null($route) ? data_get($routeConfig, 'cache_path') : null;
         $this->cacheManager->put($image, $finalUrl, $cachePath);
     }
 }

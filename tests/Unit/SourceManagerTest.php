@@ -1,5 +1,8 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\SourceManager;
 use Folklore\Image\Sources\LocalSource;
 use Folklore\Image\Sources\FilesystemSource;

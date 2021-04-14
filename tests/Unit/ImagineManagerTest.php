@@ -1,5 +1,8 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\ImagineManager;
 use \Imagine\Gd\Imagine as ImagineGd;
 use \Imagine\Imagick\Imagine as ImagineImagick;

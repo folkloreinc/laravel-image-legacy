@@ -1,5 +1,8 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit\Console;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\Filters\CreateUrlCacheCommand;
 
 /**

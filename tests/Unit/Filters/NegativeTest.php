@@ -1,11 +1,16 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit\Filters;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\Filters\Negative as NegativeFilter;
+use Folklore\Image\Tests\Mocks\EffectsMock;
+use Folklore\Image\Tests\Mocks\ImageMock;
 
 /**
  * @coversDefaultClass Folklore\Image\Filters\Negative
  */
-class FiltersNegativeTest extends TestCase
+class NegativeTest extends TestCase
 {
     protected $filter;
 

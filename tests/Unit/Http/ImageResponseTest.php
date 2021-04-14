@@ -1,11 +1,14 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit\Http;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\Http\ImageResponse;
 
 /**
  * @coversDefaultClass Folklore\Image\Http\ImageResponse
  */
-class HttpImageResponseTest extends TestCase
+class ImageResponseTest extends TestCase
 {
     protected $response;
 

@@ -1,11 +1,16 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit\Filters;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\Filters\Gamma as GammaFilter;
+use Folklore\Image\Tests\Mocks\EffectsMock;
+use Folklore\Image\Tests\Mocks\ImageMock;
 
 /**
  * @coversDefaultClass Folklore\Image\Filters\Gamma
  */
-class FiltersGammaTest extends TestCase
+class GammaTest extends TestCase
 {
     protected $filter;
 

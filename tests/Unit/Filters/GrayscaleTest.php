@@ -1,11 +1,16 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit\Filters;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\Filters\Grayscale as GrayscaleFilter;
+use Folklore\Image\Tests\Mocks\EffectsMock;
+use Folklore\Image\Tests\Mocks\ImageMock;
 
 /**
  * @coversDefaultClass Folklore\Image\Filters\Grayscale
  */
-class FiltersGrayscaleTest extends TestCase
+class GrayscaleTest extends TestCase
 {
     protected $filter;
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace Folklore\Image\Tests\Mocks;
+
 use Imagine\Image\Image as ImageGd;
 use Imagine\Gd\Effects as EffectsGd;
 use Imagine\Image\ImageInterface;
@@ -106,7 +108,7 @@ class ImageMock implements ImageInterface
         $this->callValue = $angle;
     }
 
-    public function paste(ImageInterface $image, PointInterface $start)
+    public function paste(ImageInterface $image, PointInterface $start, $alpha = 100)
     {
     }
 

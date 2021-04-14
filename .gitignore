@@ -8,3 +8,4 @@ package-lock.json
 /js/es
 /js/lib
 /_book
+.phpunit.result.cache

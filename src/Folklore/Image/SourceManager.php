@@ -18,8 +18,8 @@ class SourceManager extends Manager
      */
     protected function createLocalDriver($config)
     {
-        $imagine = $this->app['image.imagine']->driver();
-        $urlGenerator = $this->app->make(UrlGeneratorContract::class);
+        $imagine = $this->container['image.imagine']->driver();
+        $urlGenerator = $this->container->make(UrlGeneratorContract::class);
         return new LocalSource($imagine, $urlGenerator, $config);
     }
 
@@ -30,8 +30,8 @@ class SourceManager extends Manager
      */
     protected function createFilesystemDriver($config)
     {
-        $imagine = $this->app['image.imagine']->driver();
-        $urlGenerator = $this->app->make(UrlGeneratorContract::class);
+        $imagine = $this->container['image.imagine']->driver();
+        $urlGenerator = $this->container->make(UrlGeneratorContract::class);
         return new FilesystemSource($imagine, $urlGenerator, $config);
     }
 
@@ -45,7 +45,7 @@ class SourceManager extends Manager
      */
     protected function createDriver($source)
     {
-        $config = $this->app['config']['image.sources.'.$source];
+        $config = $this->config['image.sources.'.$source];
         if (!$config) {
             throw new InvalidSourceException("Source [$source] not found.");
         }
@@ -56,7 +56,7 @@ class SourceManager extends Manager
         // will check for a custom driver creator, which allows developers to create
         // drivers using their own customized driver creator Closure to create it.
         if (isset($this->customCreators[$driver])) {
-            return $this->customCreators[$driver]($this->app, $config);
+            return $this->customCreators[$driver]($this->container, $config);
         } elseif (method_exists($this, $method)) {
             return $this->$method($config);
         }
@@ -71,7 +71,7 @@ class SourceManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['image.source'];
+        return $this->config['image.source'];
     }
 
     /**
@@ -82,6 +82,6 @@ class SourceManager extends Manager
      */
     public function setDefaultDriver($name)
     {
-        $this->app['config']['image.source'] = $name;
+        $this->config['image.source'] = $name;
     }
 }

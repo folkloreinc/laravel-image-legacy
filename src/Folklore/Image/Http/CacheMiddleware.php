@@ -26,8 +26,8 @@ class CacheMiddleware
     {
         $path = $request->path();
         $route = $request->route();
-        $routeConfig = $route ? array_get($route->getAction(), 'image', []) : [];
-        $cachePath = array_get($routeConfig, 'cache_path');
+        $routeConfig = $route ? data_get($route->getAction(), 'image', []) : [];
+        $cachePath = data_get($routeConfig, 'cache_path');
 
         // Get the response
         $response = $next($request);

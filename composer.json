@@ -21,7 +21,7 @@
         "php": "^7.2.5|^8.0",
         "illuminate/support": "^7.0|^8.0",
         "guzzlehttp/guzzle": "^6.3.1|^7.0.1",
-        "imagine/imagine": "0.6.*|0.7.*"
+        "imagine/imagine": "^1.2.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -35,24 +35,26 @@
         "ext-gd": "*"
     },
     "autoload": {
-        "classmap": [
-            "tests/"
-        ],
         "psr-0": {
-            "Folklore\\Image\\": "src/"
+            "Folklore\\Image": "src/"
         },
         "files": [
             "src/Folklore/Image/helpers.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Folklore\\Image\\Tests\\": "tests/"
+        }
+    },
     "minimum-stability": "stable",
     "extra": {
         "laravel": {
             "providers": [
-                "Folklore\\Image\\ImageServiceProvider"
+                "Folklore\\Image\\ServiceProvider"
             ],
             "aliases": {
-                "Image": "Folklore\\Image\\Facades\\Image"
+                "Image": "Folklore\\Image\\Facade"
             }
         }
     }

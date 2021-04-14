@@ -4,6 +4,7 @@ namespace Folklore\Image;
 use Illuminate\Routing\Router;
 use Illuminate\Container\Container;
 use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
+use Illuminate\Support\Arr;
 
 class RouteRegistrar
 {
@@ -61,13 +62,13 @@ class RouteRegistrar
      */
     public function image($path, $config = [])
     {
-        $as = array_get($config, 'as');
-        $domain = array_get($config, 'domain', null);
-        $cache = array_get($config, 'cache', false);
-        $middleware = array_get($config, 'middleware', []);
-        $patternName = array_get($config, 'pattern_name', $this->patternName);
-        $cacheMiddleware = array_get($config, 'cache_middleware', $this->cacheMiddleware);
-        $controller = array_get($config, 'uses', $this->controller);
+        $as = data_get($config, 'as');
+        $domain = data_get($config, 'domain', null);
+        $cache = data_get($config, 'cache', false);
+        $middleware = data_get($config, 'middleware', []);
+        $patternName = data_get($config, 'pattern_name', $this->patternName);
+        $cacheMiddleware = data_get($config, 'cache_middleware', $this->cacheMiddleware);
+        $controller = data_get($config, 'uses', $this->controller);
 
         if ($cache) {
             $middleware[] = $cacheMiddleware;
@@ -75,18 +76,18 @@ class RouteRegistrar
 
         // Here we check if the route contains any url config. If it does, we
         // create a route pattern to catch it
-        $patternOptions = array_get($config, 'pattern', []);
+        $patternOptions = data_get($config, 'pattern', []);
         if (sizeof($patternOptions)) {
             $generatedPatternName = $patternName.'_'.preg_replace(
                 '/[^a-z0-9]+/i',
                 '_',
                 preg_replace('/^image\./', '', $as)
             );
-            $patternName = array_get($config, 'pattern_name', $generatedPatternName);
+            $patternName = data_get($config, 'pattern_name', $generatedPatternName);
             $routePattern = $this->urlGenerator->pattern($patternOptions);
             $this->router->pattern($patternName, $routePattern);
         } else {
-            $patternName = array_get($config, 'pattern_name', $this->patternName);
+            $patternName = data_get($config, 'pattern_name', $this->patternName);
         }
 
         $routePath = preg_replace('/\{\s*pattern\s*\}/i', '{'.$patternName.'}', $path);
@@ -95,7 +96,7 @@ class RouteRegistrar
             'as' => $as,
             'domain' => $domain === null ? '':$domain,
             'middleware' => $middleware,
-            'image' => array_except($config, $this->allowedAttributes),
+            'image' => Arr::except($config, $this->allowedAttributes),
             'uses' => $controller
         ));
     }

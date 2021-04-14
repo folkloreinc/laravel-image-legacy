@@ -12,10 +12,10 @@ class Resize implements FilterWithValueContract
     public function apply(ImageInterface $image, $value = [])
     {
         if (is_array($value)) {
-            $width = array_get($value, 'width', null);
-            $height = array_get($value, 'height', null);
-            $crop = array_get($value, 'crop', false);
-            $upscale = array_get($value, 'upscale', false);
+            $width = data_get($value, 'width', null);
+            $height = data_get($value, 'height', null);
+            $crop = data_get($value, 'crop', false);
+            $upscale = data_get($value, 'upscale', false);
         } else {
             $values = explode(',', $value);
             list($width, $height) = $values;

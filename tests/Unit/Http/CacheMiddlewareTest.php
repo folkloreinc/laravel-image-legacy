@@ -1,11 +1,14 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit\Http;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\Http\CacheMiddleware;
 
 /**
  * @coversDefaultClass Folklore\Image\Http\CacheMiddleware
  */
-class HttpCacheMiddlewareTest extends TestCase
+class CacheMiddlewareTest extends TestCase
 {
     protected $middleware;
 

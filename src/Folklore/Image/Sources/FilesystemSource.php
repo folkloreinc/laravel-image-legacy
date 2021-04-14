@@ -38,10 +38,10 @@ class FilesystemSource extends AbstractSource
             return parent::getFormatFromPath(rtrim($localPath, '/').'/'.ltrim($fullPath, '/'));
         }
 
-        $cache = array_get($this->config, 'cache', false);
+        $cache = data_get($this->config, 'cache', false);
         $existsCache = $cache ? $this->existsOnCache($fullPath):false;
         if ($existsCache) {
-            $cachePath = array_get($this->config, 'cache_path', null);
+            $cachePath = data_get($this->config, 'cache_path', null);
             if ($cachePath) {
                 $cacheFullPath = $this->getCacheFullPath($fullPath);
                 return parent::getFormatFromPath($cacheFullPath);
@@ -66,13 +66,13 @@ class FilesystemSource extends AbstractSource
             return $this->imagine->open(rtrim($localPath, '/').'/'.ltrim($fullPath, '/'));
         }
 
-        $cache = array_get($this->config, 'cache', false);
+        $cache = data_get($this->config, 'cache', false);
         $existsCache = $cache ? $this->existsOnCache($fullPath):false;
 
         $content = null;
         $pathToOpen = null;
         if ($existsCache) {
-            $cachePath = array_get($this->config, 'cache_path', null);
+            $cachePath = data_get($this->config, 'cache_path', null);
             if ($cachePath) {
                 $pathToOpen = $this->getCacheFullPath($fullPath);
             } else {
@@ -108,7 +108,7 @@ class FilesystemSource extends AbstractSource
 
         $disk->put($fullPath, $content);
 
-        $cache = array_get($this->config, 'cache', false);
+        $cache = data_get($this->config, 'cache', false);
         if ($cache) {
             $this->saveToCache($fullPath, $content);
         }
@@ -124,13 +124,13 @@ class FilesystemSource extends AbstractSource
 
     protected function getFullPath($path)
     {
-        $prefixPath = array_get($this->config, 'path', '/');
+        $prefixPath = data_get($this->config, 'path', '/');
         return rtrim($prefixPath, '/').'/'.ltrim($path, '/');
     }
 
     protected function getCacheFullPath($path)
     {
-        $prefix = array_get($this->config, 'cache_path', null);
+        $prefix = data_get($this->config, 'cache_path', null);
         $cachePath = $this->getCachePath($path);
         $extension = pathinfo($path, \PATHINFO_EXTENSION);
         return rtrim($prefix, '/').'/'.$cachePath.(empty($extension) ? '':('.'.$extension));
@@ -151,7 +151,7 @@ class FilesystemSource extends AbstractSource
 
     protected function existsOnCache($path)
     {
-        $cachePath = array_get($this->config, 'cache_path', null);
+        $cachePath = data_get($this->config, 'cache_path', null);
         if ($cachePath) {
             return file_exists($this->getCacheFullPath($path));
         }
@@ -192,7 +192,7 @@ class FilesystemSource extends AbstractSource
 
     protected function saveToCache($path, $contents)
     {
-        $cachePath = array_get($this->config, 'cache_path', null);
+        $cachePath = data_get($this->config, 'cache_path', null);
         if ($cachePath) {
             $filesystem = app('files');
             $fullPath = $this->getCacheFullPath($path);
@@ -203,7 +203,7 @@ class FilesystemSource extends AbstractSource
             $filesystem->put($fullPath, $contents);
         } else {
             $cacheKey = $this->getCacheKey($path);
-            $cacheExpiration = array_get($this->config, 'cache_expiration', -1);
+            $cacheExpiration = data_get($this->config, 'cache_expiration', -1);
             if ($cacheExpiration === -1) {
                 app('cache')->forever($cacheKey, $contents);
             } else {

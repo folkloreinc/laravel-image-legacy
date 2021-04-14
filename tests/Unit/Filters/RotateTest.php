@@ -1,11 +1,16 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit\Filters;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\Filters\Rotate as RotateFilter;
+use Folklore\Image\Tests\Mocks\EffectsMock;
+use Folklore\Image\Tests\Mocks\ImageMock;
 
 /**
  * @coversDefaultClass Folklore\Image\Filters\Rotate
  */
-class FiltersRotateTest extends TestCase
+class RotateTest extends TestCase
 {
     protected $filter;
 

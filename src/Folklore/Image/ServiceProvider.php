@@ -1,6 +1,6 @@
 <?php namespace Folklore\Image;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Illuminate\Bus\Dispatcher;
 use Folklore\Image\Http\ImageResponse;
 use Folklore\Image\RouteRegistrar;
@@ -14,7 +14,7 @@ use Folklore\Image\Contracts\RouteResolver as RouteResolverContract;
 use Folklore\Image\Contracts\UrlGenerator as UrlGeneratorContract;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 
-class ImageServiceProvider extends ServiceProvider
+class ServiceProvider extends BaseServiceProvider
 {
 
     /**
@@ -166,10 +166,10 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerImage()
     {
-        $this->app->singleton('image', function ($app) {
-            $image = new Image($app, $app['router']);
-            $image->setFilters($app['config']->get('image.filters', []));
-            $image->setRouteConfig($app['config']->get('image.routes', []));
+        $this->app->singleton('image', function () {
+            $image = new Image($this->app, $this->app['router']);
+            $image->setFilters($this->app['config']->get('image.filters', []));
+            $image->setRouteConfig($this->app['config']->get('image.routes', []));
             return $image;
         });
     }
@@ -181,8 +181,8 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerImagineManager()
     {
-        $this->app->singleton('image.imagine', function ($app) {
-            return new ImagineManager($app);
+        $this->app->singleton('image.imagine', function () {
+            return new ImagineManager($this->app);
         });
     }
 
@@ -193,8 +193,8 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerSourceManager()
     {
-        $this->app->singleton('image.source', function ($app) {
-            return new SourceManager($app);
+        $this->app->singleton('image.source', function () {
+            return new SourceManager($this->app);
         });
     }
 
@@ -205,16 +205,16 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerUrlGenerator()
     {
-        $this->app->singleton('image.url', function ($app) {
-            $router = $app['router'];
-            $filtersManager = $app->make(FiltersManagerContract::class);
+        $this->app->singleton('image.url', function () {
+            $router = $this->app['router'];
+            $config = $this->app['config'];
+            $filtersManager = $this->app->make(FiltersManagerContract::class);
             $generator = new UrlGenerator($router, $filtersManager);
-            $config = $app['config']->get('image.url', []);
-            $generator->setFormat(array_get($config, 'format', ''));
-            $generator->setFiltersFormat(array_get($config, 'filters_format', ''));
-            $generator->setFilterFormat(array_get($config, 'filter_format', ''));
-            $generator->setFilterSeparator(array_get($config, 'filter_separator', ''));
-            $generator->setPlaceholdersPatterns(array_get($config, 'placeholders_patterns', ''));
+            $generator->setFormat($config->get('image.url.format', ''));
+            $generator->setFiltersFormat($config->get('image.url.filters_format', ''));
+            $generator->setFilterFormat($config->get('image.url.filter_format', ''));
+            $generator->setFilterSeparator($config->get('image.url.filter_separator', ''));
+            $generator->setPlaceholdersPatterns($config->get('image.url.placeholders_patterns', ''));
             return $generator;
         });
     }
@@ -226,14 +226,14 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerRouteRegistrar()
     {
-        $this->app->singleton('image.routes', function ($app) {
-            $router = $app['router'];
-            $urlGenerator = $app->make(UrlGeneratorContract::class);
+        $this->app->singleton('image.routes', function () {
+            $router = $this->app['router'];
+            $config = $this->app['config'];
+            $urlGenerator = $this->app->make(UrlGeneratorContract::class);
             $registrar = new RouteRegistrar($router, $urlGenerator);
-            $config = $app['config']->get('image.routes', []);
-            $registrar->setPatternName(array_get($config, 'pattern_name'));
-            $registrar->setCacheMiddleware(array_get($config, 'cache_middleware'));
-            $registrar->setController(array_get($config, 'controller'));
+            $registrar->setPatternName($config->get('image.routes.pattern_name'));
+            $registrar->setCacheMiddleware($config->get('image.routes.cache_middleware'));
+            $registrar->setController($config->get('image.routes.controller'));
             return $registrar;
         });
     }
@@ -245,9 +245,9 @@ class ImageServiceProvider extends ServiceProvider
      */
     public function registerImageHandler()
     {
-        $this->app->bind(ImageHandler::class, function ($app) {
-            $filtersManager = $app->make(FiltersManagerContract::class);
-            $memoryLimit = $app['config']->get('image.memory_limit', '128MB');
+        $this->app->bind(ImageHandler::class, function () {
+            $filtersManager = $this->app->make(FiltersManagerContract::class);
+            $memoryLimit = $this->app['config']->get('image.memory_limit', '128MB');
             return new ImageHandler($filtersManager, $memoryLimit);
         });
     }

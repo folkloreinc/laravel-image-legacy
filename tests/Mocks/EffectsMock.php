@@ -1,5 +1,6 @@
 <?php
 
+namespace Folklore\Image\Tests\Mocks;
 
 class EffectsMock
 {

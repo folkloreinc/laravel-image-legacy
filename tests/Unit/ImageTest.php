@@ -1,5 +1,8 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
 use Folklore\Image\Sources\LocalSource;
 use Folklore\Image\Sources\FilesystemSource;
@@ -64,10 +67,10 @@ class ImageTest extends TestCase
      *
      * @test
      * @covers ::source
-     * @expectedException Folklore\Image\Exception\InvalidSourceException
      */
     public function testSourceWithInvalidName()
     {
+        $this->expectException(\Folklore\Image\Exception\InvalidSourceException::class);
         $factory = $this->image->source('invalid');
     }
 

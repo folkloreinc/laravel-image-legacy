@@ -22,9 +22,9 @@ class RouteResolver implements RouteResolverContract
     {
         $path = $this->getPathFromRoute($route);
         $config = $this->getConfigFromRoute($route);
-        $source = array_get($config, 'source');
-        $urlConfig = array_get($config, 'pattern', []);
-        $routeFilters = array_get($config, 'filters', []);
+        $source = data_get($config, 'source');
+        $urlConfig = data_get($config, 'pattern', []);
+        $routeFilters = data_get($config, 'filters', []);
 
         // Parse the path
         $parseData = $this->urlGenerator->parse($path, $urlConfig);
@@ -39,9 +39,9 @@ class RouteResolver implements RouteResolverContract
     {
         $path = $this->getPathFromRoute($route);
         $config = $this->getConfigFromRoute($route);
-        $source = array_get($config, 'source');
-        $quality = (float)array_get($config, 'quality', 100);
-        $expires = array_get($config, 'expires', null);
+        $source = data_get($config, 'source');
+        $quality = (float)data_get($config, 'quality', 100);
+        $expires = data_get($config, 'expires', null);
 
         $image = $this->resolveToImage($route);
         $format = $this->image->source($source)->format($path);
@@ -54,11 +54,11 @@ class RouteResolver implements RouteResolverContract
 
     public function getPathFromRoute(Route $route)
     {
-        return array_get($route->parameters(), 'image_pattern', $route->uri());
+        return data_get($route->parameters(), 'image_pattern', $route->uri());
     }
 
     public function getConfigFromRoute(Route $route)
     {
-        return array_get($route->getAction(), 'image', []);
+        return data_get($route->getAction(), 'image', []);
     }
 }

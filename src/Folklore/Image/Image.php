@@ -1,6 +1,7 @@
 <?php namespace Folklore\Image;
 
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Arr;
 use Folklore\Image\Contracts\ImageHandlerFactory as ImageHandlerFactoryContract;
 use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
 use Folklore\Image\Contracts\FiltersManager as FiltersManagerContract;
@@ -185,8 +186,8 @@ class Image implements
         $config = array_merge($this->routeConfig, is_string($config) ? [
             'map' => $config
         ] : $config);
-        $groupConfig = array_only($config, ['domain', 'prefix', 'as', 'namespace', 'middleware']);
-        $map = array_get($config, 'map', null);
+        $groupConfig = Arr::only($config, ['domain', 'prefix', 'as', 'namespace', 'middleware']);
+        $map = data_get($config, 'map', null);
 
         // Map routes defined in the routes files
         $this->container->make('router')->group($groupConfig, function ($router) use ($map) {
@@ -296,7 +297,7 @@ class Image implements
      */
     public function getFilter($name)
     {
-        return array_get($this->filters, $name, null);
+        return data_get($this->filters, $name, null);
     }
 
     /**

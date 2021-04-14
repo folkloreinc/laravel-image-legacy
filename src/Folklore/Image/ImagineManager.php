@@ -41,7 +41,7 @@ class ImagineManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['image.driver'];
+        return $this->config['image.driver'];
     }
 
     /**
@@ -52,6 +52,6 @@ class ImagineManager extends Manager
      */
     public function setDefaultDriver($name)
     {
-        $this->app['config']['image.driver'] = $name;
+        $this->config['image.driver'] = $name;
     }
 }

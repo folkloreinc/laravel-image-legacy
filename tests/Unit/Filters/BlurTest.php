@@ -1,11 +1,16 @@
 <?php
 
+namespace Folklore\Image\Tests\Unit\Filters;
+
+use Folklore\Image\Tests\TestCase;
 use Folklore\Image\Filters\Blur as BlurFilter;
+use Folklore\Image\Tests\Mocks\EffectsMock;
+use Folklore\Image\Tests\Mocks\ImageMock;
 
 /**
  * @coversDefaultClass Folklore\Image\Filters\Blur
  */
-class FiltersBlurTest extends TestCase
+class BlurTest extends TestCase
 {
     protected $filter;
 

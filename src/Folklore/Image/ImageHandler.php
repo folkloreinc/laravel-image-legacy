@@ -1,6 +1,7 @@
 <?php namespace Folklore\Image;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Arr;
 use Folklore\Image\Contracts\FiltersManager as FiltersManagerContract;
 use Folklore\Image\Contracts\ImageHandler as ImageHandlerContract;
 use Folklore\Image\Contracts\Source as SourceContract;
@@ -54,7 +55,7 @@ class ImageHandler implements ImageHandlerContract
         $configKeys = ['memory_limit'];
 
         //Get config
-        $configOptions = array_only($options, $configKeys);
+        $configOptions = Arr::only($options, $configKeys);
         $config = array_merge([
             'memory_limit' => $this->memoryLimit
         ], $configOptions);
@@ -71,7 +72,7 @@ class ImageHandler implements ImageHandlerContract
         }
 
         // Merge array filters
-        $filtersOptions = array_except($options, array_merge($configKeys));
+        $filtersOptions = Arr::except($options, array_merge($configKeys));
         $filters = $this->getFiltersFromOptions($filtersOptions);
 
         // Check if all filters exists
@@ -222,17 +223,17 @@ class ImageHandler implements ImageHandlerContract
 
         // Convert width, height, crop options to resize filter
         $sizeKeys = ['width', 'height', 'crop'];
-        $width = array_get($filters, 'width', null);
-        $height = array_get($filters, 'height', null);
+        $width = data_get($filters, 'width', null);
+        $height = data_get($filters, 'height', null);
         if ($width !== null || $height !== null) {
-            $crop = array_get($filters, 'crop', false);
+            $crop = data_get($filters, 'crop', false);
             $filters['resize'] = [
                 'width' => $width,
                 'height' => $height,
                 'crop' => $crop
             ];
         }
-        $filters = array_except($filters, array_merge($sizeKeys));
+        $filters = Arr::except($filters, array_merge($sizeKeys));
 
         return $filters;
     }

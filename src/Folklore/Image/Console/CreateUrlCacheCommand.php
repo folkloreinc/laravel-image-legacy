@@ -68,7 +68,7 @@ class CreateUrlCacheCommand extends Command
         $route = !empty($routeName) ? $this->router->getRoutes()->getByName($routeName) : null;
         $routeConfig = !is_null($route) ? $this->routeResolver->getConfigFromRoute($route) : [];
         $finalUrl = $this->urlGenerator->make($url, array_merge($filters, !empty($route) ? [
-            'pattern' => array_get($routeConfig, 'pattern', [])
+            'pattern' => data_get($routeConfig, 'pattern', [])
         ] : []));
 
         $this->line('<info>Created:</info> '.$finalUrl.' for image '.$url);
