@@ -1,6 +1,0 @@
-# Filters
-
-## Configuration
-
-
-## Usage

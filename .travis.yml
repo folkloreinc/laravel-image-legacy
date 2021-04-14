@@ -7,26 +7,18 @@ cache:
     - ${TRAVIS_BUILD_DIR}/travis/extension-cache
 
 php:
-    - 7.1
+    - 7.2.5
     - 7.3
 
 env:
-    - ILLUMINATE_VERSION=5.5.* PHPUNIT_VERSION=~6.0
-    - ILLUMINATE_VERSION=5.6.* PHPUNIT_VERSION=~7.0
-    - ILLUMINATE_VERSION=5.7.* PHPUNIT_VERSION=~7.0
-    - ILLUMINATE_VERSION=5.8.* PHPUNIT_VERSION=^7.5 COVERAGE=true
+    matrix:
+      - ILLUMINATE_VERSION=^7.0 COVERAGE=true
+      - ILLUMINATE_VERSION=^8.0 COVERAGE=true
 
 before_install:
     - cp ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ~/xdebug.ini
     - phpenv config-rm xdebug.ini
-    - sudo apt-get install graphicsmagick libgraphicsmagick1-dev
-    - pear config-set preferred_state beta
-    - pecl channel-update pecl.php.net
-    - ./scripts/install_php_extensions.sh "imagick.so:imagick gmagick.so:gmagick"
-    - composer global require hirak/prestissimo --update-no-dev
     - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
-    - composer require "orchestra/testbench:${ILLUMINATE_VERSION/5\./3\.}" --no-update --prefer-dist
-    - composer require "phpunit/phpunit:${PHPUNIT_VERSION}" --no-update --prefer-dist
 
 install: travis_retry composer install --no-interaction --prefer-dist
 
@@ -34,7 +26,7 @@ before_script: phpenv config-add ~/xdebug.ini
 
 script: vendor/bin/phpunit
 
-after_success: sh -c "if [ ! -z ${COVERAGE+x} ]; then travis_retry php vendor/bin/php-coveralls; fi"
+after_success: sh -c "if [ ! -z ${COVERAGE+x} ]; then php vendor/bin/coveralls; fi"
 
 notifications:
     email: false

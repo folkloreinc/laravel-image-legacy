@@ -1,2 +1,0 @@
-Laravel Image Documentation
-====================================

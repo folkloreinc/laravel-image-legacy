@@ -1,5 +1,0 @@
-{
-    "presets": [
-        "./build/babel-preset.js"
-    ]
-}

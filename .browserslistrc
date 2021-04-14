@@ -1,0 +1,9 @@
+[production staging]
+last 20 versions
+> 1%
+ie >= 10
+
+[development]
+last 10 versions
+> 1%
+ie >= 10
