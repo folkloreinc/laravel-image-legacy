@@ -7,19 +7,23 @@ cache:
     - ${TRAVIS_BUILD_DIR}/travis/extension-cache
 
 php:
-    - 7.2.5
-    - 7.4
-    - 8.0
+  - 7.2.5
+  - 7.4
+  - 8.0
 
 env:
-    matrix:
-      - ILLUMINATE_VERSION=^7.0 COVERAGE=true
-      - ILLUMINATE_VERSION=^8.0 COVERAGE=true
+  - ILLUMINATE_VERSION=^7.0
+  - ILLUMINATE_VERSION=^8.0 COVERAGE=true
+
+jobs:
+  exclude:
+    - php: 7.2.5
+      env: ILLUMINATE_VERSION=^8.0 COVERAGE=true
 
 before_install:
-    - cp ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ~/xdebug.ini
-    - phpenv config-rm xdebug.ini
-    - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
+  - cp ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ~/xdebug.ini
+  - phpenv config-rm xdebug.ini
+  - composer require "illuminate/support:${ILLUMINATE_VERSION}" --no-update --prefer-dist
 
 install: travis_retry composer install --no-interaction --prefer-dist
 
