@@ -60,7 +60,7 @@ class ImageManager extends Manager
             $height = null;
         }
         
-        $config = $this->app['config'];
+        $config = $this->container['config'];
         $url_parameter = isset($options['url_parameter']) ? $options['url_parameter']:$config['image.url_parameter'];
         $url_parameter_separator = isset($options['url_parameter_separator']) ? $options['url_parameter_separator']:$config['image.url_parameter_separator'];
         unset($options['url_parameter'],$options['url_parameter_separator']);
@@ -109,13 +109,13 @@ class ImageManager extends Manager
 
         // Break the path apart and put back together again
         $parts = pathinfo($src);
-        $host = isset($options['host']) ? $options['host']:$this->app['config']['image.host'];
+        $host = isset($options['host']) ? $options['host']:$this->container['config']['image.host'];
         $dir = trim($parts['dirname'], '/');
 
         $path = array();
         $path[] = rtrim($host, '/');
 
-        if ($prefix = $this->app['config']->get('image.write_path')) {
+        if ($prefix = $this->container['config']->get('image.write_path')) {
             $path[] = trim($prefix, '/');
         }
 
@@ -143,8 +143,8 @@ class ImageManager extends Manager
      */
     public function make($path, $options = array())
     {
-        //Get app config
-        $config = $this->app['config'];
+        //Get container config
+        $config = $this->container['config'];
 
         // See if the referenced file exists and is an image
         if (!($path = $this->getRealPath($path))) {
@@ -226,16 +226,16 @@ class ImageManager extends Manager
     public function serve($path, $config = array())
     {
         //Use user supplied quality or the config value
-        $quality = array_get($config, 'quality', $this->app['config']['image.quality']);
+        $quality = array_get($config, 'quality', $this->container['config']['image.quality']);
         //if nothing works fallback to the hardcoded value
         $quality = $quality ?: $this->defaultOptions['quality'];
 
         //Merge config with defaults
         $config = array_merge(array(
             'quality' => $quality,
-            'custom_filters_only' => $this->app['config']['image.serve_custom_filters_only'],
-            'write_image' => $this->app['config']['image.write_image'],
-            'write_path' => $this->app['config']['image.write_path']
+            'custom_filters_only' => $this->container['config']['image.serve_custom_filters_only'],
+            'write_image' => $this->container['config']['image.write_image'],
+            'write_path' => $this->container['config']['image.write_path']
         ), $config);
 
         $serve = new ImageServe($this, $config);
@@ -254,12 +254,12 @@ class ImageManager extends Manager
     {
         //Merge config with defaults
         $config = array_merge(array(
-            'tmp_path' => $this->app['config']['image.proxy_tmp_path'],
-            'filesystem' => $this->app['config']['image.proxy_filesystem'],
-            'cache' => $this->app['config']['image.proxy_cache'],
-            'cache_expiration' => $this->app['config']['image.proxy_cache_expiration'],
-            'write_image' => $this->app['config']['image.proxy_write_image'],
-            'cache_filesystem' => $this->app['config']['image.proxy_cache_filesystem']
+            'tmp_path' => $this->container['config']['image.proxy_tmp_path'],
+            'filesystem' => $this->container['config']['image.proxy_filesystem'],
+            'cache' => $this->container['config']['image.proxy_cache'],
+            'cache_expiration' => $this->container['config']['image.proxy_cache_expiration'],
+            'write_image' => $this->container['config']['image.proxy_write_image'],
+            'cache_filesystem' => $this->container['config']['image.proxy_cache_filesystem']
         ), $config);
         
         $serve = new ImageProxy($this, $config);
@@ -420,7 +420,7 @@ class ImageManager extends Manager
     public function pattern($parameter = null, $pattern = null)
     {
         //Replace the {options} with the options regular expression
-        $config = $this->app['config'];
+        $config = $this->container['config'];
         $parameter = !isset($parameter) ? $config['image.url_parameter']:$parameter;
         $parameter = preg_replace('/\\\{\s*options\s*\\\}/', '([0-9a-zA-Z\(\),\-/._]+?)?', preg_quote($parameter));
         
@@ -446,7 +446,7 @@ class ImageManager extends Manager
         $config = array_merge(array(
             'custom_filters_only' => false,
             'url_parameter' => null,
-            'url_parameter_separator' => $this->app['config']['image.url_parameter_separator']
+            'url_parameter_separator' => $this->container['config']['image.url_parameter_separator']
         ), $config);
 
         $parsedOptions = array();
@@ -478,7 +478,7 @@ class ImageManager extends Manager
         //Default config
         $config = array_merge(array(
             'custom_filters_only' => false,
-            'url_parameter_separator' => $this->app['config']['image.url_parameter_separator']
+            'url_parameter_separator' => $this->container['config']['image.url_parameter_separator']
         ), $config);
 
         $options = array();
@@ -562,9 +562,9 @@ class ImageManager extends Manager
         }
         
         //Get directories
-        $dirs = $this->app['config']['image.src_dirs'];
-        if ($this->app['config']['image.write_path']) {
-            $dirs[] = $this->app['config']['image.write_path'];
+        $dirs = $this->container['config']['image.src_dirs'];
+        if ($this->container['config']['image.write_path']) {
+            $dirs[] = $this->container['config']['image.write_path'];
         }
 
         // Loop through all the directories files may be uploaded to
@@ -614,8 +614,8 @@ class ImageManager extends Manager
         $parts = pathinfo($path);
         $dirs = [$parts['dirname']];
         $dirs = [$parts['dirname']];
-        if ($this->app['config']['image.write_path']) {
-            $dirs[] = $this->app['config']['image.write_path'];
+        if ($this->container['config']['image.write_path']) {
+            $dirs[] = $this->container['config']['image.write_path'];
         }
         foreach ($dirs as $directory) {
             $files = scandir($directory);
@@ -837,7 +837,7 @@ class ImageManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['image.driver'];
+        return $this->container['config']['image.driver'];
     }
 
     /**
@@ -848,6 +848,6 @@ class ImageManager extends Manager
      */
     public function setDefaultDriver($name)
     {
-        $this->app['config']['image.driver'] = $name;
+        $this->container['config']['image.driver'] = $name;
     }
 }
