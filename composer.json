@@ -1,6 +1,6 @@
 {
-    "name": "folklore/image",
-    "description": "Image manipulation library for Laravel 5 based on Imagine and inspired by Croppa for easy url based manipulation",
+    "name": "ayk/laravel-image-manipulation",
+    "description": "Image manipulation library for Laravel 9 based on Imagine and inspired by Croppa for easy url based manipulation",
     "keywords": ["laravel","image","imagick","gd","imagine","watermark","gmagick","thumbnail"],
     "homepage": "http://github.com/Folkloreatelier/laravel-image",
     "license": "MIT",
@@ -19,8 +19,8 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "illuminate/support": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*|5.7.*",
-        "guzzlehttp/guzzle": "5.3|~6.0",
+        "illuminate/support": "5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*|5.7.*|5.8.*|^6.0|^7.0|^8.0|^9.0",
+        "guzzlehttp/guzzle": "5.3|~6.0|^7.0.1",
         "imagine/imagine": "0.6.*"
     },
     "require-dev": {
@@ -40,15 +40,5 @@
         "classmap": [
             "tests/"
         ]
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Folklore\\Image\\ImageServiceProvider"
-            ],
-            "aliases": {
-                "Image": "Folklore\\Image\\Facades\\Image"
-            }
-        }
     }
 }
