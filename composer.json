@@ -1,6 +1,6 @@
 {
-    "name": "betalabs/image",
-    "description": "Image manipulation library for Laravel 5 based on Imagine and inspired by Croppa for easy url based manipulation",
+    "name": "image/laravel-image-manipulation",
+    "description": "Image manipulation library for Laravel 9 based on Imagine and inspired by Croppa for easy url based manipulation",
     "keywords": ["laravel","image","imagick","gd","imagine","watermark","gmagick","thumbnail"],
     "homepage": "http://github.com/Folkloreatelier/laravel-image",
     "license": "MIT",
