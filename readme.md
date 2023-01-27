@@ -1,4 +1,4 @@
-# Mod for Laravel 6-8
+# Mod for Laravel 6-9
 - Changed Manager variable $app => $container for new [format](https://laravel.com/docs/8.x/upgrade#manager-app-property)
 - Rename 'image' to 'folkloreimage' - for using with no conflicts with [Intervention](http://image.intervention.io) (config not renamed)
 
